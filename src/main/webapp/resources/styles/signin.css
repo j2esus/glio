@@ -1,0 +1,9 @@
+IMG.imgcenter{
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      border:none;
+}
+.form-signin-heading{
+	text-align:center;
+}
