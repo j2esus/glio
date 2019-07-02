@@ -38,7 +38,7 @@ public class SessionDAOImpl extends GenericDAOImpl<Session, Integer> implements 
         sb.append(" from Session s ");
         sb.append(" where s.father = :user ");
         sb.append(" and s.status != :status  ");
-        sb.append(" order by s.initDate ");
+        sb.append(" order by s.initDate desc ");
         Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
         q.setParameter("user", user);
         q.setParameter("status", Status.DELETED);

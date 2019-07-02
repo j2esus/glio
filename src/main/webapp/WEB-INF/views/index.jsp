@@ -31,6 +31,8 @@
         <link href="<c:url value="/resources/styles/sb-admin.css"/>" rel="stylesheet">
         <!-- tema msg -->
         <link rel="stylesheet" href="<c:url value="/resources/styles/jquery.msg.css"/>">
+        <!-- animate -->
+        <link rel="stylesheet" href="<c:url value="/resources/styles/animate.css"/>">
         <!-- end theme -->
 
         <!-- notify -->
@@ -59,7 +61,7 @@
 
     </head>
     <body class="bg-dark">
-        <div class="text-right" style="color:whitesmoke;padding-right: 5px;font-size: 13px">v.0.20.beta</div>
+        <div class="text-right" style="color:whitesmoke;padding-right: 5px;font-size: 13px">v.0.21.beta</div>
         <div class="container">
             <div class="card card-login mx-auto mt-5">
                 <div class="card-header">

@@ -43,9 +43,9 @@
         </dependency>
         
         <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>jstl</artifactId>
-                <version>${javax.servlet.jstl.version}</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>${javax.servlet.jstl.version}</version>
         </dependency>
         
         <!-- Spring dependencies -->
@@ -78,8 +78,8 @@
             <version>${org.springframework.version}</version>
             <exclusions>
                 <exclusion>
-                        <artifactId>commons-logging</artifactId>
-                        <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -172,6 +172,13 @@
             <artifactId>mail</artifactId>
             <version>1.4.7</version>
         </dependency>
+        
+        <!-- json -->
+        <dependency>
+           <groupId>org.glassfish</groupId>
+           <artifactId>javax.json</artifactId>
+           <version>1.0.4</version>
+       </dependency>
     </dependencies>
 
     <build>

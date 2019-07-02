@@ -121,6 +121,10 @@ function initEvents() {
         $(this).addClass('row-selected').siblings().removeClass('row-selected');
         _indexProjectSelected = $(this).data('meta-row');
     });
+    
+    $tableProject.on('dblclick', 'tbody tr', function (event) {
+        showDivTasks(_indexProjectSelected);
+    });
 
     //aims
     $btnRefreshAim.click(onClickRefreshAim);

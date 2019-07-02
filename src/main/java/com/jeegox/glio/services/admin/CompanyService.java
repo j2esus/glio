@@ -20,7 +20,7 @@ public interface CompanyService {
     
     Company findBydId(Integer id);
     
-    void register(String companyName, String username, String email, String password) throws Exception;
+    String register(String captchaResponse, String companyName, String username, String email, String password) throws Exception;
     
     Company findBy(String name);
     

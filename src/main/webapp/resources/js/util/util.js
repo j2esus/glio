@@ -160,11 +160,11 @@ _uiUtil = (function () {
         var yyyy = today.getFullYear();
 
         if (dd < 10) {
-            dd = '0' + dd
+            dd = '0' + dd;
         }
 
         if (mm < 10) {
-            mm = '0' + mm
+            mm = '0' + mm;
         }
 
         today = yyyy + '-' + mm + '-' + dd;
@@ -293,13 +293,14 @@ _notify = (function () {
         }, {
             type: type,
             z_index: 2000,
+            delay: 3000,
             animate: {
                 enter: 'animated fadeInDown',
                 exit: 'animated fadeOutUp'
             },
             placement: {
-                from: "bottom",
-                align: "right"
+                from: "top",
+                align: "center"
             }
         });
     }

@@ -23,6 +23,7 @@ public final class DataConfig {
         pages.add(new Page("403","/WEB-INF/views/error/403.jsp", Layout.HEADER));
         pages.add(new Page("404","/WEB-INF/views/error/404.jsp", Layout.HEADER));
         pages.add(new Page("register","/WEB-INF/views/register.jsp", Layout.HEADER));
+        pages.add(new Page("thanks","/WEB-INF/views/thanks.jsp", Layout.HEADER));
         
         pages.add(new Page("forbidden","/WEB-INF/views/error/forbidden.jsp", Layout.DEFAULT));
         

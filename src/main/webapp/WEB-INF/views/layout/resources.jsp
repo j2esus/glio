@@ -36,6 +36,8 @@
 <!-- tema msg -->
 <link rel="stylesheet" href="<c:url value="/resources/styles/jquery.msg.css"/>">
 <!-- end theme -->
+<!-- animate -->
+<link rel="stylesheet" href="<c:url value="/resources/styles/animate.css"/>">
 
 
 <!-- notify -->

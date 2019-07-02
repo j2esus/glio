@@ -37,6 +37,7 @@ function addRowToTable(item, table) {
     var fila = "";
     fila += "<tr><input type='hidden' id='id" + noRow + "' value='" + item.id + "'/>";
     fila += "<td><input type='hidden' id='session" + noRow + "' value='" + item.session + "'/>" + item.session + "</td>";
+    fila += "<td>" + item.father.username + "</td>";
     fila += "<td>" + item.status + "</td>";
     fila += "<td>" + _uiUtil.getFormattedDateTime(item.initDate) + "</td>";
     fila += "<td>" + endDate + "</td>";

@@ -11,6 +11,7 @@ import com.jeegox.glio.enumerators.EntityType;
 import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.services.admin.CompanyService;
 import com.jeegox.glio.util.Util;
+import com.jeegox.glio.util.VerifyUtils;
 import java.util.HashSet;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,8 +67,13 @@ public class CompanyServiceImpl implements CompanyService{
 
     @Transactional
     @Override
-    public void register(String companyName, String username, String email, String password) throws Exception {
+    public String register(String captchaResponse, String companyName, String username, String email, String password) throws Exception {
         try{
+            
+            boolean valid = VerifyUtils.verify(captchaResponse);
+            if(!valid)
+                throw new Exception("Captcha incorrecto");
+            
             Company company = this.findBy(companyName);
             if(company != null)
                 throw new Exception("El nombre de la empresa ya se encuentra registrada, intente con otro nombre.");
@@ -89,17 +95,19 @@ public class CompanyServiceImpl implements CompanyService{
             
             userTypeDAO.save(userType);
             //user
+            String sUsername = username+"@"+companyName;
             User user = new User();
             user.setEmail(email);
             user.setFather(company);
             user.setName("");
-            user.setUsername(username+"@"+companyName);
+            user.setUsername(sUsername);
             user.setOnlyOneAccess(Boolean.FALSE);
             user.setStatus(Status.ACTIVE);
             user.setUserType(userType);
             user.setPassword(Util.encodeSha256(password));
             
             userDAO.save(user);
+            return sUsername;
         }catch(Exception e){
             throw e;
         }

@@ -23,7 +23,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "session")
-@JsonIgnoreProperties({"father"})
 public class Session extends JComplexEntity<Integer, User> implements Serializable{
     private String session;
     private Status status;

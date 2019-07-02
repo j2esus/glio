@@ -19,6 +19,7 @@
         <thead>
             <tr>
                 <th>Sesión</th>
+                <th>Usuario</th>
                 <th>Estatus</th>
                 <th>Fecha inicio</th>
                 <th>Fecha fin</th>

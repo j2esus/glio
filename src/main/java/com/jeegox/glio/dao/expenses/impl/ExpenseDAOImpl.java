@@ -35,6 +35,7 @@ public class ExpenseDAOImpl extends GenericDAOImpl<Expense, Integer> implements 
         if(!idCategory.equals(0))
         sb.append(" and c.id = :idCategory ");
         sb.append(" and e.date between :init and :end ");
+        sb.append(" order by e.date ");
         
         Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
         q.setParameter("company", company);
