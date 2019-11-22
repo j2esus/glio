@@ -2,6 +2,7 @@ package com.jeegox.glio.controllers.aim;
 
 import com.jeegox.glio.controllers.BaseController;
 import com.jeegox.glio.entities.aim.Project;
+import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.services.admin.UserService;
 import com.jeegox.glio.services.aim.ProjectService;
 import com.jeegox.glio.util.Util;
@@ -31,7 +32,8 @@ public class ActivityController extends BaseController {
 
     @RequestMapping("init")
     public String index(Model model, HttpServletRequest request) {
-        List<Project> projects = projectService.findByCompany(getCurrentCompany(request));
+        List<Project> projects = projectService.findBy(getCurrentCompany(request), 
+                new Status[]{Status.ACTIVE, Status.INACTIVE, Status.FINISHED});
         model.addAttribute("projects", projects);
         return "activity/init";
     }

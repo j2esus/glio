@@ -23,4 +23,6 @@ public interface ProjectDAO extends GenericDAO<Project, Integer>{
     List<GraphStatusVO> findDataGraphProject(Integer idProject);
     
     List<Project> findBy(Company company, String query, Status[] status);
+    
+    List<Project> findBy(Company company, Status[] status);
 }

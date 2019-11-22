@@ -17,52 +17,52 @@
 <div class="tab-content" id="myTabContent">
     <br/>
     <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
-        <div class="text-right">
-            <button type="button" class="btn btn-success fa fa-refresh" id="btnRefresh"></button>
-        </div>
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover" id="dataTableGral" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>Categoría</th>
-                                    <th>Monto</th>
-                                    <th>Porcentaje</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+        <div id="divCategory">
+            <div class="text-right">
+                <button type="button" class="btn btn-success fa fa-refresh" id="btnRefresh"></button>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover" id="dataTableGral" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Categoría</th>
+                                        <th>Monto</th>
+                                        <th>Porcentaje</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div id="divGraphCategory">
+                        <canvas id="canvGraphCategory" style="width: 100%"></canvas>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-8">
-                <div id="divGraphCategory">
-                    <canvas id="canvGraphCategory" style="width: 100%"></canvas>
+        </div>
+        <div id="divSubcategory">
+            <div class="row">
+                <div class="col-lg-4">
+                    <a href="<c:url value="init"/>">Regresar</a></span>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <h4><span id="titleModalNew" class="badge badge-success"></h4>
+                </div>
+                <div class="col-lg-4 text-right">
+                    <button type="button" class="btn btn-success fa fa-refresh" id="btnRefreshSub"></button>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="tab-pane fade" id="month" role="tabpanel" aria-labelledby="month-tab">
+            <br/>
 
-    </div>
-    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-
-    </div>
-</div>
-
-
-<div class="modal fade bd-example-modal-lg" id="subcategoryModal" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4><span id="titleModalNew" class="badge badge-success"></span></h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-10">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="dataTableSub" width="100%" cellspacing="0">
                                 <thead>
@@ -76,16 +76,21 @@
                             </table>
                         </div>
                     </div>
-                    <div class="col-lg-10">
-                        <div id="divGraphSubcategory">
-                            <canvas id="canvGraphSubcategory" style="width: 100%"></canvas>
-                        </div>
+                </div>
+                <div class="col-lg-8">
+                    <div id="divGraphSubcategory">
+                        <canvas id="canvGraphSubcategory" style="width: 100%"></canvas>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
-            </div>
         </div>
     </div>
+    <div class="tab-pane fade" id="month" role="tabpanel" aria-labelledby="month-tab">
+
+    </div>
+    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+
+    </div>
+
+
 </div>

@@ -5,6 +5,7 @@ import java.io.Serializable;
 /**
  *
  * @author j2esus
+ * @param <T>
  */
 public abstract class JEntity <T extends Serializable> implements Serializable{
     protected T id;

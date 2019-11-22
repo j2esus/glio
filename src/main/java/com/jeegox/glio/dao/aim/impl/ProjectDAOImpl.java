@@ -108,5 +108,20 @@ public class ProjectDAOImpl extends GenericDAOImpl<Project,Integer> implements P
         q.setParameterList("status", status);
         return q.list();
     }
+
+    @Override
+    public List<Project> findBy(Company company, Status[] status) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" select p ");
+        sb.append(" from Project p ");
+        sb.append(" join p.father u ");
+        sb.append(" where u.father = :company ");
+        sb.append(" and p.status in ( :status ) ");
+        
+        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
+        q.setParameter("company", company);
+        q.setParameterList("status", status);
+        return q.list();
+    }
     
 }

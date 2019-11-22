@@ -8,7 +8,6 @@ import com.jeegox.glio.services.admin.SessionService;
 import com.jeegox.glio.services.admin.UserService;
 import com.jeegox.glio.util.Constants;
 import com.jeegox.glio.util.Util;
-import com.jeegox.glio.util.VerifyUtils;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -38,8 +37,9 @@ public class LoginController {
     @Autowired
     private CompanyService companyService;
 
-    @RequestMapping("/")
-    public String index() {
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String index(Model model) {
+        model.addAttribute("message", "");
         return "index";
     }
 
@@ -51,10 +51,9 @@ public class LoginController {
     
     @RequestMapping(value = "/thanks", method = RequestMethod.GET)
     public String thanks(Model model) {
-        model.addAttribute("username", "");
+        model.addAttribute("user", "");
         return "thanks";
     }
-    
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ModelAndView toRegister(HttpServletRequest request, @RequestParam String companyName,
@@ -63,24 +62,26 @@ public class LoginController {
             String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
             String user = this.companyService.register(gRecaptchaResponse, companyName, username, email, password);
             ModelAndView mv = new ModelAndView("thanks");
-            mv.getModelMap().addAttribute("username", user);
+            mv.getModelMap().addAttribute("user", user.split("@")[0]);
+            mv.getModelMap().addAttribute("company", user.split("@")[1]);
             return mv;
         } catch (Exception e) {
             ModelAndView mv = new ModelAndView("register");
             mv.getModelMap().addAttribute("message", e.getMessage());
             mv.getModelMap().addAttribute("company", companyName);
-            mv.getModelMap().addAttribute("username", username);
+            mv.getModelMap().addAttribute("user", username);
             mv.getModelMap().addAttribute("email", email);
             mv.getModelMap().addAttribute("password", password);
             return mv;
         }
     }
 
-    @RequestMapping("/login")
-    @ResponseBody
-    public String login(@RequestParam String username, @RequestParam String password, HttpServletRequest request) {
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ModelAndView login(@RequestParam String company, @RequestParam String user, @RequestParam String password, HttpServletRequest request) {
+        ModelAndView mv = null;
         try {
-            Session session = userService.login(username, Util.encodeSha256(password), "");
+            String username = user.trim()+"@"+company.trim();
+            Session session = userService.login(username, Util.encodeSha256(password.trim()), "");
             if (session != null) {
                 Set<OptionMenu> options = session.getFather().getUserType().getOptions();
                 Map<String, Integer> mapaOptios = new HashMap<>();
@@ -96,11 +97,16 @@ public class LoginController {
                 HttpSession httpSession = request.getSession(false);
                 httpSession.setAttribute(Constants.Security.USER_SESSION, session);
                 httpSession.setAttribute(Constants.Security.OPTIONS_MAP, mapaOptios);
-                return "OK";
+                mv = new ModelAndView("redirect:all/dash");
+                return mv;
             }
-            return "ERROR";
+            mv = new ModelAndView("index");
+            mv.getModelMap().addAttribute("message", "Los datos de acceso son incorrectos");
+            return mv;
         } catch (Exception e) {
-            return e.getMessage();
+            mv = new ModelAndView("index");
+            mv.getModelMap().addAttribute("message", e.getMessage());
+            return mv;
         }
     }
 
