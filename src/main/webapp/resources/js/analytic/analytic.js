@@ -1,8 +1,11 @@
 var $btnRefresh,
     $dataTableGral,
-    $subcategoryModal;
+    $btnRefreshSub;
     
-    
+
+var $divCategory,
+    $divSubcategory;
+     
 var _indexSelectedCategory = -1, _dataCategory = [];
 
 var $dataTableSub;
@@ -10,29 +13,49 @@ var $dataTableSub;
 
 $(document).ready(function () {
     initComponents();
+    initPanels();
     initEvents();
     findDataCategory();
 });
 
 function initComponents() {
     $btnRefresh = $('#btnRefresh');
+    $btnRefreshSub = $('#btnRefreshSub');
     $dataTableGral = $('#dataTableGral');
-    $subcategoryModal = $('#subcategoryModal');
     
     $dataTableSub = $('#dataTableSub');
+    
+    $divCategory = $('#divCategory');
+    $divSubcategory = $('#divSubcategory');
+}
+
+function initPanels() {
+    $divCategory.css("display", "block");
+    $divSubcategory.css("display", "none");
 }
 
 function initEvents() {
     $btnRefresh.click(onClickBtnRefresh);
     
     $dataTableGral.on('click', 'tbody tr', function (event) {
+        $(this).addClass('row-selected').siblings().removeClass('row-selected');
+        _indexSelectedCategory = $(this).data('meta-row');
+    });
+    
+    $dataTableGral.on('dblclick', 'tbody tr', function (event) {
         _indexSelectedCategory = $(this).data('meta-row');
         showSubcategoryData();
     });
+    
+    $btnRefreshSub.click(onClickBtnRefreshSub);
 }
 
 function onClickBtnRefresh() {
     findDataCategory();
+}
+
+function onClickBtnRefreshSub(){
+    showSubcategoryData();
 }
 
 function findDataCategory() {
@@ -125,8 +148,9 @@ function randomArrayColorGenerator(length) {
 function showSubcategoryData(){
     var item = _dataCategory[_indexSelectedCategory];
     $('#titleModalNew').html(item.name);
+    $divCategory.css("display", "none");
+    $divSubcategory.css("display", "block");
     findDataSubcategory(item.id);
-    $subcategoryModal.modal();
 }
 
 function findDataSubcategory(idCategory) {
@@ -157,8 +181,10 @@ function findDataSubcategory(idCategory) {
                     addRowToTable(item, $dataTableSub, percent);
                 });
                 
-                buildChartSubcategory(data, labels);
                 $dataTableSub.tablePagination(_uiUtil.getOptionsPaginator(5));
+                
+                buildChartSubcategory(data, labels);
+                
             }
         }, complete: function () {
             _blockUI.unblock();

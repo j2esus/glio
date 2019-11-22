@@ -18,7 +18,8 @@
                     Datos de acceso
                 </div>
                 <div class="card-block">
-                    <p class="card-text">Usuario: <strong>${username}</strong></p>
+                    <p class="card-text">Empresa: <strong>${company}</strong></p>
+                    <p class="card-text">Usuario: <strong>${user}</strong></p>
                     <p class="card-text">Password: <strong>****************</strong></p>
                     <hr/>
                     <div class="text-right">

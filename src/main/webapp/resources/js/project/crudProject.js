@@ -381,7 +381,7 @@ function findAimData() {
                     _aimData.push(item);
                     addRowToTableAim(item, $tableAim);
                 });
-                $tableAim.tablePagination(_uiUtil.getOptionsPaginator(5));
+                $tableAim.tablePagination(_uiUtil.getOptionsPaginator(10));
             } else {
                 _notify.show("La consulta no produjo resultados.", "danger");
             }
@@ -559,7 +559,7 @@ function findTaskData() {
                     _taskData.push(item);
                     addRowToTableTask(item, $tableTask);
                 });
-                $tableTask.tablePagination(_uiUtil.getOptionsPaginator(5));
+                $tableTask.tablePagination(_uiUtil.getOptionsPaginator(10));
             } else {
                 _notify.show("La consulta no produjo resultados.", "danger");
             }

@@ -31,4 +31,6 @@ public interface ProjectService {
     List<Map> findDataGraphAim(Integer idProject);
     
     List<Project> findBy(Company company, String query, Status[] status);
+    
+    List<Project> findBy(Company company, Status[] status);
 }

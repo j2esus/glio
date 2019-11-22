@@ -94,4 +94,10 @@ public class ProjectServiceImpl implements ProjectService{
     public List<Project> findBy(Company company, String query, Status[] status) {
         return projectDAO.findBy(company, query, status);
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Project> findBy(Company company, Status[] status) {
+        return projectDAO.findBy(company, status);
+    }
 }

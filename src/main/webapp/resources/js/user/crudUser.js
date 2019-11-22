@@ -1,6 +1,8 @@
 var $btnNew,
         $btnRefresh,
-        $btnDelete;
+        $btnDelete,
+        $btnEdit,
+        $btnConfirmDelete;
 
 var $saveModal,
         $dataForm;
@@ -92,7 +94,7 @@ function confirmDialog(noRow) {
 
 function onClickBtnEdit() {
     if (_indexSelected === -1) {
-        _notify.show('Debes seleccionar un tipo de usuario', 'warning');
+        _notify.show('Debes seleccionar un usuario', 'warning');
         return;
     }
     var item = _data[_indexSelected];
@@ -198,9 +200,7 @@ function onClickBtnConfirmDelete(){
         _notify.show('Debes seleccionar un usuario', 'warning');
         return;
     }
-    console.log(_indexSelected);
     var item = _data[_indexSelected];
-    console.log(item);
     $('#idDelete').val(item.id);
     $('#deleteLabel').html("¿Está seguro de eliminar <b>" + item.name + "</b>?");
     $('#confirmModal').modal();
