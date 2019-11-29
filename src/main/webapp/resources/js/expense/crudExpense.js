@@ -253,7 +253,7 @@ function onClickBtnConfirmDelete() {
     }
     var item = _data[_indexSelected];
     $('#idDelete').val(item.id);
-    $('#deleteLabel').html("¿Está seguro de eliminar el gosto con importe <b>" + item.amount + "</b>?");
+    $('#deleteLabel').html("¿Está seguro de eliminar el gasto con importe <b>" + item.amount + "</b>?");
     $('#confirmModal').modal();
 
 }

@@ -2,6 +2,7 @@ package com.jeegox.glio.dao.expenses;
 
 import com.jeegox.glio.dao.hibernate.GenericDAO;
 import com.jeegox.glio.dto.GeneralCategoryDTO;
+import com.jeegox.glio.dto.MonthDTO;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.expenses.Category;
 import com.jeegox.glio.entities.expenses.Expense;
@@ -21,4 +22,12 @@ public interface ExpenseDAO extends GenericDAO<Expense, Integer>{
     List<GeneralCategoryDTO> findDataCategory(Company company);
     
     List<GeneralCategoryDTO> findDataSubcategory(Category category);
+    
+    List<String> yearsExpenses();
+    
+    List<MonthDTO> getMonthAmounts(Integer year);
+    
+    List<GeneralCategoryDTO> findDataCategory(Company company, Integer year);
+    
+    List<GeneralCategoryDTO> findDataCategory(Company company, Integer year, Integer month);
 }

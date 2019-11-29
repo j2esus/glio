@@ -92,6 +92,7 @@ function writeUserData(item){
     node += '<th>Prioridad</th>';
     node += '<th>Estimado</th>';
     node += '<th>Consumido</th>';
+    node += '<th style="text-align:center">% Consumido</th>';
     node += '</tr></thead>';
     
     node += '<tbody>';
@@ -99,7 +100,7 @@ function writeUserData(item){
     var real = 0;
     if(tasks.length <= 0){
         node += '<tr>';
-        node += '<td colspan = "4"><span class="badge badge-danger">Sin actividad </span></td>';
+        node += '<td colspan = "5"><span class="badge badge-danger">Sin actividad </span></td>';
         node += '<tr>';
     }else{
         for(var i = 0; i< tasks.length; i++){
@@ -110,6 +111,7 @@ function writeUserData(item){
             node += '<td bgcolor="'+color+'">'+_uiUtil.getStringPriority(item.priority)+'</td>';
             node += '<td>'+item.estimatedTime+'</td>';
             node += '<td>'+item.realTime+'</td>';
+            node += '<td align="center">'+getEstatusLabelActivity(item.estimatedTime, item.realTime)+'</td>';
             node += '<tr>';
             estimated+=item.estimatedTime;
             real += item.realTime;
@@ -125,6 +127,14 @@ function writeUserData(item){
     node += '</div>';
     node += '</div></div><br/>';
     return node;
+}
+
+function getEstatusLabelActivity(estimated, real){
+    let percent = _jsUtil.round((real/estimated)*100);
+    
+    if(percent <= 100)
+        return '<span class="badge badge-success">'+percent+' %</span>';
+    return '<span class="badge badge-danger">'+percent+' %</span>';
 }
 
 function initData(){
