@@ -5,9 +5,7 @@ import com.jeegox.glio.entities.expenses.Category;
 import com.jeegox.glio.entities.expenses.Expense;
 import com.jeegox.glio.entities.expenses.Subcategory;
 import com.jeegox.glio.enumerators.Status;
-import com.jeegox.glio.services.expenses.CategoryService;
 import com.jeegox.glio.services.expenses.ExpenseService;
-import com.jeegox.glio.services.expenses.SubcategoryService;
 import com.jeegox.glio.util.Util;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -27,15 +25,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/expense/**")
 public class ExpenseController extends BaseController {
     @Autowired
-    private CategoryService categoryService;
-    @Autowired
     private ExpenseService expenseService;
-    @Autowired
-    private SubcategoryService subcategoryService;
     
     @RequestMapping("init")
     public String index(HttpServletRequest request, Model model){
-        List<Category> categories = categoryService.findBy(getCurrentCompany(request), new Status[]{Status.ACTIVE}, "");
+        List<Category> categories = expenseService.findBy(getCurrentCompany(request), new Status[]{Status.ACTIVE}, "");
         model.addAttribute("categories", categories);
         return "expense/init";
     }
@@ -43,8 +37,8 @@ public class ExpenseController extends BaseController {
     @RequestMapping(value = "findSubcategories", method = RequestMethod.POST)
     @ResponseBody
     public List<Subcategory> findSubcategories(HttpServletRequest request, @RequestParam Integer idCategory){
-        Category category = this.categoryService.findBy(idCategory);
-        return subcategoryService.findBy(category, new Status[]{Status.ACTIVE}, "");
+        Category category = this.expenseService.findCategoryBy(idCategory);
+        return expenseService.findBy(category, new Status[]{Status.ACTIVE}, "");
     }
     
     @RequestMapping(value = "saveExpense", method = RequestMethod.POST)
@@ -53,7 +47,7 @@ public class ExpenseController extends BaseController {
             @RequestParam Integer idSubcategory, @RequestParam String dateE){
         try{
             //
-            expenseService.saveOrUpdate(new Expense(id.equals(0) ? null : id, amount, description, subcategoryService.findBy(idSubcategory), 
+            expenseService.saveOrUpdate(new Expense(id.equals(0) ? null : id, amount, description, expenseService.findSubcategoryBy(idSubcategory), 
             Util.stringToDate(dateE, "yyyy-MM-dd"), Status.ACTIVE, getCurrentUser(request), getCurrentCompany(request)));
             return "OK";
         }catch(Exception e){
