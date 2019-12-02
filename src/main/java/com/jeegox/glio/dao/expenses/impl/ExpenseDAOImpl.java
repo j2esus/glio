@@ -98,13 +98,14 @@ public class ExpenseDAOImpl extends GenericDAOImpl<Expense, Integer> implements 
     }
 
     @Override
-    public List<MonthDTO> getMonthAmounts(Integer year) {
+    public List<MonthDTO> getMonthAmounts(Company company, Integer year) {
         List<MonthDTO> result = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         sb.append(" select month(expense_date), sum(amount) ");
         sb.append(" from expense ");
         sb.append(" where status = '").append(Status.ACTIVE).append("'");
         sb.append(" and year(expense_date) = ").append(year).append(" ");
+        sb.append(" and id_company = ").append(company.getId());
         sb.append(" group by month(expense_date) ");
         
         List<Object[]> data = sessionFactory.getCurrentSession().createNativeQuery(sb.toString()).list();

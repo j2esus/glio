@@ -193,7 +193,7 @@ public class TaskDAOImpl extends GenericDAOImpl<Task,Integer> implements TaskDAO
     }
 
     @Override
-    public List<TaskDTO> findBy(User userOwner, Status[] status, Date initDate, Date endDate, Integer idProject) {
+    public List<TaskDTO> findBy(User userOwner, Status[] status, Date initDate, Date endDate, Integer idProject, Integer idAim) {
         List<TaskDTO> result = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         sb.append(" select tk.id_task, tk.name, priority, tk.id_user_owner, tk.id_user_requester, tk.estimated_time,  ");
@@ -210,6 +210,9 @@ public class TaskDAOImpl extends GenericDAOImpl<Task,Integer> implements TaskDAO
         
         if(!idProject.equals(0))
             sb.append(" and p.id_project = ").append(idProject);
+        
+         if(!idAim.equals(0))
+            sb.append(" and a.id_aim = ").append(idAim);
             
         sb.append(" group by tk.id_task ");
         

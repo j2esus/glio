@@ -73,7 +73,7 @@
     </ol>
     <h4><span id="divTitleTasks" class="badge badge-success"></span></h4>
     <br/>
-    
+
     <div class="row">
         <div class="col-lg-6">
             <div class="card">
@@ -124,6 +124,9 @@
                             </thead>
                             <tbody></tbody>
                         </table>
+                    </div>
+                    <div class="text-right">
+                        <span id="totalTask" class="badge badge-success"></span>
                     </div>
                 </div>
             </div>
@@ -389,7 +392,7 @@
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
                                 Usuario

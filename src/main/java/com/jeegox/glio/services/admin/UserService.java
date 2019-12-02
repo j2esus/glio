@@ -40,7 +40,7 @@ public interface UserService {
     
     void save(User user) throws Exception;
     
-    List<GraphProductivityDTO> findDataGraphProductivity(Company company, Date initDate, Date endDate, Integer idProject);
+    List<GraphProductivityDTO> findDataGraphProductivity(Company company, Date initDate, Date endDate, Integer idProject, Integer idAim);
     
-    List<Map> findActivityData(Company company, Date initDate, Date endDate, Integer idProject);
+    List<Map> findActivityData(Company company, Date initDate, Date endDate, Integer idProject, Integer idAim);
 }

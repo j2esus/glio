@@ -2,7 +2,8 @@ var $initDate,
     $endDate,
     $divChart,
     $productivityForm,
-    $idProject;
+    $idProject,
+    $idAim;
 
 $(document).ready(function () {
     initComponents();
@@ -16,6 +17,7 @@ function initComponents() {
     $divChart = $('#divChart');
     $productivityForm = $('#productivityForm');
     $idProject = $('#idProject');
+    $idAim = $('#idAim');
 }
 
 function initEvents() {
@@ -27,6 +29,10 @@ function initEvents() {
             e.preventDefault();
             buildChart();
         }
+    });
+    
+    $idProject.change(function () {
+        findAims($idProject.val(), $idAim, '--Todos');
     });
 }
 
@@ -48,7 +54,7 @@ function buildChart() {
     $.ajax({
         type: "POST",
         url: $.PATH + "productivity/findDataGraphProductivity",
-        data: {initDate: $initDate.val(), endDate: $endDate.val(), idProject: $idProject.val()},
+        data: {initDate: $initDate.val(), endDate: $endDate.val(), idProject: $idProject.val(), idAim: $idAim.val()},
         beforeSend: function (xhr) {
             _blockUI.block();
             users = [];
@@ -108,4 +114,28 @@ function writeGraph(users, data){
 function initData(){
     $initDate.val(_uiUtil.today());
     $endDate.val(_uiUtil.today());
+}
+
+function findAims(idProject, select, text) {
+    select.empty();
+    select.append("<option value='0'>" + text + "</option>");
+
+    $.ajax({
+        type: "POST",
+        url: $.PATH + "productivity/findAims",
+        async: false,
+        data: {idProject: idProject},
+        beforeSend: function (xhr) {
+            _blockUI.block();
+        },
+        success: function (items) {
+            if (items.length > 0) {
+                $.each(items, function (i, item) {
+                    select.append("<option value='" + item.id + "'>" + item.name + "</option>");
+                });
+            }
+        }, complete: function () {
+            _blockUI.unblock();
+        }
+    });
 }

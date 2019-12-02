@@ -53,7 +53,7 @@
 
     </head>
     <body class="bg-dark">
-        <div class="text-right" style="color:whitesmoke;padding-right: 5px;font-size: 13px">v.0.23</div>
+        <div class="text-right" style="color:whitesmoke;padding-right: 5px;font-size: 13px">v.0.27</div>
         <div class="container">
             <c:if test="${message != ''}">
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -80,11 +80,11 @@
                                         </div>
                                         <form method="post" data-toggle="validator" action="<c:url value="login"/>">
                                             <div class="form-group">
-                                                <input class="form-control" name="company" type="text" placeholder="Empresa" autocomplete="off" required autofocus/>
+                                                <input class="form-control" name="company" type="text" placeholder="Empresa" autocomplete="off" value="${company}" required autofocus/>
                                                 <div class="help-block with-errors"></div>
                                             </div>
                                             <div class="form-group">
-                                                <input class="form-control" name="user" type="text" placeholder="Usuario" autocomplete="off" required/>
+                                                <input class="form-control" name="user" type="text" placeholder="Usuario" autocomplete="off" value="${user}" required/>
                                                 <div class="help-block with-errors"></div>
                                             </div>
                                             <div class="form-group">

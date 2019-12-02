@@ -31,7 +31,7 @@ public interface ExpenseService {
 
     List<String> yearsExpenses();
 
-    List<MonthDTO> getMonthAmounts(Integer year);
+    List<MonthDTO> getMonthAmounts(Company company, Integer year);
 
     List<GeneralCategoryDTO> findDataCategory(Company company, Integer year);
 

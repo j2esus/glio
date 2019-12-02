@@ -45,7 +45,7 @@ public class AnalyticController extends BaseController{
     @RequestMapping(value = "getMonthAmounts", method = RequestMethod.POST)
     @ResponseBody
     public List<MonthDTO> getMonthAmounts(HttpServletRequest request, @RequestParam Integer year){
-        return expenseService.getMonthAmounts(year);
+        return expenseService.getMonthAmounts(getCurrentCompany(request), year);
     }
     
     @RequestMapping(value = "findDataCategoryYear", method = RequestMethod.POST)

@@ -46,7 +46,8 @@ var $btnRefreshTask,
     $btnEditTask,
     $saveModalTask,
     $dataFormTask,
-    $tableTask;
+    $tableTask,
+    $totalTask;
 
 $(document).ready(function () {
     initComponents();
@@ -97,6 +98,7 @@ function initComponents() {
     $saveModalTask = $('#saveModalTask');
     $dataFormTask = $('#dataFormTask');
     $tableTask = $('#dataTableTask');
+    $totalTask = $('#totalTask');
 }
 
 function initEvents() {
@@ -373,6 +375,7 @@ function findAimData() {
             _blockUI.block();
             _uiUtil.clearDataTable($tableAim);
             _indexAimSelected = -1;
+            $totalTask.html("0 horas ");
         },
         success: function (items) {
             if (items.length > 0) {
@@ -542,6 +545,7 @@ function saveTask() {
 }
 
 function findTaskData() {
+    var total = 0;
     var item = _aimData[_indexAimSelected];
     $.ajax({
         type: "POST",
@@ -551,6 +555,7 @@ function findTaskData() {
             _blockUI.block();
             _uiUtil.clearDataTable($tableTask);
             _indexTaskSelected = -1;
+            $totalTask.html(total +" horas ");
         },
         success: function (items) {
             if (items.length > 0) {
@@ -558,8 +563,10 @@ function findTaskData() {
                 $.each(items, function (i, item) {
                     _taskData.push(item);
                     addRowToTableTask(item, $tableTask);
+                    total += item.estimatedTime;
                 });
                 $tableTask.tablePagination(_uiUtil.getOptionsPaginator(10));
+                $totalTask.html(total +" horas ");
             } else {
                 _notify.show("La consulta no produjo resultados.", "danger");
             }

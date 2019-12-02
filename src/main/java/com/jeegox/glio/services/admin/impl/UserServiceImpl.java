@@ -195,7 +195,7 @@ public class UserServiceImpl implements UserService{
 
     @Transactional(readOnly = true)
     @Override
-    public List<GraphProductivityDTO> findDataGraphProductivity(Company company, Date initDate, Date endDate, Integer idProject) {
+    public List<GraphProductivityDTO> findDataGraphProductivity(Company company, Date initDate, Date endDate, Integer idProject, Integer idAim) {
         List<GraphProductivityDTO> result = new ArrayList<>();
         List<User> users = userDAO.findByCompany(company);
         Status[] status = new Status[]{Status.IN_PROCESS, Status.PAUSED, Status.FINISHED, Status.ACCEPTED};
@@ -206,7 +206,7 @@ public class UserServiceImpl implements UserService{
         
         for(User user: users){
             graphDTO = new GraphProductivityDTO();
-            tasks = taskDAO.findBy(user, status, initDate, endDate, idProject);
+            tasks = taskDAO.findBy(user, status, initDate, endDate, idProject, idAim);
             float total = 0;
             for(TaskDTO item: tasks){
                 double multiplo = 0;
@@ -234,14 +234,14 @@ public class UserServiceImpl implements UserService{
 
     @Transactional(readOnly = true)
     @Override
-    public List<Map> findActivityData(Company company, Date initDate, Date endDate, Integer idProject) {
+    public List<Map> findActivityData(Company company, Date initDate, Date endDate, Integer idProject, Integer idAim) {
         List<Map> result = new ArrayList<>();
         List<User> users = userDAO.findByCompany(company);
         Status[] status = new Status[]{Status.IN_PROCESS, Status.PAUSED, Status.FINISHED, Status.ACCEPTED};
         List<TaskDTO> tasks = null;
         Map<String,Object> map = null;
         for(User user: users){
-            tasks = taskDAO.findBy(user, status, initDate, endDate, idProject);
+            tasks = taskDAO.findBy(user, status, initDate, endDate, idProject, idAim);
             map = new HashMap<>();
             map.put("user", user);
             map.put("tasks", tasks);
