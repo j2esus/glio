@@ -102,10 +102,14 @@ public class LoginController {
             }
             mv = new ModelAndView("index");
             mv.getModelMap().addAttribute("message", "Los datos de acceso son incorrectos");
+            mv.getModelMap().addAttribute("company", company);
+            mv.getModelMap().addAttribute("user", user);
             return mv;
         } catch (Exception e) {
             mv = new ModelAndView("index");
             mv.getModelMap().addAttribute("message", e.getMessage());
+            mv.getModelMap().addAttribute("company", company);
+            mv.getModelMap().addAttribute("user", user);
             return mv;
         }
     }

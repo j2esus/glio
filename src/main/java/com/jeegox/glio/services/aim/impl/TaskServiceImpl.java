@@ -123,7 +123,7 @@ public class TaskServiceImpl implements TaskService{
 
     @Transactional(readOnly = true)
     @Override
-    public List<TaskDTO> findBy(User userOwner, Status[] status, Date initDate, Date endDate, Integer idProject ) {
-        return taskDAO.findBy(userOwner, status, initDate, endDate, idProject);
+    public List<TaskDTO> findBy(User userOwner, Status[] status, Date initDate, Date endDate, Integer idProject, Integer idAim) {
+        return taskDAO.findBy(userOwner, status, initDate, endDate, idProject, idAim);
     }
 }

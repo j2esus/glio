@@ -76,7 +76,7 @@ public class ExpenseServiceImpl implements ExpenseService{
 
     @Transactional(readOnly = true)
     @Override
-    public List<MonthDTO> getMonthAmounts(Integer year) {
+    public List<MonthDTO> getMonthAmounts(Company company, Integer year) {
         List<MonthDTO> monthAmounts = new ArrayList<>();
         String[] months = {"Enero","Febrero","Marzo", "Abril", "Mayo", "Junio", 
                 "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
@@ -84,7 +84,7 @@ public class ExpenseServiceImpl implements ExpenseService{
         for(int i = 0; i < months.length; i++){
             monthAmounts.add(new MonthDTO(i, months[i], 0D));
         }
-        for(MonthDTO item: expenseDAO.getMonthAmounts(year)){
+        for(MonthDTO item: expenseDAO.getMonthAmounts(company, year)){
             monthAmounts.get(item.getMonth()-1).setAmount(item.getAmount());
         }
         return monthAmounts;

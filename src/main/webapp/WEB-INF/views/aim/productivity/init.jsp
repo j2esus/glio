@@ -34,6 +34,12 @@
                         </c:forEach>
                     </select>
                 </div>
+                <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                    <div class="input-group-addon">Objetivo</div>
+                    <select class="custom-select" id = "idAim">
+                        <option value="0">--Todos</option>
+                    </select>
+                </div>
                 <input type="submit" class="btn btn-success" value="Buscar"/>
             </div>
         </div>

@@ -33,5 +33,5 @@ public interface TaskDAO extends GenericDAO<Task,Integer>{
     
     List<Task> findBy(Company company, Status[] status, String query, Priority[] priorities, Integer idProject);
     
-    List<TaskDTO> findBy(User userOwner, Status[] status, Date initDate, Date endDate, Integer idProject);
+    List<TaskDTO> findBy(User userOwner, Status[] status, Date initDate, Date endDate, Integer idProject, Integer idAim);
 }

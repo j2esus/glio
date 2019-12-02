@@ -37,8 +37,7 @@ public class ExpenseController extends BaseController {
     @RequestMapping(value = "findSubcategories", method = RequestMethod.POST)
     @ResponseBody
     public List<Subcategory> findSubcategories(HttpServletRequest request, @RequestParam Integer idCategory){
-        Category category = this.expenseService.findCategoryBy(idCategory);
-        return expenseService.findBy(category, new Status[]{Status.ACTIVE}, "");
+        return expenseService.findBy(expenseService.findCategoryBy(idCategory), new Status[]{Status.ACTIVE}, "");
     }
     
     @RequestMapping(value = "saveExpense", method = RequestMethod.POST)
