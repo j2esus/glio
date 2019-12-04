@@ -9,7 +9,7 @@ import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.services.admin.CategoryMenuService;
 import com.jeegox.glio.services.admin.TokenService;
 import com.jeegox.glio.services.admin.UserService;
-import com.jeegox.glio.services.aim.TaskService;
+import com.jeegox.glio.services.ProjectService;
 import com.jeegox.glio.util.Constants;
 import com.jeegox.glio.util.Util;
 import java.util.List;
@@ -39,7 +39,7 @@ public class AllController extends BaseController {
     @Autowired
     private TokenService tokenService;
     @Autowired
-    private TaskService taskService;
+    private ProjectService projectService;
 
     @RequestMapping("dash")
     public String dash(HttpServletRequest request, Model model){
@@ -133,6 +133,6 @@ public class AllController extends BaseController {
     @RequestMapping(name = "countInProcess", method = RequestMethod.POST)
     @ResponseBody
     public Long countInProcess(HttpServletRequest request){
-        return taskService.count(getCurrentUser(request), new Status[]{Status.IN_PROCESS});
+        return projectService.count(getCurrentUser(request), new Status[]{Status.IN_PROCESS});
     }
 }

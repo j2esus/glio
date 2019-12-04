@@ -8,9 +8,7 @@ import com.jeegox.glio.entities.aim.Task;
 import com.jeegox.glio.enumerators.Priority;
 import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.services.admin.UserService;
-import com.jeegox.glio.services.aim.AimService;
-import com.jeegox.glio.services.aim.ProjectService;
-import com.jeegox.glio.services.aim.TaskService;
+import com.jeegox.glio.services.ProjectService;
 import com.jeegox.glio.util.Util;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -31,10 +29,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ProjectController extends BaseController{
     @Autowired
     private ProjectService projectService;
-    @Autowired
-    private AimService aimService;
-    @Autowired
-    private TaskService taskService;
     @Autowired
     private UserService userService;
     
@@ -92,7 +86,7 @@ public class ProjectController extends BaseController{
             @RequestParam String endDate, @RequestParam Integer idProject){
         try{
             Project project = projectService.findBydId(idProject);
-            this.aimService.saveOrUpdate(new Aim(id.equals(0) ? null : id, name, description, status, 
+            this.projectService.saveOrUpdate(new Aim(id.equals(0) ? null : id, name, description, status, 
                     Util.stringToDate(initDate, "yyyy-MM-dd"), Util.stringToDate(endDate, "yyyy-MM-dd"),
                     getCurrentUser(request), project ));
             return "OK";
@@ -105,14 +99,14 @@ public class ProjectController extends BaseController{
     @ResponseBody
     public List<Aim> findAims(HttpServletRequest request, @RequestParam Integer idProject){
         Project project = projectService.findBydId(idProject);
-        return aimService.findBy(project);
+        return projectService.findBy(project);
     }
     
     @RequestMapping(value = "deleteAim", method = RequestMethod.POST)
     @ResponseBody
     public String deleteAim(HttpServletRequest request,@RequestParam Integer id){
         try{
-            this.aimService.changeStatus(aimService.findBydId(id), Status.DELETED);
+            this.projectService.changeStatus(projectService.findAimBydId(id), Status.DELETED);
             return "OK";
         }catch(Exception e){
             return e.getMessage();
@@ -127,9 +121,9 @@ public class ProjectController extends BaseController{
             @RequestParam String description, @RequestParam Priority priority,
             @RequestParam Integer estimated, @RequestParam String username, @RequestParam Integer idAim){
         try{
-            Aim aim = aimService.findBydId(idAim);
+            Aim aim = projectService.findAimBydId(idAim);
             User user = userService.findById(username);
-            Task task = taskService.findBydId(id);
+            Task task = projectService.findTaskBydId(id);
             if(task == null){
                 task = new Task(null, name, description, Status.PENDING, priority,
                     estimated, getCurrentUser(request), user, aim );
@@ -143,7 +137,7 @@ public class ProjectController extends BaseController{
                 task.setFather(aim);
             }
             
-            this.taskService.saveOrUpdate(task);
+            projectService.saveOrUpdate(task);
             return "OK";
         }catch(Exception e){
             return e.getMessage();
@@ -153,15 +147,14 @@ public class ProjectController extends BaseController{
     @RequestMapping(value = "findTasks", method = RequestMethod.POST)
     @ResponseBody
     public List<Task> findTasks(HttpServletRequest request, @RequestParam Integer idAim){
-        Aim aim = this.aimService.findBydId(idAim);
-        return taskService.findBy(aim);
+        return projectService.findBy(projectService.findAimBydId(idAim));
     }
     
     @RequestMapping(value = "deleteTask", method = RequestMethod.POST)
     @ResponseBody
     public String deleteTask(HttpServletRequest request,@RequestParam Integer id){
         try{
-            this.taskService.changeStatus(taskService.findBydId(id), Status.DELETED);
+            this.projectService.changeStatus(projectService.findTaskBydId(id), Status.DELETED);
             return "OK";
         }catch(Exception e){
             return e.getMessage();

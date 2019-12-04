@@ -6,9 +6,7 @@ import com.jeegox.glio.entities.aim.Aim;
 import com.jeegox.glio.entities.aim.Project;
 import com.jeegox.glio.entities.aim.Task;
 import com.jeegox.glio.enumerators.Status;
-import com.jeegox.glio.services.aim.AimService;
-import com.jeegox.glio.services.aim.ProjectService;
-import com.jeegox.glio.services.aim.TaskService;
+import com.jeegox.glio.services.ProjectService;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -29,10 +27,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class AdvanceController extends BaseController{
     @Autowired
     private ProjectService projectService;
-    @Autowired
-    private AimService aimService;
-    @Autowired
-    private TaskService taskService;
     
     @RequestMapping("init")
     public String index(Model model,HttpServletRequest request){
@@ -54,13 +48,13 @@ public class AdvanceController extends BaseController{
     @RequestMapping(value = "findDataGraphAim", method = RequestMethod.POST)
     @ResponseBody
     public List<Map> findDataGraphAim(HttpServletRequest request, @RequestParam Integer idProject){
-        return projectService.findDataGraphAim(idProject);
+        return projectService.findDataGraphAimByProject(idProject);
     }
     
     @RequestMapping(value = "findTasks", method = RequestMethod.POST)
     @ResponseBody
     public List<Task> findTasks(HttpServletRequest request, @RequestParam Integer idAim){
-        Aim aim = this.aimService.findBydId(idAim);
-        return taskService.findBy(aim, new Status[]{Status.DELETED, Status.INACTIVE});
+        Aim aim = projectService.findAimBydId(idAim);
+        return projectService.findBy(aim, new Status[]{Status.DELETED, Status.INACTIVE});
     }
 }

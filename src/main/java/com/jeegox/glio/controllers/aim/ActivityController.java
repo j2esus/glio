@@ -5,8 +5,7 @@ import com.jeegox.glio.entities.aim.Aim;
 import com.jeegox.glio.entities.aim.Project;
 import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.services.admin.UserService;
-import com.jeegox.glio.services.aim.AimService;
-import com.jeegox.glio.services.aim.ProjectService;
+import com.jeegox.glio.services.ProjectService;
 import com.jeegox.glio.util.Util;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +30,6 @@ public class ActivityController extends BaseController {
     private UserService userService;
     @Autowired
     private ProjectService projectService;
-    @Autowired
-    private AimService aimService;
 
     @RequestMapping("init")
     public String index(Model model, HttpServletRequest request) {
@@ -53,6 +50,6 @@ public class ActivityController extends BaseController {
     @RequestMapping(value = "findAims", method = RequestMethod.POST)
     @ResponseBody
     public List<Aim> findAims(HttpServletRequest request, @RequestParam Integer idProject){
-        return aimService.findBy(projectService.findBydId(idProject));
+        return projectService.findBy(projectService.findBydId(idProject));
     }
 }

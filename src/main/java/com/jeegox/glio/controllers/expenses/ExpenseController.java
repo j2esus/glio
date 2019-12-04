@@ -5,7 +5,7 @@ import com.jeegox.glio.entities.expenses.Category;
 import com.jeegox.glio.entities.expenses.Expense;
 import com.jeegox.glio.entities.expenses.Subcategory;
 import com.jeegox.glio.enumerators.Status;
-import com.jeegox.glio.services.expenses.ExpenseService;
+import com.jeegox.glio.services.ExpenseService;
 import com.jeegox.glio.util.Util;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;

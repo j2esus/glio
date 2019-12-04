@@ -3,9 +3,7 @@ package com.jeegox.glio.controllers.rest;
 import com.jeegox.glio.entities.State;
 import com.jeegox.glio.entities.Suburb;
 import com.jeegox.glio.entities.Town;
-import com.jeegox.glio.services.StateService;
-import com.jeegox.glio.services.SuburbService;
-import com.jeegox.glio.services.TownService;
+import com.jeegox.glio.services.AddressService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,22 +20,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/json/address/**")
 public class AddressController {
     @Autowired
-    private StateService stateService;
-    @Autowired
-    private TownService townService;
-    @Autowired
-    private SuburbService suburbService;
+    private AddressService addressService;
     
     @RequestMapping(value = "findAllStates", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public List<State> findAllStates(){
-        return stateService.findAll();
+        return addressService.findAll();
     }
     
     @RequestMapping(value = "findTownByState", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public List<Town> findTownByState(@RequestParam Integer idState){
-        return townService.findByState(idState);
+        return addressService.findByState(idState);
     }
     
     //buscar Town por nombre
@@ -45,13 +39,13 @@ public class AddressController {
     @RequestMapping(value = "findSuburbByTown", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public List<Suburb> findSuburbByTown(@RequestParam Integer idTown){
-        return suburbService.findByTown(idTown);
+        return addressService.findByTown(idTown);
     }
     
     @RequestMapping(value = "findSuburbByCp", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public List<Suburb> findSuburbByCp(@RequestParam String cp){
-        return suburbService.findByTown(cp);
+        return addressService.findByTown(cp);
     }
     
     //buscar Suburb por nombre
