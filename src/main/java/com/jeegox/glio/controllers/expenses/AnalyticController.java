@@ -3,7 +3,7 @@ package com.jeegox.glio.controllers.expenses;
 import com.jeegox.glio.controllers.BaseController;
 import com.jeegox.glio.dto.GeneralCategoryDTO;
 import com.jeegox.glio.dto.MonthDTO;
-import com.jeegox.glio.services.expenses.ExpenseService;
+import com.jeegox.glio.services.ExpenseService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;

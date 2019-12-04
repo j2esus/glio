@@ -4,7 +4,7 @@ import com.jeegox.glio.controllers.BaseController;
 import com.jeegox.glio.entities.expenses.Category;
 import com.jeegox.glio.entities.expenses.Subcategory;
 import com.jeegox.glio.enumerators.Status;
-import com.jeegox.glio.services.expenses.ExpenseService;
+import com.jeegox.glio.services.ExpenseService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
