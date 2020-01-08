@@ -6,9 +6,8 @@ import com.jeegox.glio.entities.admin.OptionMenu;
 import com.jeegox.glio.entities.admin.Token;
 import com.jeegox.glio.entities.admin.User;
 import com.jeegox.glio.enumerators.Status;
-import com.jeegox.glio.services.admin.CategoryMenuService;
-import com.jeegox.glio.services.admin.TokenService;
-import com.jeegox.glio.services.admin.UserService;
+import com.jeegox.glio.services.CategoryMenuService;
+import com.jeegox.glio.services.UserService;
 import com.jeegox.glio.services.ProjectService;
 import com.jeegox.glio.util.Constants;
 import com.jeegox.glio.util.Util;
@@ -36,8 +35,6 @@ public class AllController extends BaseController {
     private CategoryMenuService categoryMenuService;
     @Autowired
     private UserService userService;
-    @Autowired
-    private TokenService tokenService;
     @Autowired
     private ProjectService projectService;
 
@@ -97,14 +94,14 @@ public class AllController extends BaseController {
     @RequestMapping("findTokensUser")
     @ResponseBody
     public List<Token> findTokensUser(HttpServletRequest request){
-        return tokenService.findByUser(getCurrentUser(request));
+        return userService.findByUser(getCurrentUser(request));
     }
     
     @RequestMapping("deleteToken")
     @ResponseBody
     public String deleteToken(HttpServletRequest request,@RequestParam Integer id){
         try{
-            this.tokenService.changeStatus(tokenService.findById(id), Status.DELETED);
+            userService.changeStatus(userService.findTokenById(id), Status.DELETED);
             return "OK";
         }catch(Exception e){
             return e.getMessage();

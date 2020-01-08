@@ -1,4 +1,4 @@
-package com.jeegox.glio.services.admin.impl;
+package com.jeegox.glio.services;
 
 import com.jeegox.glio.dao.admin.CompanyDAO;
 import com.jeegox.glio.dao.admin.OptionMenuDAO;
@@ -9,7 +9,6 @@ import com.jeegox.glio.entities.admin.User;
 import com.jeegox.glio.entities.admin.UserType;
 import com.jeegox.glio.enumerators.EntityType;
 import com.jeegox.glio.enumerators.Status;
-import com.jeegox.glio.services.admin.CompanyService;
 import com.jeegox.glio.util.Util;
 import com.jeegox.glio.util.VerifyUtils;
 import java.util.HashSet;
@@ -23,7 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @author j2esus
  */
 @Service
-public class CompanyServiceImpl implements CompanyService{
+public class CompanyService {
+
     @Autowired
     private CompanyDAO companyDAO;
     @Autowired
@@ -32,52 +32,47 @@ public class CompanyServiceImpl implements CompanyService{
     private UserDAO userDAO;
     @Autowired
     private OptionMenuDAO optionMenuDAO;
-    
 
     @Transactional(readOnly = true)
-    @Override
     public List<Company> findAll() {
         return companyDAO.findAll();
     }
 
     @Transactional
-    @Override
     public void changeStatus(Company company, Status status) throws Exception {
         company.setStatus(status);
-        this.saveOrUpdate(company);
+        companyDAO.save(company);
     }
 
     @Transactional
-    @Override
     public void saveOrUpdate(Company company) throws Exception {
         companyDAO.save(company);
     }
 
     @Transactional(readOnly = true)
-    @Override
     public List<Company> findByName(String name) {
         return companyDAO.findByName(name);
     }
 
     @Transactional(readOnly = true)
-    @Override
     public Company findBydId(Integer id) {
         return companyDAO.findById(id);
     }
 
     @Transactional
-    @Override
     public String register(String captchaResponse, String companyName, String username, String email, String password) throws Exception {
-        try{
-            
+        try {
+
             boolean valid = VerifyUtils.verify(captchaResponse);
-            if(!valid)
+            if (!valid) {
                 throw new Exception("Captcha incorrecto");
-            
+            }
+
             Company company = this.findBy(companyName);
-            if(company != null)
+            if (company != null) {
                 throw new Exception("El nombre de la empresa ya se encuentra registrada, intente con otro nombre.");
-            
+            }
+
             //company
             company = new Company();
             company.setName(companyName);
@@ -85,17 +80,17 @@ public class CompanyServiceImpl implements CompanyService{
             company.setStatus(Status.ACTIVE);
             company.setTotalUser(3);
             this.saveOrUpdate(company);
-            
+
             //user type
             UserType userType = new UserType();
             userType.setFather(company);
             userType.setName("admin");
             userType.setStatus(Status.ACTIVE);
             userType.setOptions(new HashSet(optionMenuDAO.findBy(EntityType.PUBLIC)));
-            
+
             userTypeDAO.save(userType);
             //user
-            String sUsername = username+"@"+companyName;
+            String sUsername = username + "@" + companyName;
             User user = new User();
             user.setEmail(email);
             user.setFather(company);
@@ -105,18 +100,16 @@ public class CompanyServiceImpl implements CompanyService{
             user.setStatus(Status.ACTIVE);
             user.setUserType(userType);
             user.setPassword(Util.encodeSha256(password));
-            
+
             userDAO.save(user);
             return sUsername;
-        }catch(Exception e){
+        } catch (Exception e) {
             throw e;
         }
     }
 
     @Transactional(readOnly = true)
-    @Override
     public Company findBy(String name) {
         return companyDAO.findBy(name);
     }
-    
 }

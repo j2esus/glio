@@ -2,8 +2,7 @@ package com.jeegox.glio.controllers.rest;
 
 import com.jeegox.glio.dto.admin.UserResponse;
 import com.jeegox.glio.dto.GenericResponse;
-import com.jeegox.glio.services.admin.TokenService;
-import com.jeegox.glio.services.admin.UserService;
+import com.jeegox.glio.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class JsonController {
     @Autowired
     private UserService userService;
-    @Autowired
-    private TokenService tokenService;
     
     @RequestMapping(value = "login", method = RequestMethod.POST)
     @ResponseBody
@@ -32,6 +29,6 @@ public class JsonController {
     @RequestMapping(value = "validateToken", method = RequestMethod.POST)
     @ResponseBody
     public GenericResponse validateToken(@RequestParam String token){
-        return tokenService.validateToken(token);
+        return userService.validateToken(token);
     }
 }

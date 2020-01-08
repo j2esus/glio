@@ -4,7 +4,7 @@ import com.jeegox.glio.controllers.BaseController;
 import com.jeegox.glio.dto.admin.OptionMenuUserTypeDTO;
 import com.jeegox.glio.entities.admin.UserType;
 import com.jeegox.glio.enumerators.Status;
-import com.jeegox.glio.services.admin.UserTypeService;
+import com.jeegox.glio.services.UserService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/userType/**")
 public class UserTypeController extends BaseController {
     @Autowired
-    private UserTypeService userTypeService;
+    private UserService userService;
     
     @RequestMapping("init")
     public String index(Model model){
@@ -34,14 +34,14 @@ public class UserTypeController extends BaseController {
     @RequestMapping("findUserTypes")
     @ResponseBody
     public List<UserType> findUserTypes(HttpServletRequest request){
-        return userTypeService.findByCompany(getCurrentCompany(request));
+        return userService.findUserTypeByCompany(getCurrentCompany(request));
     }
     
     @RequestMapping("deleteUserType")
     @ResponseBody
     public String deleteUserType(HttpServletRequest request,@RequestParam Integer id){
         try{
-            this.userTypeService.changeStatus(userTypeService.findById(id), Status.DELETED);
+            userService.changeStatus(userService.findUserTypeById(id), Status.DELETED);
             return "OK";
         }catch(Exception e){
             return e.getMessage();
@@ -53,7 +53,7 @@ public class UserTypeController extends BaseController {
     public String saveUserType(HttpServletRequest request, @RequestParam Integer id, @RequestParam String name,
             @RequestParam Status status){
         try{
-            this.userTypeService.save(id, name,status, getCurrentCompany(request));
+            userService.save(id, name,status, getCurrentCompany(request));
             return "OK";
         }catch(Exception e){
             return e.getMessage();
@@ -68,7 +68,7 @@ public class UserTypeController extends BaseController {
         try{
             String[] optionsAddA = optionsAdd.split(",");
             String[] optionsDelA = optionsDel.split(",");
-            this.userTypeService.saveOptions(idUserType, optionsAddA, optionsDelA);
+            userService.saveOptions(idUserType, optionsAddA, optionsDelA);
             return "OK";
         }catch(Exception e){
             return e.getMessage();
@@ -78,6 +78,6 @@ public class UserTypeController extends BaseController {
     @RequestMapping("findOptions")
     @ResponseBody
     public List<OptionMenuUserTypeDTO> findOptions(HttpServletRequest request, @RequestParam Integer idUserType){
-        return userTypeService.findOptionsMenu(idUserType);
+        return userService.findOptionsMenu(idUserType);
     }
 }

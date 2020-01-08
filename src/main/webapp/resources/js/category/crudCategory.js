@@ -155,6 +155,7 @@ function btnNewCaOnClick() {
     _uiUtil.cleanControls($saveModalCategory);
     $('#titleModalNewCategory').html("Agregar categoría");
     $('#idNewCategory').val(0);
+    $('#statusCategory').val($("#statusCategory option:first").val());
     $saveModalCategory.modal();
 }
 
@@ -299,6 +300,7 @@ function btnNewSuOnClick() {
     _uiUtil.cleanControls($saveModalSubcategory);
     $('#titleModalNewSubcategory').html("Agregar subcategoría");
     $('#idNewSubcategory').val(0);
+    $('#statusSubcategory').val($("#statusSubcategory option:first").val());
     $saveModalSubcategory.modal();
 }
 

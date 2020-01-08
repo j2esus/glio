@@ -25,8 +25,8 @@ public class AnalyticController extends BaseController{
     private ExpenseService expenseService;
     
     @RequestMapping("init")
-    public String index(Model model){
-        model.addAttribute("dates", expenseService.yearsExpenses() );
+    public String index(Model model, HttpServletRequest request){
+        model.addAttribute("dates", expenseService.yearsExpenses(getCurrentCompany(request)));
         return "analytic/init";
     }
     

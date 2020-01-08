@@ -47,7 +47,8 @@ public final class DataConfig {
         pages.add(new Page("category/init","/WEB-INF/views/expenses/category/init.jsp", Layout.DEFAULT));
         pages.add(new Page("expense/init","/WEB-INF/views/expenses/expense/init.jsp", Layout.DEFAULT));
         pages.add(new Page("analytic/init","/WEB-INF/views/expenses/analytic/init.jsp", Layout.DEFAULT));
-        
+        //supply
+        pages.add(new Page("article/init","/WEB-INF/views/supply/article/init.jsp", Layout.DEFAULT));
         //all
         pages.add(new Page("all/dash","/WEB-INF/views/all/dash.jsp", Layout.DEFAULT_WITHOUT_HEADER));
         pages.add(new Page("all/configuration","/WEB-INF/views/all/configuration.jsp", Layout.DEFAULT_WITHOUT_HEADER));
@@ -70,6 +71,8 @@ public final class DataConfig {
         privatesUrls.add("/category/");
         privatesUrls.add("/expense/");
         privatesUrls.add("/analytic/");
+        //supply
+        privatesUrls.add("/article/");
     }
     
     public static boolean isPrivate(String path){

@@ -65,7 +65,6 @@
             </c:if>
             <div class="row justify-content-center">
                 <div class="col-xl-10 col-lg-12 col-md-9">
-
                     <div class="card o-hidden border-0 shadow-lg my-5">
                         <div class="card">
                             <div class="card-body">
@@ -93,7 +92,7 @@
                                             </div>
                                             <button class="btn btn-primary btn-block" style="padding: 15px" type="submit">Iniciar sesión</button>
                                         </form>
-                                            <hr/>
+                                        <hr/>
                                         <div class="text-center">
                                             <a class="d-block small mt-3" href="<c:url value="/register"/>">Crear una cuenta</a>
                                             <!--a class="d-block small" href="forgot-password.html">Forgot Password?</a-->
@@ -105,7 +104,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </body>
 </html>

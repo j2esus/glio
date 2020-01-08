@@ -23,7 +23,7 @@ public interface ExpenseDAO extends GenericDAO<Expense, Integer>{
     
     List<GeneralCategoryDTO> findDataSubcategory(Category category);
     
-    List<String> yearsExpenses();
+    List<String> yearsExpenses(Company company);
     
     List<MonthDTO> getMonthAmounts(Company company, Integer year);
     

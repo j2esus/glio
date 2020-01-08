@@ -63,8 +63,8 @@ public class ExpenseService {
     }
 
     @Transactional(readOnly = true)
-    public List<String> yearsExpenses() {
-        return expenseDAO.yearsExpenses();
+    public List<String> yearsExpenses(Company company) {
+        return expenseDAO.yearsExpenses(company);
     }
 
     @Transactional(readOnly = true)

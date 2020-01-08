@@ -4,3 +4,6 @@
 .springBeans
 /target/
 /nbproject/
+glio.properties
+glio.log
+glio.script

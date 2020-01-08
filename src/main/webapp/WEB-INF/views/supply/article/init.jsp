@@ -4,9 +4,9 @@
     Author     : j2esus
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<script src="<c:url value="/resources/js/admin/crudCompany.js"/>"></script>
+<script src="<c:url value="/resources/js/supply/crudArticle.js"/>"></script>
 
-<h1>Empresas</h1>
+<h1>Artículos</h1>
 <hr/>
 <br/>
 <div class="text-right">
@@ -21,9 +21,12 @@
         <thead>
             <tr>
                 <th>Nombre</th>
+                <th>Sku</th>
                 <th>Descripción</th>
+                <th>Costo</th>
+                <th>Precio</th>
                 <th>Estatus</th>
-                <th>Total usuarios</th>
+                <th>Unidad</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -66,10 +69,20 @@
                         <input type="hidden" id="idNew"/>
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Nombre:
+                                Nombre
                             </div>
                             <div class="col-9">
-                                <input type="text" id="name" name="name" class="form-control" required="required" maxlength="50" pattern="^[_A-z0-9]{1,}$" autocomplete="off"/>
+                                <input type="text" id="name" name="name" class="form-control" required="required" maxlength="100" pattern="^[_A-z0-9]{1,}$" autocomplete="off"/>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                            <div class="col-3 col-form-label">
+                                Sku
+                            </div>
+                            <div class="col-9">
+                                <input type="text" id="sku" name="sku" class="form-control" required="required" maxlength="50" pattern="^[_A-z0-9]{1,}$" autocomplete="off"/>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
@@ -80,6 +93,26 @@
                             </div>
                             <div class="col-9">
                                 <textarea id="description" name="description" class="form-control" required="required" maxlength="100" rows="3"></textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                            <div class="col-3 col-form-label">
+                                Costo
+                            </div>
+                            <div class="col-9">
+                                <input type="number" id="cost" class="form-control" min="0" step=".01" required="required" autocomplete="off"/>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                            <div class="col-3 col-form-label">
+                                Precio
+                            </div>
+                            <div class="col-9">
+                                <input type="number" id="price" class="form-control" min="0" step=".01" required="required" autocomplete="off"/>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
@@ -101,10 +134,15 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Total usuarios
+                                Unidad
                             </div>
                             <div class="col-9">
-                                <input type="number" id="totalUser" name="totalUser" class="form-control" required="required" maxlength="10"/>
+                                <select id="unity" class="form-control" required="required">
+                                    <option value="">--Seleccione</option>
+                                    <c:forEach items="${unities}" var="unity">
+                                        <option value="${unity}">${unity}</option>
+                                    </c:forEach>
+                                </select>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>

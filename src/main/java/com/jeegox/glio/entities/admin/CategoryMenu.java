@@ -28,6 +28,7 @@ public class CategoryMenu extends JEntity<Integer> implements Serializable {
     private Integer order;
     private Status status;
     private String icon;
+    private String clazz;
     private List<OptionMenu> optionsMenus = new ArrayList<>();
     
     @Id
@@ -84,4 +85,15 @@ public class CategoryMenu extends JEntity<Integer> implements Serializable {
     public void setOptionsMenus(List<OptionMenu> optionsMenus) {
         this.optionsMenus = optionsMenus;
     }
+
+    @Column(name = "class")
+    public String getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
+    }
+    
+    
 }

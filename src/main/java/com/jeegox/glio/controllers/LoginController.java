@@ -3,9 +3,8 @@ package com.jeegox.glio.controllers;
 import com.jeegox.glio.entities.admin.OptionMenu;
 import com.jeegox.glio.entities.admin.Session;
 import com.jeegox.glio.enumerators.Status;
-import com.jeegox.glio.services.admin.CompanyService;
-import com.jeegox.glio.services.admin.SessionService;
-import com.jeegox.glio.services.admin.UserService;
+import com.jeegox.glio.services.CompanyService;
+import com.jeegox.glio.services.UserService;
 import com.jeegox.glio.util.Constants;
 import com.jeegox.glio.util.Util;
 import java.util.HashMap;
@@ -29,11 +28,8 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
 public class LoginController {
-
     @Autowired
     private UserService userService;
-    @Autowired
-    private SessionService sessionService;
     @Autowired
     private CompanyService companyService;
 
@@ -120,7 +116,7 @@ public class LoginController {
         try {
             HttpSession httpSession = (HttpSession) request.getSession(false);
             Session session = (Session) httpSession.getAttribute(Constants.Security.USER_SESSION);
-            sessionService.changeStatus(session, Status.CLOSED);
+            userService.changeStatus(session, Status.CLOSED);
             httpSession.invalidate();
             return "OK";
         } catch (Exception e) {

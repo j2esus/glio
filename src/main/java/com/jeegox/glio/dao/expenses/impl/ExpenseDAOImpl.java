@@ -86,14 +86,15 @@ public class ExpenseDAOImpl extends GenericDAOImpl<Expense, Integer> implements 
     }
 
     @Override
-    public List<String> yearsExpenses() {
+    public List<String> yearsExpenses(Company company) {
         StringBuilder sb = new StringBuilder();
         sb.append(" select year(date) ");
         sb.append(" from Expense e ");
+        sb.append(" where e.father = :company ");
         sb.append(" group by year(date) ");
         sb.append(" order by year(date) desc ");
         Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-         
+        q.setParameter("company", company);
         return q.list();
     }
 

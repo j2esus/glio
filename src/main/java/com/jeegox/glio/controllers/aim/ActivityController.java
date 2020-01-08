@@ -4,7 +4,7 @@ import com.jeegox.glio.controllers.BaseController;
 import com.jeegox.glio.entities.aim.Aim;
 import com.jeegox.glio.entities.aim.Project;
 import com.jeegox.glio.enumerators.Status;
-import com.jeegox.glio.services.admin.UserService;
+import com.jeegox.glio.services.UserService;
 import com.jeegox.glio.services.ProjectService;
 import com.jeegox.glio.util.Util;
 import java.util.List;

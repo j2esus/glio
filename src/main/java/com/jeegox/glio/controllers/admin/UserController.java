@@ -5,8 +5,7 @@ import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.admin.User;
 import com.jeegox.glio.entities.admin.UserType;
 import com.jeegox.glio.enumerators.Status;
-import com.jeegox.glio.services.admin.UserService;
-import com.jeegox.glio.services.admin.UserTypeService;
+import com.jeegox.glio.services.UserService;
 import com.jeegox.glio.util.Util;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -26,14 +25,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class UserController extends BaseController {
     @Autowired
     private UserService userService;
-    @Autowired
-    private UserTypeService userTypeService;
     
     @RequestMapping("init")
     public String index(Model model, HttpServletRequest request){
         Status[] status = {Status.ACTIVE, Status.INACTIVE};
         Company company = getCurrentCompany(request);
-        List<UserType> userTypes = userTypeService.findByCompany(company);
+        List<UserType> userTypes = userService.findUserTypeByCompany(company);
         model.addAttribute("status", status);
         model.addAttribute("userTypes", userTypes);
         model.addAttribute("company", company.getName());
@@ -65,7 +62,7 @@ public class UserController extends BaseController {
             @RequestParam Integer idUserType, @RequestParam Boolean onlyOneAccess,
             @RequestParam String email){
         try{
-            UserType userType = userTypeService.findById(idUserType);
+            UserType userType = userService.findUserTypeById(idUserType);
             User user = new User(id.equals(0) ? null :id, username, 
                     id.equals(0) ? Util.encodeSha256(password) : password, 
                     name, status, userType, onlyOneAccess, getCurrentCompany(request), email );

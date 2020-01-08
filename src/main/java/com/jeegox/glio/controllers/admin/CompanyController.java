@@ -3,7 +3,7 @@ package com.jeegox.glio.controllers.admin;
 import com.jeegox.glio.controllers.BaseController;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.enumerators.Status;
-import com.jeegox.glio.services.admin.CompanyService;
+import com.jeegox.glio.services.CompanyService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
