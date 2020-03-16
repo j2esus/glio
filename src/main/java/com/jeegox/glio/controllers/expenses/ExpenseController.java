@@ -57,9 +57,9 @@ public class ExpenseController extends BaseController {
     @RequestMapping(value = "findExpenses", method = RequestMethod.POST)
     @ResponseBody
     public List<Expense> findExpenses(HttpServletRequest request, @RequestParam String initDate,
-            @RequestParam String endDate, @RequestParam Integer idCategory, @RequestParam Integer idSubcategory){
+            @RequestParam String endDate, @RequestParam Integer idCategory, @RequestParam Integer idSubcategory, @RequestParam String description){
         return expenseService.findBy(getCurrentCompany(request), new Status[]{Status.ACTIVE}, idCategory, idSubcategory, 
-                Util.stringToDate(initDate, "yyyy-MM-dd"), Util.stringToDate(endDate, "yyyy-MM-dd"));
+                Util.stringToDate(initDate, "yyyy-MM-dd"), Util.stringToDate(endDate, "yyyy-MM-dd"), description);
     }
     
     @RequestMapping("deleteExpense")

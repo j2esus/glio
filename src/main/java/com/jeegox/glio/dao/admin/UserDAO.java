@@ -18,4 +18,6 @@ public interface UserDAO extends GenericDAO<User, Integer>{
     Long count(Company company);
     
     User findById(String username);
+    
+    List<User> findByCompany(Company company, String nameLike);
 }

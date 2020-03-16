@@ -48,8 +48,9 @@ public class ExpenseService {
     }
 
     @Transactional(readOnly = true)
-    public List<Expense> findBy(Company company, Status[] estatus, Integer idCategory, Integer idSubcategory, Date initDate, Date endDate) {
-        return expenseDAO.findBy(company, estatus, idCategory, idSubcategory, initDate, endDate);
+    public List<Expense> findBy(Company company, Status[] estatus, Integer idCategory, Integer idSubcategory, 
+            Date initDate, Date endDate, String description) {
+        return expenseDAO.findBy(company, estatus, idCategory, idSubcategory, initDate, endDate, description);
     }
 
     @Transactional(readOnly = true)
@@ -69,17 +70,7 @@ public class ExpenseService {
 
     @Transactional(readOnly = true)
     public List<MonthDTO> getMonthAmounts(Company company, Integer year) {
-        List<MonthDTO> monthAmounts = new ArrayList<>();
-        String[] months = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
-
-        for (int i = 0; i < months.length; i++) {
-            monthAmounts.add(new MonthDTO(i, months[i], 0D));
-        }
-        for (MonthDTO item : expenseDAO.getMonthAmounts(company, year)) {
-            monthAmounts.get(item.getMonth() - 1).setAmount(item.getAmount());
-        }
-        return monthAmounts;
+        return expenseDAO.getMonthAmounts(company, year);
     }
 
     @Transactional(readOnly = true)

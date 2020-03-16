@@ -17,7 +17,7 @@ import java.util.List;
 public interface ExpenseDAO extends GenericDAO<Expense, Integer>{
     
     List<Expense> findBy(Company company, Status[] estatus, Integer idCategory, 
-            Integer idSubcategory, Date initDate, Date endDate);
+            Integer idSubcategory, Date initDate, Date endDate, String description);
     
     List<GeneralCategoryDTO> findDataCategory(Company company);
     

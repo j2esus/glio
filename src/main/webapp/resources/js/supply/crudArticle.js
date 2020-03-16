@@ -52,6 +52,31 @@ function initEvents() {
     $btnConfirmDelete.click(onClickBtnConfirmDelete);
     
     $btnEdit.click(onClickBtnEdit);
+    
+    $('#categoryArticle').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                type: "POST",
+                url: $.PATH + "article/findByCompany",
+                data: {
+                    name: request.term
+                },
+                success: function (data) {
+                    response($.map(data, function (categoryArticle) {
+                        return {
+                            label: categoryArticle.name,
+                            value: categoryArticle.name,
+                            id: categoryArticle.id
+                        };
+                    }));
+                }
+            });
+        },
+        minLength: 2,
+        select: function (event, ui) {
+            $('#idCategoryArticle').val(ui.item.id);
+        }
+    });
 }
 
 function onClickNew() {
@@ -77,6 +102,7 @@ function addRowToTable(item, table) {
     fila += "<td>" + item.name + "</td>";
     fila += "<td>" + item.sku + "</td>";
     fila += "<td>" + item.description + "</td>";
+    fila += "<td>" + item.categoryArticle.name + "</td>";
     fila += "<td align='right'>" + accounting.formatMoney(item.cost) + "</td>";
     fila += "<td align='right'>" + accounting.formatMoney(item.price) + "</td>";
     fila += "<td>" + item.status + "</td>";
@@ -143,6 +169,7 @@ function saveElement() {
     var price = $('#price').val();
     var status = $('#status').val();
     var unity = $('#unity').val();
+    var idCategoryArticle = $('#idCategoryArticle').val();
     $.ajax({
         type: "POST",
         url: $.PATH + "article/saveArticle",
@@ -154,7 +181,8 @@ function saveElement() {
             cost: cost,
             price: price,
             status: status, 
-            unity: unity
+            unity: unity,
+            idCategoryArticle: idCategoryArticle
         },
         beforeSend: function (xhr) {
             _blockUI.block();
@@ -200,6 +228,8 @@ function onClickBtnEdit() {
     $('#price').val(item.price);
     $('#status').val(item.status);
     $('#unity').val(item.unity);
+    $('#idCategoryArticle').val(item.categoryArticle.id);
+    $('#categoryArticle').val(item.categoryArticle.name);
 
     $saveModal.modal();
 }

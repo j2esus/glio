@@ -34,6 +34,9 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item dropdown">
                         <div class="btn-group">
+                            <button type="button" class="btn btn-danger" id="btnDash">
+                                <i class="fa fa-fw fa-th"></i>
+                            </button>
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-fw fa-user" style="padding-right: 15px"></i>${userSession.father.username}
                             </button>

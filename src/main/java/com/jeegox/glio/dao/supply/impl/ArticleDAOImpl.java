@@ -7,13 +7,13 @@ import com.jeegox.glio.entities.supply.Article;
 import com.jeegox.glio.enumerators.Status;
 import java.util.List;
 import org.hibernate.query.Query;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author j2esus
  */
-@Service
+@Repository
 public class ArticleDAOImpl extends GenericDAOImpl<Article, Integer> implements ArticleDAO {
 
     @Override

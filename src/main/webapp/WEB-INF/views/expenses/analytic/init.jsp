@@ -48,14 +48,20 @@
         <hr/>
         <br/>
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-9">
                 <h2><span id="tittleCategoryMonth" class="badge badge-success"></span></h2>
+            </div>
+            <div  class="col-lg-3">
+                <div class="text-right">
+                    <button type="button" class="btn btn-primary fa fa-arrow-left" id="btnYearBack"></button>
+                    <button type="button" class="btn btn-success fa fa-refresh" id="btnRefreshDetails"></button>
+                </div>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-4">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTableCatMonth" width="100%" cellspacing="0">
+                    <table class="table table-bordered table-hover" id="dataTableCatMonth" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th>Categoría</th>

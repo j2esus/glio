@@ -1,7 +1,6 @@
 package com.jeegox.glio.dto;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -49,8 +48,9 @@ public class MonthDTO implements Serializable{
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 47 * hash + Objects.hashCode(this.month);
+        int hash = 5;
+        hash = 59 * hash + Objects.hashCode(this.month);
+        hash = 59 * hash + Objects.hashCode(this.monthName);
         return hash;
     }
 
@@ -66,11 +66,16 @@ public class MonthDTO implements Serializable{
             return false;
         }
         final MonthDTO other = (MonthDTO) obj;
+        if (!Objects.equals(this.monthName, other.monthName)) {
+            return false;
+        }
         if (!Objects.equals(this.month, other.month)) {
             return false;
         }
         return true;
     }
+
+    
     
     
 }

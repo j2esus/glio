@@ -23,6 +23,7 @@
                 <th>Nombre</th>
                 <th>Sku</th>
                 <th>Descripción</th>
+                <th>Categoria</th>
                 <th>Costo</th>
                 <th>Precio</th>
                 <th>Estatus</th>
@@ -56,7 +57,7 @@
 
 <!-- edit/add element-->
 <div class="modal fade" id="saveModal" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <form id="dataForm" method="post" data-toggle="validator">
             <!-- Modal content-->
             <div class="modal-content">
@@ -72,11 +73,11 @@
                                 Nombre
                             </div>
                             <div class="col-9">
-                                <input type="text" id="name" name="name" class="form-control" required="required" maxlength="100" pattern="^[_A-z0-9]{1,}$" autocomplete="off"/>
+                                <input type="text" id="name" name="name" class="form-control" required="required" maxlength="100" autocomplete="off"/>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
                                 Sku
@@ -96,7 +97,7 @@
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
                                 Costo
@@ -106,7 +107,7 @@
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
                                 Precio
@@ -123,7 +124,6 @@
                             </div>
                             <div class="col-9">
                                 <select id="status" class="form-control" required="required">
-                                    <option value="">--Seleccione</option>
                                     <c:forEach items="${status}" var="status">
                                         <option value="${status}">${status}</option>
                                     </c:forEach>
@@ -143,6 +143,17 @@
                                         <option value="${unity}">${unity}</option>
                                     </c:forEach>
                                 </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-3 col-form-label">
+                                Categoría
+                            </div>
+                            <div class="col-9">
+                                <input type="hidden" id="idCategoryArticle"/>
+                                <input type="text" class="form-control" id="categoryArticle" required="required">
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>

@@ -5,7 +5,11 @@ import com.jeegox.glio.config.spring.ApplicationContextConfigTest;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.services.CompanyService;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.internal.SessionImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,13 +29,13 @@ public class CompanyDAOTest {
 
     @Autowired
     private CompanyService companyService;
-    
+
     @Before
-    public void setData() throws Exception{
+    public void setData() throws Exception {
         //Company company = new Company(1, "jeegox", "jeegox analytics", Status.ACTIVE, 3);
         //companyService.saveOrUpdate(company);
     }
-    
+
     @Test
     public void whenUserIdIsProvided_thenRetrievedNameIsCorrect() {
         //Company company = companyService.findBy("jeegox");
@@ -39,5 +43,4 @@ public class CompanyDAOTest {
         assertThat(true).isTrue();
     }
 
-    
 }

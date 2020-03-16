@@ -1,53 +1,53 @@
 var $divProjects,
-     $divTasks;
+        $divTasks;
 
 var _indexProjectSelected = -1,
-    _aimData = [],
-    _projectData = [],
-    _indexAimSelected = -1,
-    _taskData = [],
-    _indexTaskSelected = -1;
+        _aimData = [],
+        _projectData = [],
+        _indexAimSelected = -1,
+        _taskData = [],
+        _indexTaskSelected = -1;
 
 //projects
 var $btnNewProject,
-    $btnRefreshProject,
-    $btnConfirmDeleteProject,
-    $btnDeleteProject,
-    $btnEditProject,
-    $initDate,
-    $endDate;
+        $btnRefreshProject,
+        $btnConfirmDeleteProject,
+        $btnDeleteProject,
+        $btnEditProject,
+        $initDate,
+        $endDate;
 
 var $txtFilterName,
-    $txtFilterStatus,
-    $txtFilterDescription;
+        $txtFilterStatus,
+        $txtFilterDescription;
 
 var $saveModalProject,
-    $dataFormProject;
+        $dataFormProject;
 
 var $tableProject;
 
 //aim
 var $btnRefreshAim,
-    $btnNewAim,
-    $btnConfirmDeleteAim,
-    $btnDeleteAim,
-    $btnEditAim,
-    $saveModalAim,
-    $dataFormAim,
-    $tableAim,
-    $initDateAim,
-    $endDateAim;
+        $btnNewAim,
+        $btnConfirmDeleteAim,
+        $btnDeleteAim,
+        $btnEditAim,
+        $saveModalAim,
+        $dataFormAim,
+        $tableAim,
+        $initDateAim,
+        $endDateAim;
 
 //tasks
 var $btnRefreshTask,
-    $btnNewTask,
-    $btnConfirmDeleteTask,
-    $btnDeleteTask,
-    $btnEditTask,
-    $saveModalTask,
-    $dataFormTask,
-    $tableTask,
-    $totalTask;
+        $btnNewTask,
+        $btnConfirmDeleteTask,
+        $btnDeleteTask,
+        $btnEditTask,
+        $saveModalTask,
+        $dataFormTask,
+        $tableTask,
+        $totalTask;
 
 $(document).ready(function () {
     initComponents();
@@ -123,7 +123,7 @@ function initEvents() {
         $(this).addClass('row-selected').siblings().removeClass('row-selected');
         _indexProjectSelected = $(this).data('meta-row');
     });
-    
+
     $tableProject.on('dblclick', 'tbody tr', function (event) {
         showDivTasks(_indexProjectSelected);
     });
@@ -162,10 +162,35 @@ function initEvents() {
             saveTask();
         }
     });
-    
+
     $tableTask.on('click', 'tbody tr', function (event) {
         $(this).addClass('row-selected').siblings().removeClass('row-selected');
         _indexTaskSelected = $(this).data('meta-row');
+    });
+    
+    $('#userNameAuto').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                type: "POST",
+                url: $.PATH + "all/findUsers",
+                data: {
+                    name: request.term
+                },
+                success: function (data) {
+                    response($.map(data, function (user) {
+                        return {
+                            label: user.name,
+                            value: user.name,
+                            username: user.username
+                        };
+                    }));
+                }
+            });
+        },
+        minLength: 2,
+        select: function (event, ui) {
+            $('#userTask').val(ui.item.username);
+        }
     });
 }
 
@@ -499,9 +524,9 @@ function onClickBtnNewTask() {
         _notify.show('Selecciona primero un objetivo', 'warning');
         return;
     }
-    
+
     var item = _aimData[_indexAimSelected];
-    
+
     _uiUtil.cleanControls($saveModalTask);
     $('#titleModalNewTask').html("Agregar tarea");
     $('#idNewTask').val(0);
@@ -522,14 +547,14 @@ function saveTask() {
         type: "POST",
         url: $.PATH + "project/saveTask",
         data: {id: id, name: name, description: description, priority: priority,
-            estimated: estimated, username:username, idAim: item.id},
+            estimated: estimated, username: username, idAim: item.id},
         beforeSend: function (xhr) {
             _blockUI.block();
         },
         success: function (response) {
             if (response === "OK") {
                 _notify.show("Tarea guardado con éxito", 'success');
-                if(id != 0){
+                if (id != 0) {
                     $saveModalTask.modal('hide');
                 }
                 $('#nameTask').focus();
@@ -555,7 +580,7 @@ function findTaskData() {
             _blockUI.block();
             _uiUtil.clearDataTable($tableTask);
             _indexTaskSelected = -1;
-            $totalTask.html(total +" horas ");
+            $totalTask.html(total + " horas ");
         },
         success: function (items) {
             if (items.length > 0) {
@@ -566,7 +591,7 @@ function findTaskData() {
                     total += item.estimatedTime;
                 });
                 $tableTask.tablePagination(_uiUtil.getOptionsPaginator(10));
-                $totalTask.html(total +" horas ");
+                $totalTask.html(total + " horas ");
             } else {
                 _notify.show("La consulta no produjo resultados.", "danger");
             }
@@ -590,12 +615,12 @@ function addRowToTableTask(item, table) {
     table.append(fila);
 }
 
-function onClickBtnRefreshTask(){
+function onClickBtnRefreshTask() {
     if (_indexAimSelected === -1) {
         _notify.show('Selecciona primero un objetivo', 'warning');
         return;
     }
-    
+
     findTaskData();
 }
 
@@ -653,5 +678,6 @@ function onClickBtnEditTask() {
     $('#priorityTask').val(item.priority);
     $('#estimatedTask').val(item.estimatedTime);
     $('#userTask').val(item.userOwner.username);
+    $('#userNameAuto').val(item.userOwner.name);
     $saveModalTask.modal();
 }
