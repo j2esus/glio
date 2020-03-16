@@ -35,6 +35,10 @@
                         <option value="0">--Todos</option>
                     </select>
                 </div>
+                <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                    <div class="input-group-addon">Descripción</div>
+                    <input type="text" class="form-control" id="descriptionF"/>
+                </div>
                 <input type="submit" class="btn btn-success" value="Buscar"/>
             </div>
         </div>
@@ -62,7 +66,11 @@
         <tbody></tbody>
     </table>
 </div>
-
+<br/>
+<div class="text-right">
+    <h3><span id="total" class="badge badge-success"></span></h3>
+</div>
+<br/>
 <!-- edit/add element-->
 <div class="modal fade" id="saveModal" role="dialog">
     <div class="modal-dialog">
@@ -121,7 +129,7 @@
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
                                 Subcategoría

@@ -8,6 +8,7 @@ import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.expenses.Category;
 import com.jeegox.glio.entities.expenses.Expense;
 import com.jeegox.glio.enumerators.Status;
+import com.jeegox.glio.util.Util;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,11 +20,11 @@ import org.springframework.stereotype.Repository;
  * @author j2esus
  */
 @Repository
-public class ExpenseDAOImpl extends GenericDAOImpl<Expense, Integer> implements ExpenseDAO{
+public class ExpenseDAOImpl extends GenericDAOImpl<Expense, Integer> implements ExpenseDAO {
 
     @Override
-    public List<Expense> findBy(Company company, Status[] estatus, Integer idCategory, 
-            Integer idSubcategory, Date initDate, Date endDate) {
+    public List<Expense> findBy(Company company, Status[] estatus, Integer idCategory,
+            Integer idSubcategory, Date initDate, Date endDate, String description) {
         StringBuilder sb = new StringBuilder();
         sb.append(" select e ");
         sb.append(" from Expense e ");
@@ -31,23 +32,29 @@ public class ExpenseDAOImpl extends GenericDAOImpl<Expense, Integer> implements 
         sb.append(" join e.subcategory s ");
         sb.append(" join s.father c ");
         sb.append(" where f = :company ");
+        sb.append(" and e.description like :description ");
         sb.append(" and e.status in ( :status )");
-        if(!idSubcategory.equals(0))
+        if (!idSubcategory.equals(0)) {
             sb.append(" and s.id = :idSubcategory ");
-        if(!idCategory.equals(0))
-        sb.append(" and c.id = :idCategory ");
+        }
+        if (!idCategory.equals(0)) {
+            sb.append(" and c.id = :idCategory ");
+        }
         sb.append(" and e.date between :init and :end ");
         sb.append(" order by e.date ");
-        
+
         Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
         q.setParameter("company", company);
         q.setParameter("init", initDate);
         q.setParameter("end", endDate);
+        q.setParameter("description", "%" + description + "%");
         q.setParameterList("status", estatus);
-        if(!idSubcategory.equals(0))
+        if (!idSubcategory.equals(0)) {
             q.setParameter("idSubcategory", idSubcategory);
-        if(!idCategory.equals(0))
+        }
+        if (!idCategory.equals(0)) {
             q.setParameter("idCategory", idCategory);
+        }
         return q.list();
     }
 
@@ -100,7 +107,7 @@ public class ExpenseDAOImpl extends GenericDAOImpl<Expense, Integer> implements 
 
     @Override
     public List<MonthDTO> getMonthAmounts(Company company, Integer year) {
-        List<MonthDTO> result = new ArrayList<>();
+        List<MonthDTO> result = Util.getMonths();
         StringBuilder sb = new StringBuilder();
         sb.append(" select month(expense_date), sum(amount) ");
         sb.append(" from expense ");
@@ -108,16 +115,13 @@ public class ExpenseDAOImpl extends GenericDAOImpl<Expense, Integer> implements 
         sb.append(" and year(expense_date) = ").append(year).append(" ");
         sb.append(" and id_company = ").append(company.getId());
         sb.append(" group by month(expense_date) ");
-        
+
         List<Object[]> data = sessionFactory.getCurrentSession().createNativeQuery(sb.toString()).list();
-        
-        MonthDTO object;
+
         for (Object[] objects : data) {
-            object = new MonthDTO();
-            object.setMonth((Integer)objects[0]);
-            object.setAmount((Double)objects[1]);
-            result.add(object);
+            result.get(((Integer) objects[0])-1).setAmount((Double) objects[1]);
         }
+
         return result;
     }
 
@@ -160,5 +164,5 @@ public class ExpenseDAOImpl extends GenericDAOImpl<Expense, Integer> implements 
         q.setParameter("month", month);
         return q.list();
     }
-    
+
 }

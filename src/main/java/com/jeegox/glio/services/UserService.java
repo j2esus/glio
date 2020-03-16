@@ -402,4 +402,9 @@ public class UserService {
     public Session findSessionById(Integer id) {
         return sessionDAO.findById(id);
     }
+    
+    @Transactional(readOnly = true)
+    public List<User> findByLike(Company company, String nameLike) {
+        return userDAO.findByCompany(company, nameLike);
+    }
 }

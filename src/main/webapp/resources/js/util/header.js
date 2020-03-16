@@ -1,6 +1,7 @@
 var $sideNavToggler,
     $btnConfiguration,
-    $btnLogout;
+    $btnLogout,
+    $btnDash;
 
 $(document).ready(function () {
     initComponentsHeader();
@@ -11,12 +12,14 @@ function initComponentsHeader(){
     $sideNavToggler = $('#sidenavToggler');
     $btnConfiguration = $('#btnConfiguration');
     $btnLogout = $('#btnLogout');
+    $btnDash = $('#btnDash');
 }
 
 function initEventsHeader(){
     $sideNavToggler.click(onClickSideNavToggler);
     $btnConfiguration.click(onClickBtnConfiguration);
     $btnLogout.click(btnLogoutOnClick);
+    $btnDash.click(btnDashOnClick);
 }
 
 function onClickSideNavToggler(e){
@@ -32,6 +35,10 @@ function onClickBtnConfiguration(){
 
 function btnLogoutOnClick(){
     countInProcess();
+}
+
+function btnDashOnClick(){
+    _jsUtil.redirect("all/dash");
 }
 
 function logout(){

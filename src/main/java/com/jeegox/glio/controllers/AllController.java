@@ -132,4 +132,10 @@ public class AllController extends BaseController {
     public Long countInProcess(HttpServletRequest request){
         return projectService.count(getCurrentUser(request), new Status[]{Status.IN_PROCESS});
     }
+    
+    @RequestMapping(value = "findUsers", method = RequestMethod.POST)
+    @ResponseBody
+    public List<User> findUsers(HttpServletRequest request, @RequestParam String name){
+        return userService.findByLike(getCurrentCompany(request), name);
+    }
 }

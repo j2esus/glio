@@ -1,5 +1,6 @@
 package com.jeegox.glio.util;
 
+import com.jeegox.glio.dto.MonthDTO;
 import com.jeegox.glio.enumerators.Status;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -8,7 +9,9 @@ import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -73,5 +76,15 @@ public class Util {
             result += "'" + item.name() + "'" + character;
         }
         return result.substring(0, result.length() -1);
+    }
+    
+    public static List<MonthDTO> getMonths(){
+        List<MonthDTO> monthAmounts = new ArrayList<>();
+        String[] months = new String[]{"Enero", "Febrero", "Marzo", "Abril", "Mayo",
+            "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
+        for(int i = 0; i<months.length; i++){
+            monthAmounts.add(new MonthDTO(i, months[i], 0D));
+        }
+        return monthAmounts;
     }
 }

@@ -398,12 +398,8 @@
                                 Usuario
                             </div>
                             <div class="col-9">
-                                <select id="userTask" class="form-control" required="required">
-                                    <option value="">--Seleccione</option>
-                                    <c:forEach items="${users}" var="user">
-                                        <option value="${user.username}">${user.username}</option>
-                                    </c:forEach>
-                                </select>
+                                <input type="hidden" id="userTask"/>
+                                <input type="text" class="form-control" id="userNameAuto" required="required">
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>

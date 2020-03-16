@@ -11,6 +11,7 @@ var $initDate,
         $endDate,
         $idCategoryF,
         $idSubcategoryF,
+        $descriptionF,
         $expenseForm;
 
 var $amount,
@@ -22,7 +23,7 @@ var $amount,
 var $optionsModal,
         $dataFormOption;
 
-var $table;
+var $table, $total;
 
 var _indexSelected = -1,
         _data = [];
@@ -46,6 +47,7 @@ function initComponents() {
     $idCategoryF = $('#idCategoryF');
     $idSubcategoryF = $('#idSubcategoryF');
     $expenseForm = $('#expenseForm');
+    $descriptionF = $('#descriptionF');
 
     //form
     $amount = $('#amount');
@@ -61,6 +63,7 @@ function initComponents() {
     $dataFormOption = $('#dataFormOption');
 
     $table = $('#dataTable');
+    $total = $('#total');
 }
 
 function initEvents() {
@@ -171,22 +174,27 @@ function onClickBtnEdit() {
 }
 
 function findData() {
+    var total = 0;
     $.ajax({
         type: "POST",
         url: $.PATH + "expense/findExpenses",
         data: {initDate: $initDate.val(), endDate: $endDate.val(),idCategory: $idCategoryF.val(), 
-            idSubcategory: $idSubcategoryF.val()},
+            idSubcategory: $idSubcategoryF.val(),
+            description: $descriptionF.val()
+        },
         beforeSend: function (xhr) {
             _blockUI.block();
             _uiUtil.clearDataTable($table);
             _indexSelected = -1;
             _data = [];
+            total = 0;
         },
         success: function (items) {
             if (items.length > 0) {
                 $.each(items, function (i, item) {
                     addRowToTable(item, $table);
                     _data.push(item);
+                    total += item.amount;
                 });
                 $table.tablePagination(_uiUtil.getOptionsPaginator(10));
             } else {
@@ -194,6 +202,7 @@ function findData() {
             }
         }, complete: function () {
             _blockUI.unblock();
+            $total.html(accounting.formatMoney(total));
         }
     });
 }
@@ -271,7 +280,9 @@ function findSubcategories(idCategory, select, text) {
         type: "POST",
         url: $.PATH + "expense/findSubcategories",
         async: false,
-        data: {idCategory: idCategory},
+        data: {
+            idCategory: idCategory
+        },
         beforeSend: function (xhr) {
             _blockUI.block();
         },

@@ -1,6 +1,6 @@
 let $btnRefresh,
         $dataTableGral,
-        $btnRefreshSub;
+        $btnRefreshSub, $btnRefreshDetails, $btnYearBack;
 
 let $divChart, $btnRefreshMonth, $dataTableMonth, $year, $totalMonth, $tittleCategoryMonth,
         $dataTableCatMonth, $totalMonthCategory;
@@ -28,6 +28,8 @@ function initComponents() {
     $btnRefresh = $('#btnRefresh');
     $btnRefreshSub = $('#btnRefreshSub');
     $dataTableGral = $('#dataTableGral');
+    $btnRefreshDetails = $('#btnRefreshDetails');
+    $btnYearBack = $('#btnYearBack');
 
     $dataTableSub = $('#dataTableSub');
 
@@ -44,6 +46,8 @@ function initComponents() {
     $tittleCategoryMonth = $('#tittleCategoryMonth');
     $dataTableCatMonth = $('#dataTableCatMonth');
     $totalMonthCategory = $('#totalMonthCategory');
+    
+    $btnYearBack.hide();
 }
 
 function initPanels() {
@@ -58,6 +62,7 @@ function returnGeneral(){
 
 function initEvents() {
     $btnRefresh.click(onClickBtnRefresh);
+    $btnRefreshDetails.click(onClickbtnRefreshDetails);
 
     $dataTableGral.on('click', 'tbody tr', function (event) {
         $(this).addClass('row-selected').siblings().removeClass('row-selected');
@@ -83,10 +88,19 @@ function initEvents() {
     $btnRefreshMonth.click(onClickBtnRefreshMonth);
 
     $year.change(onChangeYear);
+    
+    $btnYearBack.click(onClickBtnYearBack);
 }
 
 function onClickBtnRefresh() {
     findDataCategory();
+}
+
+function onClickbtnRefreshDetails(){
+    if(_indexSelectedMonth !== -1)
+        buildChartMonths_yearMonth();
+    else
+        buildChartMonths_year();
 }
 
 function onClickBtnRefreshSub() {
@@ -99,6 +113,10 @@ function onClickBtnRefreshMonth() {
 
 function onChangeYear() {
     buildChartsMonths();
+}
+
+function onClickBtnYearBack(){
+    buildChartMonths_year();
 }
 
 function findDataCategory() {
@@ -315,6 +333,7 @@ function buildChartsMonths() {
 }
 
 function buildChartMonths_year(){
+    $btnYearBack.hide();
     $tittleCategoryMonth.html($year.val());
     
     let labelsMonthCat = [];
@@ -355,7 +374,8 @@ function buildChartMonths_year(){
 }
 
 function buildChartMonths_yearMonth(){
-    $tittleCategoryMonth.html(_months[_indexSelectedMonth]+" "+ $year.val());
+    $btnYearBack.show();
+    $tittleCategoryMonth.html(_months[_indexSelectedMonth] +" "+$year.val());
     
     let labelsMonthCat = [];
     let dataMonthCat = [];
@@ -364,7 +384,10 @@ function buildChartMonths_yearMonth(){
     $.ajax({
         type: "POST",
         url: $.PATH + "analytic/findDataCategoryYearMonth",
-        data: {year: $year.val(), month: (_indexSelectedMonth +1)},
+        data: {
+            year: $year.val(), 
+            month: (_indexSelectedMonth +1)
+        },
         beforeSend: function (xhr) {
             _blockUI.block();
             _uiUtil.clearDataTable($dataTableCatMonth);

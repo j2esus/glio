@@ -12,7 +12,7 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hibernate.version>5.2.10.Final</hibernate.version>
+        <hibernate.version>5.2.18.Final</hibernate.version>
         <spring-data-jpa.version>1.11.3.RELEASE</spring-data-jpa.version>
         <javassist.version>3.21.0-GA</javassist.version>
         <javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
@@ -227,6 +227,14 @@
             <groupId>org.glassfish</groupId>
             <artifactId>javax.json</artifactId>
             <version>1.0.4</version>
+        </dependency>
+        
+        <!-- test -->
+        <dependency>
+            <groupId>nl.jqno.equalsverifier</groupId>
+            <artifactId>equalsverifier</artifactId>
+            <version>3.0.3</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

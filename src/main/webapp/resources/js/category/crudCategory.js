@@ -268,7 +268,7 @@ function findSubcategoriesData() {
                     _subcategoryData.push(item);
                     addRowToTableSub(item, $dataTableSu);
                 });
-                $dataTableSu.tablePagination(_uiUtil.getOptionsPaginator(5));
+                $dataTableSu.tablePagination(_uiUtil.getOptionsPaginator(10));
             } else {
                 _notify.show("La consulta no produjo resultados.", "danger");
             }

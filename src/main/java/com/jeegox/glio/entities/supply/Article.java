@@ -33,13 +33,14 @@ public class Article extends JComplexEntity<Integer, Company> implements Seriali
     private Double price;
     private Status status;
     private Unity unity;
+    private CategoryArticle categoryArticle;
     
     public Article(){
         
     }
 
     public Article(Integer id, String name, String sku, String description, Double cost, 
-            Double price, Status status, Unity unity, Company company) {
+            Double price, Status status, Unity unity, Company company, CategoryArticle categoryArticle) {
         this.id = id;
         this.name = name;
         this.sku = sku;
@@ -49,6 +50,7 @@ public class Article extends JComplexEntity<Integer, Company> implements Seriali
         this.status = status;
         this.unity = unity;
         this.father = company;
+        this.categoryArticle = categoryArticle;
     }
     
     
@@ -124,6 +126,16 @@ public class Article extends JComplexEntity<Integer, Company> implements Seriali
 
     public void setUnity(Unity unity) {
         this.unity = unity;
+    }
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_category_article", referencedColumnName = "id_category_article", nullable = false)
+    public CategoryArticle getCategoryArticle() {
+        return categoryArticle;
+    }
+
+    public void setCategoryArticle(CategoryArticle categoryArticle) {
+        this.categoryArticle = categoryArticle;
     }
     
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

@@ -81,5 +81,21 @@ public class UserDAOImpl extends GenericDAOImpl<User, Integer> implements UserDA
         else
             return users.get(0);
     }
+
+    @Override
+    public List<User> findByCompany(Company company, String nameLike) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" select u ");
+        sb.append(" from User u ");
+        sb.append(" where u.father = :father ");
+        sb.append(" and u.status = :status ");
+        sb.append(" and upper(u.name) like :name ");
+        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
+        q.setParameter("father", company);
+        q.setParameter("status", Status.ACTIVE);
+        q.setParameter("name", "%"+nameLike.toUpperCase()+"%");
+        q.setMaxResults(10);
+        return q.list();
+    }
     
 }
