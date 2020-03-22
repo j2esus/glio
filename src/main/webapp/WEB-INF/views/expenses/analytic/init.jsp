@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<script src="<c:url value="/resources/js/analytic/analytic.js"/>"></script>
+<script src="<c:url value="/resources/js/expenses/analytic.js"/>"></script>
 
 <h1>Análisis de gastos</h1>
 <hr/>
@@ -47,38 +47,79 @@
         <br/>
         <hr/>
         <br/>
-        <div class="row">
-            <div class="col-lg-9">
-                <h2><span id="tittleCategoryMonth" class="badge badge-success"></span></h2>
-            </div>
-            <div  class="col-lg-3">
-                <div class="text-right">
+        <div id="divCategoryDetail">
+            
+            <div class="row">
+                <div class="col-lg-4">
                     <button type="button" class="btn btn-primary fa fa-arrow-left" id="btnYearBack"></button>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <h2><span id="tittleCategoryMonth" class="badge badge-success"></h2>
+                </div>
+                <div class="col-lg-4 text-right">
                     <button type="button" class="btn btn-success fa fa-refresh" id="btnRefreshDetails"></button>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover" id="dataTableCatMonth" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th>Categoría</th>
-                                <th>Monto</th>
-                                <th>Porcentaje</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+            <br/>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" id="dataTableCatMonth" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Categoría</th>
+                                    <th>Monto</th>
+                                    <th>Porcentaje</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="text-right">
+                        <span id="totalMonthCategory" class="badge badge-success"></span>
+                    </div>
                 </div>
-                <div class="text-right">
-                    <span id="totalMonthCategory" class="badge badge-success"></span>
+                <div class="col-lg-8">
+                    <div id="divGraphCategoryMonth">
+                        <canvas id="canvGraphCategoryMonth" style="width: 100%"></canvas>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-8">
-                <div id="divGraphCategoryMonth">
-                    <canvas id="canvGraphCategoryMonth" style="width: 100%"></canvas>
+        </div>
+        <div id="divSubcategoryDetail">
+            <div class="row">
+                <div class="col-lg-4">
+                    <button type="button" class="btn btn-primary fa fa-arrow-left" id="btnYearBackSub"></button>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <h2><span id="tittleSubcategoryMonth" class="badge badge-success"></h2>
+                </div>
+                <div class="col-lg-4 text-right">
+                    <button type="button" class="btn btn-success fa fa-refresh" id="btnRefreshDetailsSub"></button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTableSubMonth" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Subcategoría</th>
+                                    <th>Monto</th>
+                                    <th>Porcentaje</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="text-right">
+                        <span id="totalMonthSubcategory" class="badge badge-success"></span>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div id="divGraphSubcategoryMonth">
+                        <canvas id="canvGraphSubcategoryMonth" style="width: 100%"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -117,10 +158,10 @@
         <div id="divSubcategory">
             <div class="row">
                 <div class="col-lg-4">
-                    <a href="javascript:returnGeneral()">Regresar</a></span>
+                    <button type="button" class="btn btn-primary fa fa-arrow-left" id="btnGralBack"></button>
                 </div>
                 <div class="col-lg-4 text-center">
-                    <h4><span id="titleModalNew" class="badge badge-success"></h4>
+                    <h2><span id="titleModalNew" class="badge badge-success"></h2>
                 </div>
                 <div class="col-lg-4 text-right">
                     <button type="button" class="btn btn-success fa fa-refresh" id="btnRefreshSub"></button>

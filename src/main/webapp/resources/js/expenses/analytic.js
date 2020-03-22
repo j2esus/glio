@@ -1,6 +1,6 @@
 let $btnRefresh,
         $dataTableGral,
-        $btnRefreshSub, $btnRefreshDetails, $btnYearBack;
+        $btnRefreshSub, $btnRefreshDetails, $btnYearBack, $btnGralBack;
 
 let $divChart, $btnRefreshMonth, $dataTableMonth, $year, $totalMonth, $tittleCategoryMonth,
         $dataTableCatMonth, $totalMonthCategory;
@@ -9,12 +9,13 @@ let $divChart, $btnRefreshMonth, $dataTableMonth, $year, $totalMonth, $tittleCat
 let $divCategory, $totalCategory,
         $divSubcategory, $totalSubcategory;
 
-let _indexSelectedCategory = -1, _dataCategory = [], _indexSelectedMonth = -1;
+let _indexSelectedCategory = -1, _dataCategory = [], _indexSelectedMonth = -1, _indexSelectedCategoryDetail = -1;
 
-let $dataTableSub;
+let $dataTableSub, $dataTableSubMonth, $totalMonthSubcategory;
 
-let _months = ["Enero", "Febrero", "Marzon", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+let $divCategoryDetail, $divSubcategoryDetail, $tittleSubcategoryMonth, _dataCategoryDetails = [], $btnRefreshDetailsSub, $btnYearBackSub;
 
+let _months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
 $(document).ready(function () {
     initComponents();
@@ -30,6 +31,7 @@ function initComponents() {
     $dataTableGral = $('#dataTableGral');
     $btnRefreshDetails = $('#btnRefreshDetails');
     $btnYearBack = $('#btnYearBack');
+    $btnGralBack = $('#btnGralBack');
 
     $dataTableSub = $('#dataTableSub');
 
@@ -46,16 +48,27 @@ function initComponents() {
     $tittleCategoryMonth = $('#tittleCategoryMonth');
     $dataTableCatMonth = $('#dataTableCatMonth');
     $totalMonthCategory = $('#totalMonthCategory');
-    
+
+    $divCategoryDetail = $('#divCategoryDetail');
+    $divSubcategoryDetail = $('#divSubcategoryDetail');
+    $tittleSubcategoryMonth = $('#tittleSubcategoryMonth');
+    $btnRefreshDetailsSub = $('#btnRefreshDetailsSub');
+    $btnYearBackSub = $('#btnYearBackSub');
+    $dataTableSubMonth = $('#dataTableSubMonth');
+    $totalMonthSubcategory = $('#totalMonthSubcategory');
+
     $btnYearBack.hide();
 }
 
 function initPanels() {
     $divCategory.css("display", "block");
     $divSubcategory.css("display", "none");
+
+    $divCategoryDetail.css("display", "block");
+    $divSubcategoryDetail.css("display", "none");
 }
 
-function returnGeneral(){
+function returnGeneral() {
     $divCategory.css("display", "block");
     $divSubcategory.css("display", "none");
 }
@@ -73,34 +86,48 @@ function initEvents() {
         _indexSelectedCategory = $(this).data('meta-row');
         showSubcategoryData();
     });
-    
+
     $dataTableMonth.on('click', 'tbody tr', function (event) {
         $(this).addClass('row-selected').siblings().removeClass('row-selected');
     });
-    
+
     $dataTableMonth.on('dblclick', 'tbody tr', function (event) {
         _indexSelectedMonth = $(this).data('meta-row');
         buildChartMonths_yearMonth();
     });
 
+    $dataTableCatMonth.on('click', 'tbody tr', function (event) {
+        $(this).addClass('row-selected').siblings().removeClass('row-selected');
+    });
+
+    $dataTableCatMonth.on('dblclick', 'tbody tr', function (event) {
+        _indexSelectedCategoryDetail = $(this).data('meta-row');
+        showSubcategoryDetails();
+    });
+
     $btnRefreshSub.click(onClickBtnRefreshSub);
-
     $btnRefreshMonth.click(onClickBtnRefreshMonth);
-
     $year.change(onChangeYear);
-    
     $btnYearBack.click(onClickBtnYearBack);
+    $btnGralBack.click(onClickBtnGralBack);
+
+    $btnYearBackSub.click(onClickBtnYearBackSub);
+    $btnRefreshDetailsSub.click(onClickBtnRefreshDetailsSub);
 }
 
 function onClickBtnRefresh() {
     findDataCategory();
 }
 
-function onClickbtnRefreshDetails(){
-    if(_indexSelectedMonth !== -1)
+function onClickbtnRefreshDetails() {
+    if (_indexSelectedMonth !== -1)
         buildChartMonths_yearMonth();
     else
         buildChartMonths_year();
+}
+
+function onClickBtnYearBackSub() {
+    onClickbtnRefreshDetails();
 }
 
 function onClickBtnRefreshSub() {
@@ -115,8 +142,50 @@ function onChangeYear() {
     buildChartsMonths();
 }
 
-function onClickBtnYearBack(){
+function onClickBtnYearBack() {
     buildChartMonths_year();
+}
+
+function onClickBtnGralBack() {
+    returnGeneral();
+}
+
+function showSubcategoryDetails() {
+    $divCategoryDetail.css("display", "none");
+    $divSubcategoryDetail.css("display", "block");
+
+    let item = _dataCategoryDetails[_indexSelectedCategoryDetail];
+
+    let title = item.name;
+    if (_indexSelectedMonth !== -1)
+        title += " " + _months[_indexSelectedMonth];
+
+    title += " " + $year.val();
+
+    $tittleSubcategoryMonth.html(title);
+    
+    buildCharSubcategory_yearMonth(item.id);
+}
+
+function onClickBtnRefreshDetailsSub(){
+    showSubcategoryDetails();
+}
+
+function showCategoryDetails_year() {
+    $divCategoryDetail.css("display", "block");
+    $divSubcategoryDetail.css("display", "none");
+
+    $btnYearBack.hide();
+    $tittleCategoryMonth.html($year.val());
+    _indexSelectedMonth = -1;
+}
+
+function showCategoryDetails_month() {
+    $divCategoryDetail.css("display", "block");
+    $divSubcategoryDetail.css("display", "none");
+
+    $btnYearBack.show();
+    $tittleCategoryMonth.html(_months[_indexSelectedMonth] + " " + $year.val());
 }
 
 function findDataCategory() {
@@ -148,6 +217,7 @@ function findDataCategory() {
                     _dataCategory.push(item);
                 });
 
+                $dataTableGral.tablePagination(_uiUtil.getOptionsPaginator(5));
                 buildChartCategory(data, labels);
                 $totalCategory.html(accounting.formatMoney(total));
             } else {
@@ -210,14 +280,14 @@ function buildChartCategory(data, labels) {
 
 function randomArrayColorGenerator(length) {
     let colors = [];
-    for (i = 0; i < length; i++) {
+    do {
         var random = '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
-        colors.push(random);
-    }
-
+        if (!colors.includes(random)) {
+            colors.push(random);
+        }
+    } while (colors.length < length)
     return colors;
 }
-;
 
 function showSubcategoryData() {
     let item = _dataCategory[_indexSelectedCategory];
@@ -296,7 +366,7 @@ function buildChartSubcategory(data, labels) {
 function buildChartsMonths() {
     let labelsMonth = [];
     let dataMonth = [];
-    
+
     $.ajax({
         type: "POST",
         url: $.PATH + "analytic/getMonthAmounts",
@@ -327,15 +397,13 @@ function buildChartsMonths() {
         }
     });
 
-
     buildChartMonths_year();
-    
+
 }
 
-function buildChartMonths_year(){
-    $btnYearBack.hide();
-    $tittleCategoryMonth.html($year.val());
-    
+function buildChartMonths_year() {
+    showCategoryDetails_year();
+
     let labelsMonthCat = [];
     let dataMonthCat = [];
     let dataPercentMonthCat = [];
@@ -343,12 +411,15 @@ function buildChartMonths_year(){
     $.ajax({
         type: "POST",
         url: $.PATH + "analytic/findDataCategoryYear",
-        data: {year: $year.val()},
+        data: {
+            year: $year.val()
+        },
         beforeSend: function (xhr) {
             _blockUI.block();
             _uiUtil.clearDataTable($dataTableCatMonth);
             buildChartMonthCategoryMonth(dataMonthCat, labelsMonthCat);
             $totalMonthCategory.html(accounting.formatMoney(totalMonthCat));
+            _dataCategoryDetails = [];
         },
         success: function (items) {
             if (items.length > 0) {
@@ -356,6 +427,7 @@ function buildChartMonths_year(){
                     labelsMonthCat.push(item.name);
                     dataMonthCat.push(item.amount);
                     totalMonthCat += item.amount;
+                    _dataCategoryDetails.push(item);
                 });
 
                 $.each(items, function (i, item) {
@@ -373,10 +445,9 @@ function buildChartMonths_year(){
     });
 }
 
-function buildChartMonths_yearMonth(){
-    $btnYearBack.show();
-    $tittleCategoryMonth.html(_months[_indexSelectedMonth] +" "+$year.val());
-    
+function buildChartMonths_yearMonth() {
+    showCategoryDetails_month();
+
     let labelsMonthCat = [];
     let dataMonthCat = [];
     let dataPercentMonthCat = [];
@@ -385,14 +456,15 @@ function buildChartMonths_yearMonth(){
         type: "POST",
         url: $.PATH + "analytic/findDataCategoryYearMonth",
         data: {
-            year: $year.val(), 
-            month: (_indexSelectedMonth +1)
+            year: $year.val(),
+            month: (_indexSelectedMonth + 1)
         },
         beforeSend: function (xhr) {
             _blockUI.block();
             _uiUtil.clearDataTable($dataTableCatMonth);
             buildChartMonthCategoryMonth(dataMonthCat, labelsMonthCat);
             $totalMonthCategory.html(accounting.formatMoney(totalMonthCat));
+            _dataCategoryDetails = [];
         },
         success: function (items) {
             if (items.length > 0) {
@@ -400,6 +472,7 @@ function buildChartMonths_yearMonth(){
                     labelsMonthCat.push(item.name);
                     dataMonthCat.push(item.amount);
                     totalMonthCat += item.amount;
+                    _dataCategoryDetails.push(item);
                 });
 
                 $.each(items, function (i, item) {
@@ -410,6 +483,48 @@ function buildChartMonths_yearMonth(){
                 $dataTableCatMonth.tablePagination(_uiUtil.getOptionsPaginator(5));
                 buildChartMonthCategoryMonth(dataPercentMonthCat, labelsMonthCat);
                 $totalMonthCategory.html(accounting.formatMoney(totalMonthCat));
+            }
+        }, complete: function () {
+            _blockUI.unblock();
+        }
+    });
+}
+
+function buildCharSubcategory_yearMonth(idCategory) {
+
+    let labelsMonthCat = [];
+    let dataMonthCat = [];
+    let dataPercentMonthCat = [];
+    let totalMonthCat = 0;
+    $.ajax({
+        type: "POST",
+        url: $.PATH + "analytic/findDataSubcategoryYearMonth",
+        data: {
+            idCategory: idCategory, 
+            year: $year.val(),
+            month: _indexSelectedMonth === -1 ? _indexSelectedMonth : (_indexSelectedMonth + 1)
+        },
+        beforeSend: function (xhr) {
+            _blockUI.block();
+            _uiUtil.clearDataTable($dataTableSubMonth);
+            buildChartMonthSubcategoryMonth(dataMonthCat, labelsMonthCat);
+            $totalMonthSubcategory.html(accounting.formatMoney(totalMonthCat));
+        },
+        success: function (items) {
+            if (items.length > 0) {
+                $.each(items, function (i, item) {
+                    labelsMonthCat.push(item.name);
+                    totalMonthCat += item.amount;
+                });
+
+                $.each(items, function (i, item) {
+                    var percent = _jsUtil.round((item.amount / totalMonthCat) * 100);
+                    dataPercentMonthCat.push(percent);
+                    addRowToTable(item, $dataTableSubMonth, percent);
+                });
+                $dataTableSubMonth.tablePagination(_uiUtil.getOptionsPaginator(5));
+                buildChartMonthSubcategoryMonth(dataPercentMonthCat, labelsMonthCat);
+                $totalMonthSubcategory.html(accounting.formatMoney(totalMonthCat));
             }
         }, complete: function () {
             _blockUI.unblock();
@@ -458,6 +573,32 @@ function buildChartMonthCategoryMonth(data, labels) {
     $('#divGraphCategoryMonth').html('<canvas id="canvGraphCategoryMonth" style="width: 100%"></canvas>');
 
     let myChart = document.getElementById("canvGraphCategoryMonth");
+    let ctxMix = myChart.getContext('2d');
+
+    let config = {
+        datasets: [{
+                data: data,
+                backgroundColor: randomArrayColorGenerator(labels.length)
+            }],
+
+        labels: labels
+    };
+
+    _chart = new Chart(ctxMix, {
+        type: 'pie',
+        data: config,
+        options: {
+            responsive: true
+        }
+    });
+}
+
+function buildChartMonthSubcategoryMonth(data, labels) {
+
+    $('#divGraphSubcategoryMonth').html('');
+    $('#divGraphSubcategoryMonth').html('<canvas id="canvGraphSubcategoryMonth" style="width: 100%"></canvas>');
+
+    let myChart = document.getElementById("canvGraphSubcategoryMonth");
     let ctxMix = myChart.getContext('2d');
 
     let config = {
