@@ -38,7 +38,7 @@ public class ApplicationContextConfigTest {
         
         JDBCDataSource dataSource = new JDBCDataSource();
         dataSource.setUrl("jdbc:hsqldb:mem:glio;shutdown=true;sql.syntax_mys=true;sql.ignore_case=true");
-        dataSource.setUser("sa");
+        dataSource.setUser("SA");
         dataSource.setPassword("");
         return dataSource;
     }

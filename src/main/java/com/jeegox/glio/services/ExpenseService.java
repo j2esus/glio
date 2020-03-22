@@ -125,4 +125,10 @@ public class ExpenseService {
         subcategoryDAO.save(subcategory);
     }
 
+    @Transactional(readOnly = true)
+    public List<GeneralCategoryDTO> findDataSubcategory(Category category, Integer year, Integer month) {
+        if(!month.equals(-1))
+            return expenseDAO.findDataSubcategory(category, year, month);
+        return expenseDAO.findDataSubcategory(category, year);
+    }
 }

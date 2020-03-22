@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<script src="<c:url value="/resources/js/expense/crudExpense.js"/>"></script>
+<script src="<c:url value="/resources/js/expenses/crudExpense.js"/>"></script>
 
 <h1>Gastos</h1>
 <hr/>

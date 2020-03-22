@@ -59,4 +59,11 @@ public class AnalyticController extends BaseController{
     public List<GeneralCategoryDTO> findDataCategoryYearMonth(HttpServletRequest request, @RequestParam Integer year, @RequestParam Integer month){
         return expenseService.findDataCategory(getCurrentCompany(request), year, month);
     }
+    
+    @RequestMapping(value = "findDataSubcategoryYearMonth", method = RequestMethod.POST)
+    @ResponseBody
+    public List<GeneralCategoryDTO> findDataSubcategoryYearMonth(HttpServletRequest request, @RequestParam Integer idCategory,
+            @RequestParam Integer year, @RequestParam Integer month){
+        return expenseService.findDataSubcategory(expenseService.findCategoryBy(idCategory), year, month);
+    }
 }

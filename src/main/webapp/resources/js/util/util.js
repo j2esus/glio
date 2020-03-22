@@ -439,3 +439,26 @@ _jsUtil = (function () {
         round: round
     };
 })();
+
+
+_jsColorRandom = (function () {
+    let colors = [];
+    
+    function getColors(conf){
+        if(conf.total === colors.length){
+            return colors;
+        }else{
+            var random = '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
+            if(colors.includes(random))
+                getColors(conf);
+            else{
+                colors.push(random);
+                getColors(conf);
+            }
+        }
+    }
+    
+    return {
+        getColors: getColors
+    };
+})();

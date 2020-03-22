@@ -9,7 +9,6 @@ import com.jeegox.glio.entities.expenses.Category;
 import com.jeegox.glio.entities.expenses.Expense;
 import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.util.Util;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.hibernate.query.Query;
@@ -159,6 +158,46 @@ public class ExpenseDAOImpl extends GenericDAOImpl<Expense, Integer> implements 
         sb.append(" group by c.id, c.name ");
         Query q = sessionFactory.getCurrentSession().createQuery(sb.toString(), GeneralCategoryDTO.class);
         q.setParameter("company", company);
+        q.setParameter("status", Status.ACTIVE);
+        q.setParameter("year", year);
+        q.setParameter("month", month);
+        return q.list();
+    }
+    
+    @Override
+    public List<GeneralCategoryDTO> findDataSubcategory(Category category, Integer year) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" select new com.jeegox.glio.dto.GeneralCategoryDTO(s.id, s.name, sum(e.amount) ) ");
+        sb.append(" from Expense e ");
+        sb.append(" join e.father f ");
+        sb.append(" join e.subcategory s ");
+        sb.append(" join s.father c ");
+        sb.append(" where c = :category ");
+        sb.append(" and e.status =  :status ");
+        sb.append(" and year(e.date) =  :year ");
+        sb.append(" group by s.id, s.name ");
+        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString(), GeneralCategoryDTO.class);
+        q.setParameter("category", category);
+        q.setParameter("status", Status.ACTIVE);
+        q.setParameter("year", year);
+        return q.list();
+    }
+
+    @Override
+    public List<GeneralCategoryDTO> findDataSubcategory(Category category, Integer year, Integer month) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" select new com.jeegox.glio.dto.GeneralCategoryDTO(s.id, s.name, sum(e.amount) ) ");
+        sb.append(" from Expense e ");
+        sb.append(" join e.father f ");
+        sb.append(" join e.subcategory s ");
+        sb.append(" join s.father c ");
+        sb.append(" where c = :category ");
+        sb.append(" and e.status =  :status ");
+        sb.append(" and year(e.date) =  :year ");
+        sb.append(" and month(e.date) =  :month ");
+        sb.append(" group by s.id, s.name ");
+        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString(), GeneralCategoryDTO.class);
+        q.setParameter("category", category);
         q.setParameter("status", Status.ACTIVE);
         q.setParameter("year", year);
         q.setParameter("month", month);
