@@ -17,6 +17,8 @@ let $divCategoryDetail, $divSubcategoryDetail, $tittleSubcategoryMonth, _dataCat
 
 let _months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
+let __chartCategory;
+
 $(document).ready(function () {
     initComponents();
     initPanels();
@@ -58,6 +60,8 @@ function initComponents() {
     $totalMonthSubcategory = $('#totalMonthSubcategory');
 
     $btnYearBack.hide();
+    
+    __chartCategory = new mx.jeegox.jChart($('#divGraphCategory'));
 }
 
 function initPanels() {
@@ -199,7 +203,7 @@ function findDataCategory() {
         beforeSend: function (xhr) {
             _blockUI.block();
             _uiUtil.clearDataTable($dataTableGral);
-            buildChartCategory(data, labels);
+            __chartCategory.builtPie(data, labels);
             _dataCategory = [];
             _indexSelectedCategory = -1;
         },
@@ -218,7 +222,7 @@ function findDataCategory() {
                 });
 
                 $dataTableGral.tablePagination(_uiUtil.getOptionsPaginator(5));
-                buildChartCategory(data, labels);
+                __chartCategory.builtPie(data, labels);
                 $totalCategory.html(accounting.formatMoney(total));
             } else {
                 _notify.show("La consulta no produjo resultados.", "danger");
@@ -250,43 +254,6 @@ function addRowToTableMonth(item, table) {
     fila += "<td  align='right'>" + accounting.formatMoney(item.amount) + "</td>";
     fila += "</tr>";
     table.append(fila);
-}
-
-function buildChartCategory(data, labels) {
-
-    $('#divGraphCategory').html('');
-    $('#divGraphCategory').html('<canvas id="canvGraphCategory" style="width: 100%"></canvas>');
-
-    let myChart = document.getElementById("canvGraphCategory");
-    let ctxMix = myChart.getContext('2d');
-
-    let config = {
-        datasets: [{
-                data: data,
-                backgroundColor: randomArrayColorGenerator(labels.length)
-            }],
-
-        labels: labels
-    };
-
-    _chart = new Chart(ctxMix, {
-        type: 'pie',
-        data: config,
-        options: {
-            responsive: true
-        }
-    });
-}
-
-function randomArrayColorGenerator(length) {
-    let colors = [];
-    do {
-        var random = '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
-        if (!colors.includes(random)) {
-            colors.push(random);
-        }
-    } while (colors.length < length)
-    return colors;
 }
 
 function showSubcategoryData() {
@@ -348,7 +315,7 @@ function buildChartSubcategory(data, labels) {
     let config = {
         datasets: [{
                 data: data,
-                backgroundColor: randomArrayColorGenerator(labels.length)
+                backgroundColor: _uiUtil.randomArrayColorGenerator(labels.length)
             }],
 
         labels: labels
@@ -370,7 +337,9 @@ function buildChartsMonths() {
     $.ajax({
         type: "POST",
         url: $.PATH + "analytic/getMonthAmounts",
-        data: {year: $year.val()},
+        data: {
+            year: $year.val()
+        },
         async: false,
         beforeSend: function (xhr) {
             _blockUI.block();
@@ -383,8 +352,8 @@ function buildChartsMonths() {
                 let totalMonth = 0;
                 $.each(items, function (i, item) {
                     labelsMonth.push(item.monthName);
-                    dataMonth.push(item.amount);
-                    totalMonth += item.amount
+                    dataMonth.push(_jsUtil.round(item.amount));
+                    totalMonth += _jsUtil.round(item.amount);
                     addRowToTableMonth(item, $dataTableMonth);
                 });
                 $dataTableMonth.tablePagination(_uiUtil.getOptionsPaginator(6));
@@ -578,9 +547,8 @@ function buildChartMonthCategoryMonth(data, labels) {
     let config = {
         datasets: [{
                 data: data,
-                backgroundColor: randomArrayColorGenerator(labels.length)
+                backgroundColor: _uiUtil.randomArrayColorGenerator(labels.length)
             }],
-
         labels: labels
     };
 
@@ -604,7 +572,7 @@ function buildChartMonthSubcategoryMonth(data, labels) {
     let config = {
         datasets: [{
                 data: data,
-                backgroundColor: randomArrayColorGenerator(labels.length)
+                backgroundColor: _uiUtil.randomArrayColorGenerator(labels.length)
             }],
 
         labels: labels

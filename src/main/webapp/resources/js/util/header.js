@@ -68,7 +68,6 @@ function countInProcess(){
         },
         success:function(response){
             //_blockUI.unblock();
-            console.log(response);
             if(response === 0){
                 logout();
             }else{

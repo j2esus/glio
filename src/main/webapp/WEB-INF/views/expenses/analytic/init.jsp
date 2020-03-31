@@ -150,7 +150,6 @@
                 </div>
                 <div class="col-lg-8">
                     <div id="divGraphCategory">
-                        <canvas id="canvGraphCategory" style="width: 100%"></canvas>
                     </div>
                 </div>
             </div>
