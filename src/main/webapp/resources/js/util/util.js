@@ -183,7 +183,6 @@ _uiUtil = (function () {
                 descriptores = response;
             },
             error: function (request, error) {
-                console.log(request.statusText);
                 $.notify({
                     message: request.statusText
                 }, {
@@ -242,6 +241,17 @@ _uiUtil = (function () {
         return type;
     }
 
+    function randomArrayColorGenerator(length) {
+        let colors = [];
+        do {
+            var random = '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
+            if (!colors.includes(random)) {
+                colors.push(random);
+            }
+        } while (colors.length < length)
+        return colors;
+    }
+
     return {
         cleanControls: cleanControls,
         describeEntity: describeEntity,
@@ -253,7 +263,8 @@ _uiUtil = (function () {
         getUsername: getUsername,
         getStringPriority: getStringPriority,
         writePriorityColorInt: writePriorityColorInt,
-        today: today
+        today: today,
+        randomArrayColorGenerator: randomArrayColorGenerator
     };
 })();
 
@@ -316,74 +327,6 @@ _jsUtil = (function () {
         $(location).attr("href", $.PATH + url);
     }
 
-    function findStatus() {
-        var status = [];
-        $.ajax({
-            method: "POST",
-            url: $.PATH + "global/findStatus",
-            async: false,
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (response) {
-                status = response;
-            },
-            error: function (request, error) {
-                console.log(request.statusText);
-                $.notify({
-                    message: request.statusText
-                }, {
-                    type: 'danger'
-                });
-            }
-        });
-        return status;
-    }
-
-    function findEntityType() {
-        var status = [];
-        $.ajax({
-            method: "POST",
-            url: $.PATH + "global/findEntityType",
-            async: false,
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (response) {
-                status = response;
-            },
-            error: function (request, error) {
-                console.log(request.statusText);
-                $.notify({
-                    message: request.statusText
-                }, {
-                    type: 'danger'
-                });
-            }
-        });
-        return status;
-    }
-
-    function findApps() {
-        var apps = null;
-        $.ajax({
-            method: "POST",
-            url: $.PATH + "rest/findApps",
-            async: false,
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (response) {
-                apps = response;
-            },
-            error: function (request, error) {
-                $.notify({
-                    message: request.statusText
-                }, {
-                    type: 'danger'
-                });
-            }
-        });
-        return apps;
-    }
-
     function compareDate(fecha, fecha2, format) {
         if (format === 'dd-MM-yyyy' || format === 'dd/MM/yyyy') {
             var xDay = fecha.substring(0, 2);
@@ -406,11 +349,11 @@ _jsUtil = (function () {
         }
 
         if (xYear > yYear) {
-            return (true)
+            return (true);
         } else {
             if (xYear == yYear) {
                 if (xMonth > yMonth) {
-                    return (true)
+                    return (true);
                 } else {
                     if (xMonth == yMonth) {
                         if (xDay > yDay)
@@ -424,41 +367,58 @@ _jsUtil = (function () {
                 return (false);
         }
     }
-    
-    function round(value){
-        return Math.round(value*100)/100;
+
+    function round(value) {
+        return Math.round(value * 100) / 100;
     }
 
 
     return {
         redirect: redirect,
-        findStatus: findStatus,
-        findEntityType: findEntityType,
-        findApps: findApps,
         compareDate: compareDate,
         round: round
     };
 })();
 
-
-_jsColorRandom = (function () {
-    let colors = [];
-    
-    function getColors(conf){
-        if(conf.total === colors.length){
-            return colors;
-        }else{
-            var random = '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
-            if(colors.includes(random))
-                getColors(conf);
-            else{
-                colors.push(random);
-                getColors(conf);
-            }
+(function ($) {
+    function jChart(div) {
+        let _chart;
+        let _canvas;
+        
+        function init(){
+            _canvas = (Math.random().toString(16));
         }
+
+        function builtPie(data, labels) {
+            div.html('');
+            div.html('<canvas id="'+_canvas+'" style="width: 100%"></canvas>');
+
+            let myChart = document.getElementById(_canvas);
+            let ctx = myChart.getContext('2d');
+
+            let config = {
+                datasets: [{
+                        data: data,
+                        backgroundColor: _uiUtil.randomArrayColorGenerator(labels.length)
+                    }],
+
+                labels: labels
+            };
+
+            _chart = new Chart(ctx, {
+                type: 'pie',
+                data: config,
+                options: {
+                    responsive: true
+                }
+            });
+        }
+
+        $.extend(this, {
+            builtPie: builtPie
+        });
+        
+        init();
     }
-    
-    return {
-        getColors: getColors
-    };
-})();
+    $.extend(true, window, {mx: {jeegox: {jChart: jChart}}});
+})(jQuery);

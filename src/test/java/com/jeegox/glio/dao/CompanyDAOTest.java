@@ -32,7 +32,7 @@ public class CompanyDAOTest {
 
     @Before
     public void setData() throws Exception {
-        //Company company = new Company(1, "jeegox", "jeegox analytics", Status.ACTIVE, 3);
+        Company company = new Company(1, "jeegox", "jeegox analytics", Status.ACTIVE, 3);
         //companyService.saveOrUpdate(company);
     }
 
