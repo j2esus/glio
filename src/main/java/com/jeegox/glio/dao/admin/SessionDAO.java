@@ -6,10 +6,6 @@ import com.jeegox.glio.entities.admin.Session;
 import com.jeegox.glio.entities.admin.User;
 import java.util.List;
 
-/**
- *
- * @author j2esus
- */
 public interface SessionDAO extends GenericDAO<Session, Integer>{
     List<Session> findByCompany(Company company);
     

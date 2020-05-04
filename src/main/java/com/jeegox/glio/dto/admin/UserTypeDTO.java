@@ -3,10 +3,6 @@ package com.jeegox.glio.dto.admin;
 import com.jeegox.glio.entities.admin.UserType;
 import java.io.Serializable;
 
-/**
- *
- * @author j2esus
- */
 public class UserTypeDTO implements Serializable{
     private Integer id;
     private String name;

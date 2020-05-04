@@ -7,10 +7,6 @@ import com.jeegox.glio.util.Constants;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-/**
- *
- * @author j2esus
- */
 public class BaseController {
     
     public User getCurrentUser(HttpServletRequest request){

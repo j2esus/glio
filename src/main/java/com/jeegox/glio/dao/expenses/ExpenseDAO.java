@@ -10,10 +10,6 @@ import com.jeegox.glio.enumerators.Status;
 import java.util.Date;
 import java.util.List;
 
-/**
- *
- * @author j2esus
- */
 public interface ExpenseDAO extends GenericDAO<Expense, Integer>{
     
     List<Expense> findBy(Company company, Status[] estatus, Integer idCategory, 

@@ -17,10 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-/**
- *
- * @author j2esus
- */
 @Controller
 @RequestMapping("/expense/**")
 public class ExpenseController extends BaseController {
@@ -45,7 +41,6 @@ public class ExpenseController extends BaseController {
     public String saveExpense(HttpServletRequest request, @RequestParam Integer id, @RequestParam Double amount, @RequestParam String description,
             @RequestParam Integer idSubcategory, @RequestParam String dateE){
         try{
-            //
             expenseService.saveOrUpdate(new Expense(id.equals(0) ? null : id, amount, description, expenseService.findSubcategoryBy(idSubcategory), 
             Util.stringToDate(dateE, "yyyy-MM-dd"), Status.ACTIVE, getCurrentUser(request), getCurrentCompany(request)));
             return "OK";

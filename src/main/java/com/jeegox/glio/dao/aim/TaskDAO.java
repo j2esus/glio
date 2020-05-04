@@ -11,10 +11,6 @@ import com.jeegox.glio.enumerators.Status;
 import java.util.Date;
 import java.util.List;
 
-/**
- *
- * @author j2esus
- */
 public interface TaskDAO extends GenericDAO<Task,Integer>{
     
     List<Task> findByCompany(Company company);

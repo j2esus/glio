@@ -3,10 +3,6 @@ package com.jeegox.glio.dto;
 import java.io.Serializable;
 import java.util.Objects;
 
-/**
- *
- * @author j2esus
- */
 public class MonthDTO implements Serializable{
     private Integer month;
     private String monthName;

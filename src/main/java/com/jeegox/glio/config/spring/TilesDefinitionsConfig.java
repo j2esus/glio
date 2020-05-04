@@ -9,10 +9,6 @@ import org.apache.tiles.Definition;
 import org.apache.tiles.definition.DefinitionsFactory;
 import org.apache.tiles.request.Request;
 
-/**
- *
- * @author j2esus
- */
 public class TilesDefinitionsConfig implements DefinitionsFactory {
     private static final Map<String, Definition> tilesDefinitions = new HashMap<String,Definition>();
     private static final Attribute BASE_TEMPLATE = new Attribute("/WEB-INF/views/layout/default.jsp");

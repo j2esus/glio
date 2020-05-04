@@ -14,10 +14,6 @@ import java.util.List;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
-/**
- *
- * @author j2esus
- */
 @Repository
 public class ExpenseDAOImpl extends GenericDAOImpl<Expense, Integer> implements ExpenseDAO {
 

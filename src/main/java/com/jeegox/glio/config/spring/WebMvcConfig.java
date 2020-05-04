@@ -13,10 +13,6 @@ import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesView;
 import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 
-/**
- *
- * @author j2esus
- */
 @Configuration
 @EnableWebMvc
 public class WebMvcConfig extends WebMvcConfigurerAdapter{
@@ -52,18 +48,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter{
     
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        //converters.add(createXmlHttpMessageConverter());
         converters.add(new MappingJackson2HttpMessageConverter());
         super.configureMessageConverters(converters);
     }
-    
-    /*
-    private HttpMessageConverter<Object> createXmlHttpMessageConverter() {
-        MarshallingHttpMessageConverter xmlConverter = new MarshallingHttpMessageConverter();
-        XStreamMarshaller xstreamMarshaller = new XStreamMarshaller();
-        xmlConverter.setMarshaller(xstreamMarshaller);
-        xmlConverter.setUnmarshaller(xstreamMarshaller);    
-        return xmlConverter;
-    }
-    */
 }

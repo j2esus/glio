@@ -10,10 +10,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
-/**
- *
- * @author j2esus
- */
 @Service
 public class EmailService {
 

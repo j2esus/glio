@@ -12,10 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- *
- * @author j2esus
- */
 @Entity
 @Table(name = "suburb")
 public class Suburb extends JComplexEntity<Integer, Town> implements Serializable{

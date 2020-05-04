@@ -13,10 +13,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- *
- * @author j2esus
- */
 public class Util {
     
     public static String encodeSha256(String cadena) {

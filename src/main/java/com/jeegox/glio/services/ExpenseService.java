@@ -10,17 +10,12 @@ import com.jeegox.glio.entities.expenses.Category;
 import com.jeegox.glio.entities.expenses.Expense;
 import com.jeegox.glio.entities.expenses.Subcategory;
 import com.jeegox.glio.enumerators.Status;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- *
- * @author j2esus
- */
 @Service
 public class ExpenseService {
 

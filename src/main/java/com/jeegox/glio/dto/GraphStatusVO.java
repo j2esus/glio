@@ -3,10 +3,6 @@ package com.jeegox.glio.dto;
 import com.jeegox.glio.enumerators.Status;
 import java.io.Serializable;
 
-/**
- *
- * @author j2esus
- */
 public class GraphStatusVO implements Serializable{
     private Status status;
     private Long quantity;

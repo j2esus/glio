@@ -16,10 +16,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import com.jeegox.glio.enumerators.Status;
 
-/**
- *
- * @author j2esus
- */
 @Entity
 @Table(name = "user")
 @JsonIgnoreProperties({"father","hibernateLazyInitializer", "handler"})

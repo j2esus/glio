@@ -11,10 +11,6 @@ import java.util.List;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
-/**
- *
- * @author j2esus
- */
 @Repository
 public class ProjectDAOImpl extends GenericDAOImpl<Project,Integer> implements ProjectDAO{
 

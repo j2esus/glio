@@ -12,10 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-/**
- *
- * @author j2esus
- */
 @Controller
 @RequestMapping("/json/address/**")
 public class AddressController {
@@ -34,8 +30,6 @@ public class AddressController {
         return addressService.findByState(idState);
     }
     
-    //buscar Town por nombre
-    
     @RequestMapping(value = "findSuburbByTown", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public List<Suburb> findSuburbByTown(@RequestParam Integer idTown){
@@ -47,6 +41,4 @@ public class AddressController {
     public List<Suburb> findSuburbByCp(@RequestParam String cp){
         return addressService.findByTown(cp);
     }
-    
-    //buscar Suburb por nombre
 }

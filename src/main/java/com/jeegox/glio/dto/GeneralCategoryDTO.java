@@ -2,10 +2,6 @@ package com.jeegox.glio.dto;
 
 import java.io.Serializable;
 
-/**
- *
- * @author j2esus
- */
 public class GeneralCategoryDTO implements Serializable {
     private Integer id;
     private String name;

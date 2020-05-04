@@ -3,10 +3,6 @@ package com.jeegox.glio.dao.hibernate;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- *
- * @author j2esus
- */
 public interface GenericDAO<T, ID extends Serializable> {
 
     void save(T entity);

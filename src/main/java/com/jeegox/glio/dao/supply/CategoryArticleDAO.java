@@ -6,10 +6,6 @@ import com.jeegox.glio.entities.supply.CategoryArticle;
 import com.jeegox.glio.enumerators.Status;
 import java.util.List;
 
-/**
- *
- * @author j2esus
- */
 public interface CategoryArticleDAO extends GenericDAO<CategoryArticle, Integer>{
     
     List<CategoryArticle> findCategoriesArticlesBy(Company company, Status[] status);

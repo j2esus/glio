@@ -6,10 +6,6 @@ import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.admin.UserType;
 import java.util.List;
 
-/**
- *
- * @author j2esus
- */
 public interface UserTypeDAO extends GenericDAO<UserType, Integer>{
     
     List<UserType> findByCompany(Company company);

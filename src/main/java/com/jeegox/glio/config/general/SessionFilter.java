@@ -1,6 +1,5 @@
 package com.jeegox.glio.config.general;
 
-import com.jeegox.glio.entities.admin.OptionMenu;
 import com.jeegox.glio.entities.admin.Session;
 import com.jeegox.glio.util.Constants;
 import java.io.IOException;
@@ -15,10 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- *
- * @author j2esus
- */
 public class SessionFilter implements Filter{
     
     @Override

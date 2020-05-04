@@ -8,12 +8,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- *
- * @author j2esus
- * @param <T>
- * @param <ID>
- */
 public abstract class GenericDAOImpl <T, ID extends Serializable> implements GenericDAO<T, ID>{
     @Autowired
     protected SessionFactory sessionFactory;

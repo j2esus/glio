@@ -7,10 +7,6 @@ import java.util.List;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
-/**
- *
- * @author j2esus
- */
 @Repository
 public class CompanyDAOImpl extends GenericDAOImpl<Company,Integer> implements CompanyDAO{
     

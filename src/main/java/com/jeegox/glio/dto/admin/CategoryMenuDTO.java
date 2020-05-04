@@ -6,10 +6,6 @@ import java.io.Serializable;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- *
- * @author j2esus
- */
 public class CategoryMenuDTO implements Serializable{
     private Integer id;
     private String name;

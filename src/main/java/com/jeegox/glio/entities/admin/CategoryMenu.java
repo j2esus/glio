@@ -17,10 +17,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-/**
- *
- * @author j2esus
- */
 @Entity
 @Table(name = "category_menu")
 public class CategoryMenu extends JEntity<Integer> implements Serializable {

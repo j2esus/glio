@@ -22,10 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-/**
- *
- * @author j2esus
- */
 @Controller
 public class LoginController {
     @Autowired

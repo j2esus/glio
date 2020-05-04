@@ -14,16 +14,11 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.hsqldb.jdbc.JDBCDataSource;
 
-/**
- *
- * @author j2esus
- */
 @Configuration
 @EnableTransactionManagement
 @ComponentScan("com.jeegox.glio.*")
 public class ApplicationContextConfigTest {
 
-    //jdni
     @Bean
     public LocalSessionFactoryBean sessionFactory() throws NamingException {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();

@@ -1,6 +1,5 @@
 package com.jeegox.glio.entities.admin;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.jeegox.glio.entities.util.JComplexEntity;
 import com.jeegox.glio.enumerators.Status;
 import java.io.Serializable;
@@ -17,10 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- *
- * @author j2esus
- */
 @Entity
 @Table(name = "session")
 public class Session extends JComplexEntity<Integer, User> implements Serializable{

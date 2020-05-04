@@ -8,10 +8,6 @@ import com.jeegox.glio.entities.aim.Project;
 import com.jeegox.glio.enumerators.Status;
 import java.util.List;
 
-/**
- *
- * @author j2esus
- */
 public interface ProjectDAO extends GenericDAO<Project, Integer>{
     
     List<Project> findByCompany(Company company);

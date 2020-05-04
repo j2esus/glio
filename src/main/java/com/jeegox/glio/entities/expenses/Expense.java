@@ -19,10 +19,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- *
- * @author j2esus
- */
 @Entity
 @Table(name = "expense")
 @JsonIgnoreProperties({"father","user"})

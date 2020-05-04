@@ -7,10 +7,6 @@ import com.jeegox.glio.entities.admin.User;
 import com.jeegox.glio.enumerators.Status;
 import java.util.List;
 
-/**
- *
- * @author j2esus
- */
 public interface TokenDAO extends GenericDAO<Token,Integer>{
     
     Token find(User user);

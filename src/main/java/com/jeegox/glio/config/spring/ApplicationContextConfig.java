@@ -23,10 +23,6 @@ import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import org.springframework.web.servlet.view.tiles3.TilesView;
 
-/**
- *
- * @author j2esus
- */
 @Configuration
 @EnableTransactionManagement
 @PropertySource({"classpath:persistence-jndi.properties", "classpath:persistence-mysql.properties"})
@@ -54,7 +50,6 @@ public class ApplicationContextConfig {
         return viewResolver;
     }
 
-    //jdni
     @Bean
     public LocalSessionFactoryBean sessionFactory() throws NamingException {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
@@ -97,7 +92,7 @@ public class ApplicationContextConfig {
         javaMailProperties.put("mail.smtp.auth", "true");
         javaMailProperties.put("mail.transport.protocol", "smtp");
         javaMailProperties.put("mail.smtp.ssl.enable", "true");
-        javaMailProperties.put("mail.debug", "false");//Prints out everything on screen
+        javaMailProperties.put("mail.debug", "false");
 
         mailSender.setJavaMailProperties(javaMailProperties);
         return mailSender;

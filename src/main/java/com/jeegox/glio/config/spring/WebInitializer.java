@@ -12,10 +12,6 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
-/**
- *
- * @author j2esus
- */
 public class WebInitializer implements WebApplicationInitializer{
 
     @Override
@@ -23,7 +19,6 @@ public class WebInitializer implements WebApplicationInitializer{
         AnnotationConfigWebApplicationContext appContext = new AnnotationConfigWebApplicationContext();
         appContext.register(ApplicationContextConfig.class);
         
-        // Dispatcher Servlet
         ServletRegistration.Dynamic dispatcher = servletContext.addServlet("SpringDispatcher", new DispatcherServlet(appContext));
         dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/");
@@ -31,17 +26,14 @@ public class WebInitializer implements WebApplicationInitializer{
         dispatcher.setInitParameter("contextClass", appContext.getClass().getName());
         servletContext.addListener(new ContextLoaderListener(appContext));
         
-        // UTF8 Charactor Filter.
         FilterRegistration.Dynamic fr = servletContext.addFilter("encodingFilter", CharacterEncodingFilter.class);
         fr.setInitParameter("encoding", "UTF-8");
         fr.setInitParameter("forceEncoding", "true");
         fr.addMappingForUrlPatterns(null, true, "/*"); 
         
-        //HTTP Method
         FilterRegistration.Dynamic httpFr = servletContext.addFilter("HttpMethodFilter", HiddenHttpMethodFilter.class);
         httpFr.addMappingForUrlPatterns(null, true, "/*"); 
         
-        //Session filter
         FilterRegistration.Dynamic sessionFilter = servletContext.addFilter("SessionFilter", SessionFilter.class);
         sessionFilter.addMappingForUrlPatterns(null, true, "/*"); 
     }

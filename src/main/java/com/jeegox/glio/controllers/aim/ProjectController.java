@@ -20,10 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-/**
- *
- * @author j2esus
- */
 @Controller
 @RequestMapping("/project/**")
 public class ProjectController extends BaseController{
@@ -43,7 +39,6 @@ public class ProjectController extends BaseController{
         return "project/init";
     }
     
-    //projects
     @RequestMapping(value = "findProjects", method = RequestMethod.POST)
     @ResponseBody
     public List<Project> findProjects(HttpServletRequest request, @RequestParam String name, @RequestParam String status,
@@ -75,7 +70,6 @@ public class ProjectController extends BaseController{
         }
     }
     
-    //aims
     @RequestMapping(value = "saveAim", method = RequestMethod.POST)
     @ResponseBody
     public String saveAim(HttpServletRequest request, @RequestParam Integer id, @RequestParam String name,
@@ -110,8 +104,6 @@ public class ProjectController extends BaseController{
         }
     }
     
-    
-    //tasks
     @RequestMapping(value = "saveTask", method = RequestMethod.POST)
     @ResponseBody
     public String saveTask(HttpServletRequest request, @RequestParam Integer id, @RequestParam String name,
