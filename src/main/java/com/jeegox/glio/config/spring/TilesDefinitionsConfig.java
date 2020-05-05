@@ -1,7 +1,6 @@
 package com.jeegox.glio.config.spring;
 
 import com.jeegox.glio.config.general.DataConfig;
-import com.jeegox.glio.config.general.DataConfig.Page;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.tiles.Attribute;
@@ -10,7 +9,7 @@ import org.apache.tiles.definition.DefinitionsFactory;
 import org.apache.tiles.request.Request;
 
 public class TilesDefinitionsConfig implements DefinitionsFactory {
-    private static final Map<String, Definition> tilesDefinitions = new HashMap<String,Definition>();
+    private static final Map<String, Definition> TILES_DEFINITIONS = new HashMap<>();
     private static final Attribute BASE_TEMPLATE = new Attribute("/WEB-INF/views/layout/default.jsp");
     private static final Attribute BASE_TEMPLATE_WITHOUT_HEADER = new Attribute("/WEB-INF/views/layout/defaultWithoutHeader.jsp");
     private static final Attribute HEADER_TEMPLATE = new Attribute("/WEB-INF/views/layout/emptyHeader.jsp");
@@ -18,54 +17,60 @@ public class TilesDefinitionsConfig implements DefinitionsFactory {
 
     @Override
     public Definition getDefinition(String string, Request rqst) {
-        return tilesDefinitions.get(string);
+        return TILES_DEFINITIONS.get(string);
     }
     
     public static void addDefinitions(){
-        for(Page page: DataConfig.pages){
-            if(page.getLayout().equals(DataConfig.Layout.EMPTY))
-                addEmpty(page.getName(),page.getUrl());
-            else if(page.getLayout().equals(DataConfig.Layout.DEFAULT))
-                addDefault(page.getName(), page.getUrl());
-            else if(page.getLayout().equals(DataConfig.Layout.DEFAULT_WITHOUT_HEADER))
-                addDefaultWithoutHeader(page.getName(), page.getUrl());
-            else
-                addWithHeader(page.getName(), page.getUrl());
-        }
+        DataConfig.PAGES.forEach((page) -> {
+            switch (page.getLayout()) {
+                case EMPTY:
+                    addEmpty(page.getName(),page.getUrl());
+                    break;
+                case DEFAULT:
+                    addDefault(page.getName(), page.getUrl());
+                    break;
+                case DEFAULT_WITHOUT_HEADER:
+                    addDefaultWithoutHeader(page.getName(), page.getUrl());
+                    break;
+                default:
+                    addWithHeader(page.getName(), page.getUrl());
+                    break;
+            }
+        });
     }
     
     private static void addDefault(String name, String body) {
-        Map<String, Attribute> attributes = new HashMap<String,Attribute>();
+        Map<String, Attribute> attributes = new HashMap<>();
         attributes.put("resources", new Attribute("/WEB-INF/views/layout/resources.jsp"));
         attributes.put("header", new Attribute("/WEB-INF/views/layout/header.jsp"));
-        attributes.put("title", new Attribute(DataConfig.title));
+        attributes.put("title", new Attribute(DataConfig.TITLE));
         attributes.put("body", new Attribute(body));
-        tilesDefinitions.put(name, new Definition(name, BASE_TEMPLATE, attributes));
+        TILES_DEFINITIONS.put(name, new Definition(name, BASE_TEMPLATE, attributes));
     }
     
     private static void addEmpty(String name, String body) {
-        Map<String, Attribute> attributes = new HashMap<String,Attribute>();
+        Map<String, Attribute> attributes = new HashMap<>();
         attributes.put("resources", new Attribute("/WEB-INF/views/layout/resources.jsp"));
         attributes.put("body", new Attribute(body));
-        attributes.put("title", new Attribute(DataConfig.title));
+        attributes.put("title", new Attribute(DataConfig.TITLE));
         
-        tilesDefinitions.put(name, new Definition(name, EMPTY_TEMPLATE, attributes));
+        TILES_DEFINITIONS.put(name, new Definition(name, EMPTY_TEMPLATE, attributes));
     }
     
     private static void addWithHeader(String name, String body) {
-        Map<String, Attribute> attributes = new HashMap<String,Attribute>();
-        attributes.put("title", new Attribute(DataConfig.title));
+        Map<String, Attribute> attributes = new HashMap<>();
+        attributes.put("title", new Attribute(DataConfig.TITLE));
         attributes.put("resources", new Attribute("/WEB-INF/views/layout/resources.jsp"));
         attributes.put("body", new Attribute(body));
-        tilesDefinitions.put(name, new Definition(name, HEADER_TEMPLATE, attributes));
+        TILES_DEFINITIONS.put(name, new Definition(name, HEADER_TEMPLATE, attributes));
     }
     
     private static void addDefaultWithoutHeader(String name, String body) {
-        Map<String, Attribute> attributes = new HashMap<String,Attribute>();
-        attributes.put("title", new Attribute(DataConfig.title));
+        Map<String, Attribute> attributes = new HashMap<>();
+        attributes.put("title", new Attribute(DataConfig.TITLE));
         attributes.put("resources", new Attribute("/WEB-INF/views/layout/resources.jsp"));
         attributes.put("body", new Attribute(body));
-        tilesDefinitions.put(name, new Definition(name, BASE_TEMPLATE_WITHOUT_HEADER, attributes));
+        TILES_DEFINITIONS.put(name, new Definition(name, BASE_TEMPLATE_WITHOUT_HEADER, attributes));
     }
     
 }
