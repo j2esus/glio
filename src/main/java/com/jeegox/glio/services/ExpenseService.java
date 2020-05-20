@@ -19,12 +19,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ExpenseService {
 
+    private final ExpenseDAO expenseDAO;
+    private final CategoryDAO categoryDAO;
+    private final SubcategoryDAO subcategoryDAO;
+
     @Autowired
-    private ExpenseDAO expenseDAO;
-    @Autowired
-    private CategoryDAO categoryDAO;
-    @Autowired
-    private SubcategoryDAO subcategoryDAO;
+    public ExpenseService(ExpenseDAO expenseDAO, CategoryDAO categoryDAO, SubcategoryDAO subcategoryDAO) {
+        this.expenseDAO = expenseDAO;
+        this.categoryDAO = categoryDAO;
+        this.subcategoryDAO = subcategoryDAO;
+    }
 
     @Transactional
     public void saveOrUpdate(Expense expense) {

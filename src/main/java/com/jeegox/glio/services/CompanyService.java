@@ -20,15 +20,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CompanyService {
 
-    @Autowired
-    private CompanyDAO companyDAO;
-    @Autowired
-    private UserTypeDAO userTypeDAO;
-    @Autowired
-    private UserDAO userDAO;
-    @Autowired
-    private OptionMenuDAO optionMenuDAO;
+    private final CompanyDAO companyDAO;
+    private final UserTypeDAO userTypeDAO;
+    private final UserDAO userDAO;
+    private final OptionMenuDAO optionMenuDAO;
 
+    @Autowired
+    public CompanyService(CompanyDAO companyDAO, UserTypeDAO userTypeDAO, UserDAO userDAO, OptionMenuDAO optionMenuDAO) {
+        this.companyDAO = companyDAO;
+        this.userTypeDAO = userTypeDAO;
+        this.userDAO = userDAO;
+        this.optionMenuDAO = optionMenuDAO;
+    }
+    
     @Transactional(readOnly = true)
     public List<Company> findAll() {
         return companyDAO.findAll();

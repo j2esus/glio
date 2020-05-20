@@ -13,10 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AddressService {
+    private final StateDAO stateDAO;
+    private final TownDAO townDAO;
+    
     @Autowired
-    private StateDAO stateDAO;
-    @Autowired
-    private TownDAO townDAO;
+    public AddressService(StateDAO stateDAO, TownDAO townDAO){
+        this.stateDAO = stateDAO;
+        this.townDAO = townDAO;
+    }
 
     @Transactional(readOnly = true)
     public List<State> findAll() {

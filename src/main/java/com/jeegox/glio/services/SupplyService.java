@@ -14,10 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SupplyService {
 
+    private final ArticleDAO articleDAO;
+    private final CategoryArticleDAO categoryArticleDAO;
+
     @Autowired
-    private ArticleDAO articleDAO;
-    @Autowired
-    private CategoryArticleDAO categoryArticleDAO;
+    public SupplyService(ArticleDAO articleDAO, CategoryArticleDAO categoryArticleDAO) {
+        this.articleDAO = articleDAO;
+        this.categoryArticleDAO = categoryArticleDAO;
+    }
     
     @Transactional(readOnly = true)
     public Article findBydId(Integer id) {

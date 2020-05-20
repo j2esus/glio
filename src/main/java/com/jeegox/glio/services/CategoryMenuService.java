@@ -18,10 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CategoryMenuService {
+    private final CategoryMenuDAO categoryMenuDAO;
+    private final OptionMenuDAO optionMenuDAO;
+    
     @Autowired
-    private CategoryMenuDAO categoryMenuDAO;
-    @Autowired
-    private OptionMenuDAO optionMenuDAO;
+    public CategoryMenuService(CategoryMenuDAO categoryMenuDAO, OptionMenuDAO optionMenuDAO){
+        this.categoryMenuDAO = categoryMenuDAO;
+        this.optionMenuDAO = optionMenuDAO;
+    }
     
     @Transactional(readOnly = true)
     public List<CategoryMenu> findCategoryAll() {

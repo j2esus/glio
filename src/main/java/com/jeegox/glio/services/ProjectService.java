@@ -27,14 +27,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProjectService {
     
+    private final ProjectDAO projectDAO;
+    private final AimDAO aimDAO;
+    private final TaskDAO taskDAO;
+    private final TimeDAO timeDAO;
+
     @Autowired
-    private ProjectDAO projectDAO;
-    @Autowired
-    private AimDAO aimDAO;
-    @Autowired
-    private TaskDAO taskDAO;
-    @Autowired
-    private TimeDAO timeDAO;
+    public ProjectService(ProjectDAO projectDAO, AimDAO aimDAO, TaskDAO taskDAO, TimeDAO timeDAO) {
+        this.projectDAO = projectDAO;
+        this.aimDAO = aimDAO;
+        this.taskDAO = taskDAO;
+        this.timeDAO = timeDAO;
+    }
 
     @Transactional
     public void saveOrUpdate(Project project) {

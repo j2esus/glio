@@ -1,5 +1,6 @@
 package com.jeegox.glio.services;
 
+import com.jeegox.glio.dao.admin.CompanyDAO;
 import com.jeegox.glio.dao.admin.SessionDAO;
 import com.jeegox.glio.dao.admin.TokenDAO;
 import com.jeegox.glio.dao.admin.UserDAO;
@@ -37,18 +38,22 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
     
+    private final UserDAO userDAO;
+    private final SessionDAO sessionDAO;
+    private final CompanyDAO companyDAO;
+    private final TaskDAO taskDAO;
+    private final UserTypeDAO userTypeDAO;
+    private final TokenDAO tokenDAO;
+
     @Autowired
-    private UserDAO userDAO;
-    @Autowired
-    private SessionDAO sessionDAO;
-    @Autowired
-    private CompanyService companyService;
-    @Autowired
-    private TaskDAO taskDAO;
-    @Autowired
-    private UserTypeDAO userTypeDAO;
-    @Autowired
-    private TokenDAO tokenDAO;
+    public UserService(UserDAO userDAO, SessionDAO sessionDAO, CompanyDAO companyDAO, TaskDAO taskDAO, UserTypeDAO userTypeDAO, TokenDAO tokenDAO) {
+        this.userDAO = userDAO;
+        this.sessionDAO = sessionDAO;
+        this.companyDAO = companyDAO;
+        this.taskDAO = taskDAO;
+        this.userTypeDAO = userTypeDAO;
+        this.tokenDAO = tokenDAO;
+    }
     
     @Transactional(readOnly = true)
     public List<User> findAll(){
@@ -179,7 +184,7 @@ public class UserService {
 
     @Transactional
     public void save(User user) throws Exception {
-        Company c = this.companyService.findBydId(user.getFather().getId());
+        Company c = this.companyDAO.findById(user.getFather().getId());
         int count = user.getId() == null ? 1 : 0;
         if(this.count(c) + count > c.getTotalUser()){
             throw new Exception("Haz llegado a tu límite de usuarios permitidos.");
