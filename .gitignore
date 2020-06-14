@@ -7,3 +7,11 @@
 glio.properties
 glio.log
 glio.script
+
+# IntelliJ
+/.idea/**
+*.iws
+out/
+*.iml
+modules.xml
+*.ipr
