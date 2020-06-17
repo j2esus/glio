@@ -5,7 +5,6 @@ let $btnRefresh,
 let $divChart, $btnRefreshMonth, $dataTableMonth, $year, $totalMonth, $tittleCategoryMonth,
         $dataTableCatMonth, $totalMonthCategory;
 
-
 let $divCategory, $totalCategory,
         $divSubcategory, $totalSubcategory;
 
@@ -17,7 +16,7 @@ let $divCategoryDetail, $divSubcategoryDetail, $tittleSubcategoryMonth, _dataCat
 
 let _months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-let __chartCategory;
+let __chartCategory, __chartSubcategory, __chartCategoryYear, __chartSubcategoryYear;
 
 $(document).ready(function () {
     initComponents();
@@ -62,6 +61,9 @@ function initComponents() {
     $btnYearBack.hide();
     
     __chartCategory = new mx.jeegox.jChart($('#divGraphCategory'));
+    __chartSubcategory = new mx.jeegox.jChart($('#divGraphSubcategory'));
+    __chartCategoryYear = new mx.jeegox.jChart($('#divGraphCategoryMonth'));
+    __chartSubcategoryYear = new mx.jeegox.jChart($('#divGraphSubcategoryMonth'));
 }
 
 function initPanels() {
@@ -203,7 +205,7 @@ function findDataCategory() {
         beforeSend: function (xhr) {
             _blockUI.block();
             _uiUtil.clearDataTable($dataTableGral);
-            __chartCategory.builtPie(data, labels);
+            __chartCategory.clearPie();
             _dataCategory = [];
             _indexSelectedCategory = -1;
         },
@@ -222,7 +224,7 @@ function findDataCategory() {
                 });
 
                 $dataTableGral.tablePagination(_uiUtil.getOptionsPaginator(5));
-                __chartCategory.builtPie(data, labels);
+                __chartCategory.buildPie(data, labels);
                 $totalCategory.html(accounting.formatMoney(total));
             } else {
                 _notify.show("La consulta no produjo resultados.", "danger");
@@ -277,7 +279,7 @@ function findDataSubcategory(idCategory) {
         beforeSend: function (xhr) {
             _blockUI.block();
             _uiUtil.clearDataTable($dataTableSub);
-            buildChartSubcategory(data, labels);
+            __chartSubcategory.clearPie();
         },
         success: function (items) {
             if (items.length > 0) {
@@ -294,7 +296,7 @@ function findDataSubcategory(idCategory) {
 
                 $dataTableSub.tablePagination(_uiUtil.getOptionsPaginator(5));
 
-                buildChartSubcategory(data, labels);
+                __chartSubcategory.buildPie(data, labels);
                 $totalSubcategory.html(accounting.formatMoney(total));
 
             }
@@ -303,33 +305,6 @@ function findDataSubcategory(idCategory) {
         }
     });
 }
-
-function buildChartSubcategory(data, labels) {
-
-    $('#divGraphSubcategory').html('');
-    $('#divGraphSubcategory').html('<canvas id="canvGraphSubcategory" style="width: 100%"></canvas>');
-
-    let myChart = document.getElementById("canvGraphSubcategory");
-    let ctxMix = myChart.getContext('2d');
-
-    let config = {
-        datasets: [{
-                data: data,
-                backgroundColor: _uiUtil.randomArrayColorGenerator(labels.length)
-            }],
-
-        labels: labels
-    };
-
-    _chart = new Chart(ctxMix, {
-        type: 'pie',
-        data: config,
-        options: {
-            responsive: true
-        }
-    });
-}
-
 function buildChartsMonths() {
     let labelsMonth = [];
     let dataMonth = [];
@@ -373,9 +348,8 @@ function buildChartsMonths() {
 function buildChartMonths_year() {
     showCategoryDetails_year();
 
-    let labelsMonthCat = [];
-    let dataMonthCat = [];
-    let dataPercentMonthCat = [];
+    let labels = [];
+    let data = [];
     let totalMonthCat = 0;
     $.ajax({
         type: "POST",
@@ -386,26 +360,25 @@ function buildChartMonths_year() {
         beforeSend: function (xhr) {
             _blockUI.block();
             _uiUtil.clearDataTable($dataTableCatMonth);
-            buildChartMonthCategoryMonth(dataMonthCat, labelsMonthCat);
+            __chartCategoryYear.clearPie();
             $totalMonthCategory.html(accounting.formatMoney(totalMonthCat));
             _dataCategoryDetails = [];
         },
         success: function (items) {
             if (items.length > 0) {
                 $.each(items, function (i, item) {
-                    labelsMonthCat.push(item.name);
-                    dataMonthCat.push(item.amount);
+                    labels.push(item.name);
                     totalMonthCat += item.amount;
                     _dataCategoryDetails.push(item);
                 });
 
                 $.each(items, function (i, item) {
                     var percent = _jsUtil.round((item.amount / totalMonthCat) * 100);
-                    dataPercentMonthCat.push(percent);
+                    data.push(percent);
                     addRowToTable(item, $dataTableCatMonth, percent);
                 });
                 $dataTableCatMonth.tablePagination(_uiUtil.getOptionsPaginator(5));
-                buildChartMonthCategoryMonth(dataPercentMonthCat, labelsMonthCat);
+                __chartCategoryYear.buildPie(data, labels);
                 $totalMonthCategory.html(accounting.formatMoney(totalMonthCat));
             }
         }, complete: function () {
@@ -417,9 +390,8 @@ function buildChartMonths_year() {
 function buildChartMonths_yearMonth() {
     showCategoryDetails_month();
 
-    let labelsMonthCat = [];
-    let dataMonthCat = [];
-    let dataPercentMonthCat = [];
+    let labels = [];
+    let data = [];
     let totalMonthCat = 0;
     $.ajax({
         type: "POST",
@@ -431,26 +403,25 @@ function buildChartMonths_yearMonth() {
         beforeSend: function (xhr) {
             _blockUI.block();
             _uiUtil.clearDataTable($dataTableCatMonth);
-            buildChartMonthCategoryMonth(dataMonthCat, labelsMonthCat);
+            __chartCategoryYear.clearPie();
             $totalMonthCategory.html(accounting.formatMoney(totalMonthCat));
             _dataCategoryDetails = [];
         },
         success: function (items) {
             if (items.length > 0) {
                 $.each(items, function (i, item) {
-                    labelsMonthCat.push(item.name);
-                    dataMonthCat.push(item.amount);
+                    labels.push(item.name);
                     totalMonthCat += item.amount;
                     _dataCategoryDetails.push(item);
                 });
 
                 $.each(items, function (i, item) {
                     var percent = _jsUtil.round((item.amount / totalMonthCat) * 100);
-                    dataPercentMonthCat.push(percent);
+                    data.push(percent);
                     addRowToTable(item, $dataTableCatMonth, percent);
                 });
                 $dataTableCatMonth.tablePagination(_uiUtil.getOptionsPaginator(5));
-                buildChartMonthCategoryMonth(dataPercentMonthCat, labelsMonthCat);
+                __chartCategoryYear.buildPie(data, labels);
                 $totalMonthCategory.html(accounting.formatMoney(totalMonthCat));
             }
         }, complete: function () {
@@ -461,9 +432,8 @@ function buildChartMonths_yearMonth() {
 
 function buildCharSubcategory_yearMonth(idCategory) {
 
-    let labelsMonthCat = [];
-    let dataMonthCat = [];
-    let dataPercentMonthCat = [];
+    let labels = [];
+    let data = [];
     let totalMonthCat = 0;
     $.ajax({
         type: "POST",
@@ -476,23 +446,23 @@ function buildCharSubcategory_yearMonth(idCategory) {
         beforeSend: function (xhr) {
             _blockUI.block();
             _uiUtil.clearDataTable($dataTableSubMonth);
-            buildChartMonthSubcategoryMonth(dataMonthCat, labelsMonthCat);
+            __chartSubcategoryYear.clearPie();
             $totalMonthSubcategory.html(accounting.formatMoney(totalMonthCat));
         },
         success: function (items) {
             if (items.length > 0) {
                 $.each(items, function (i, item) {
-                    labelsMonthCat.push(item.name);
+                    labels.push(item.name);
                     totalMonthCat += item.amount;
                 });
 
                 $.each(items, function (i, item) {
                     var percent = _jsUtil.round((item.amount / totalMonthCat) * 100);
-                    dataPercentMonthCat.push(percent);
+                    data.push(percent);
                     addRowToTable(item, $dataTableSubMonth, percent);
                 });
                 $dataTableSubMonth.tablePagination(_uiUtil.getOptionsPaginator(5));
-                buildChartMonthSubcategoryMonth(dataPercentMonthCat, labelsMonthCat);
+                __chartSubcategoryYear.buildPie(data, labels);
                 $totalMonthSubcategory.html(accounting.formatMoney(totalMonthCat));
             }
         }, complete: function () {
@@ -532,57 +502,6 @@ function writeGraphMonth(months, data) {
             legend: {
                 display: false
             }
-        }
-    });
-}
-
-function buildChartMonthCategoryMonth(data, labels) {
-
-    $('#divGraphCategoryMonth').html('');
-    $('#divGraphCategoryMonth').html('<canvas id="canvGraphCategoryMonth" style="width: 100%"></canvas>');
-
-    let myChart = document.getElementById("canvGraphCategoryMonth");
-    let ctxMix = myChart.getContext('2d');
-
-    let config = {
-        datasets: [{
-                data: data,
-                backgroundColor: _uiUtil.randomArrayColorGenerator(labels.length)
-            }],
-        labels: labels
-    };
-
-    _chart = new Chart(ctxMix, {
-        type: 'pie',
-        data: config,
-        options: {
-            responsive: true
-        }
-    });
-}
-
-function buildChartMonthSubcategoryMonth(data, labels) {
-
-    $('#divGraphSubcategoryMonth').html('');
-    $('#divGraphSubcategoryMonth').html('<canvas id="canvGraphSubcategoryMonth" style="width: 100%"></canvas>');
-
-    let myChart = document.getElementById("canvGraphSubcategoryMonth");
-    let ctxMix = myChart.getContext('2d');
-
-    let config = {
-        datasets: [{
-                data: data,
-                backgroundColor: _uiUtil.randomArrayColorGenerator(labels.length)
-            }],
-
-        labels: labels
-    };
-
-    _chart = new Chart(ctxMix, {
-        type: 'pie',
-        data: config,
-        options: {
-            responsive: true
         }
     });
 }

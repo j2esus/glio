@@ -389,7 +389,7 @@ _jsUtil = (function () {
             _canvas = (Math.random().toString(16));
         }
 
-        function builtPie(data, labels) {
+        function buildPie(data, labels) {
             div.html('');
             div.html('<canvas id="'+_canvas+'" style="width: 100%"></canvas>');
 
@@ -401,7 +401,6 @@ _jsUtil = (function () {
                         data: data,
                         backgroundColor: _uiUtil.randomArrayColorGenerator(labels.length)
                     }],
-
                 labels: labels
             };
 
@@ -414,8 +413,13 @@ _jsUtil = (function () {
             });
         }
 
+        function clearPie(){
+            buildPie([], []);
+        }
+
         $.extend(this, {
-            builtPie: builtPie
+            buildPie: buildPie,
+            clearPie: clearPie
         });
         
         init();
