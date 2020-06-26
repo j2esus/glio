@@ -11,7 +11,10 @@ import com.jeegox.glio.entities.expenses.Expense;
 import com.jeegox.glio.entities.expenses.Subcategory;
 import com.jeegox.glio.enumerators.Status;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,7 +66,7 @@ public class ExpenseService {
     }
 
     @Transactional(readOnly = true)
-    public List<String> yearsExpenses(Company company) {
+    public List<Integer> yearsExpenses(Company company) {
         return expenseDAO.yearsExpenses(company);
     }
 
@@ -129,5 +132,20 @@ public class ExpenseService {
         if(!month.equals(-1))
             return expenseDAO.findDataSubcategory(category, year, month);
         return expenseDAO.findDataSubcategory(category, year);
+    }
+
+    @Transactional(readOnly = true)
+    public Map<Integer, List<MonthDTO>> findDataCategoryAllYears(Company company, Integer idCategory, Integer idSubcategory){
+        Map<Integer, List<MonthDTO>> response = new HashMap<>();
+        List<Integer> years = expenseDAO.yearsExpenses(company);
+        for (Integer year : years){
+            if(idCategory != -1 && idSubcategory != -1)
+                response.put(year, expenseDAO.getMonthAmounts(company, year, idCategory, idSubcategory));
+            else if(idCategory != -1)
+                response.put(year, expenseDAO.getMonthAmounts(company, year, idCategory));
+            else
+                response.put(year, expenseDAO.getMonthAmounts(company, year));
+        }
+        return response;
     }
 }

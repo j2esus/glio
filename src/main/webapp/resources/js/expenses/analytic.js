@@ -1,6 +1,7 @@
 let $btnRefresh,
         $dataTableGral,
-        $btnRefreshSub, $btnRefreshDetails, $btnYearBack, $btnGralBack;
+        $btnRefreshSub, $btnRefreshDetails, $btnYearBack, $btnGralBack, $btnRefreshComparator,
+    $idCategoryF, $idSubcategoryF;
 
 let $divChart, $btnRefreshMonth, $dataTableMonth, $year, $totalMonth, $tittleCategoryMonth,
         $dataTableCatMonth, $totalMonthCategory;
@@ -24,6 +25,7 @@ $(document).ready(function () {
     initEvents();
     findDataCategory();
     buildChartsMonths();
+    buildChartsComparator();
 });
 
 function initComponents() {
@@ -33,6 +35,9 @@ function initComponents() {
     $btnRefreshDetails = $('#btnRefreshDetails');
     $btnYearBack = $('#btnYearBack');
     $btnGralBack = $('#btnGralBack');
+    $btnRefreshComparator = $('#btnRefreshComparator');
+    $idCategoryF = $('#idCategoryF');
+    $idSubcategoryF = $('#idSubcategoryF');
 
     $dataTableSub = $('#dataTableSub');
 
@@ -116,9 +121,20 @@ function initEvents() {
     $year.change(onChangeYear);
     $btnYearBack.click(onClickBtnYearBack);
     $btnGralBack.click(onClickBtnGralBack);
+    $btnRefreshComparator.click(onClickBtnRefreshComparator);
 
     $btnYearBackSub.click(onClickBtnYearBackSub);
     $btnRefreshDetailsSub.click(onClickBtnRefreshDetailsSub);
+
+
+    $idCategoryF.change(function(){
+        findSubcategories($idCategoryF.val(), $idSubcategoryF, "--Todos");
+        buildChartsComparator();
+    });
+
+    $idSubcategoryF.change(function(){
+        buildChartsComparator();
+    });
 }
 
 function onClickBtnRefresh() {
@@ -154,6 +170,10 @@ function onClickBtnYearBack() {
 
 function onClickBtnGralBack() {
     returnGeneral();
+}
+
+function onClickBtnRefreshComparator(){
+    buildChartsComparator();
 }
 
 function showSubcategoryDetails() {
@@ -473,7 +493,7 @@ function buildCharSubcategory_yearMonth(idCategory) {
 
 function writeGraphMonth(months, data) {
     $divChart.html('<canvas id="myBarChart" width="100" height="35"></canvas>');
-    var ctxLine = $("#myBarChart");
+    const ctxLine = $("#myBarChart");
     new Chart(ctxLine, {
         type: 'bar',
         data: {
@@ -502,6 +522,92 @@ function writeGraphMonth(months, data) {
             legend: {
                 display: false
             }
+        }
+    });
+}
+
+function buildChartsComparator() {
+    let datasets= [];
+
+    $.ajax({
+        type: "POST",
+        url: $.PATH + "analytic/findDataCategoryAllYears",
+        data: {
+            idCategory: $idCategoryF.val(),
+            idSubcategory: $idSubcategoryF.val()
+        },
+        async: false,
+        beforeSend: function (xhr) {
+            _blockUI.block();
+            //writeGraphComparator(datasets);
+        },
+        success: function (items) {
+            let colors = _uiUtil.randomArrayColorGenerator($year.find("option").length);
+            let i = 0;
+            $.each(items, function (year, item) {
+                datasets.push({
+                    label: year,
+                    backgroundColor: colors[i],
+                    borderColor: colors[i],
+                    data: item.map(function(i){
+                        return i.amount;
+                    }),
+                    fill: false
+                });
+                i++;
+            });
+            writeGraphComparator(datasets);
+        }, complete: function () {
+            _blockUI.unblock();
+        }
+    });
+}
+
+function writeGraphComparator(datasets) {
+    $('#divCharComparator').html('<canvas id="myComparatorChart" width="100" height="40"></canvas>');
+    const ctxLine = $("#myComparatorChart");
+    new Chart(ctxLine, {
+        type: 'line',
+        data: {
+            labels: _months,
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            tooltips: {
+                mode: 'index',
+                intersect: false,
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            }
+        }
+    });
+}
+
+function findSubcategories(idCategory, select, text) {
+    select.empty();
+    select.append("<option value='-1'>" + text + "</option>");
+
+    $.ajax({
+        type: "POST",
+        url: $.PATH + "analytic/findSubcategories",
+        async: false,
+        data: {
+            idCategory: idCategory
+        },
+        beforeSend: function (xhr) {
+            _blockUI.block();
+        },
+        success: function (items) {
+            if (items.length > 0) {
+                $.each(items, function (i, item) {
+                    select.append("<option value='" + item.id + "'>" + item.name + "</option>");
+                });
+            }
+        }, complete: function () {
+            _blockUI.unblock();
         }
     });
 }

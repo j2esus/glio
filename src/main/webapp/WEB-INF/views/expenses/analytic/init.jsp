@@ -8,6 +8,9 @@
         <a class="nav-link active" id="month-tab" data-toggle="tab" href="#month" role="tab" aria-controls="month" aria-selected="false">Mes</a>
     </li>
     <li class="nav-item">
+    <a class="nav-link" id="comparator-tab" data-toggle="tab" href="#comparator" role="tab" aria-controls="comparator" aria-selected="true">Comparador</a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">General</a>
     </li>
 </ul>
@@ -120,6 +123,38 @@
                     <div id="divGraphSubcategoryMonth">
                         <canvas id="canvGraphSubcategoryMonth" style="width: 100%"></canvas>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="comparator" role="tabpanel" aria-labelledby="comparator-tab">
+        <div class="row">
+            <div class="col-lg-11 form-inline">
+                <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                    <div class="input-group-addon">Categoría</div>
+                    <select class="custom-select" id = "idCategoryF">
+                        <option value="-1">--Todos</option>
+                        <c:forEach items="${categories}" var="category">
+                            <option value="${category.id}">${category.name}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                    <div class="input-group-addon">Subcategoría</div>
+                    <select class="custom-select" id = "idSubcategoryF">
+                        <option value="0">--Todos</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-1">
+                <div class="text-right">
+                    <button type="button" class="btn btn-success fa fa-refresh" id="btnRefreshComparator"></button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="divCharComparator">
                 </div>
             </div>
         </div>

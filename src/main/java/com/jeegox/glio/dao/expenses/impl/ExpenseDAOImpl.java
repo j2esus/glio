@@ -12,6 +12,7 @@ import com.jeegox.glio.util.Util;
 import java.util.Date;
 import java.util.List;
 import org.hibernate.query.Query;
+import org.hibernate.type.StringType;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -88,7 +89,7 @@ public class ExpenseDAOImpl extends GenericDAOImpl<Expense, Integer> implements 
     }
 
     @Override
-    public List<String> yearsExpenses(Company company) {
+    public List<Integer> yearsExpenses(Company company) {
         StringBuilder sb = new StringBuilder();
         sb.append(" select year(date) ");
         sb.append(" from Expense e ");
@@ -103,15 +104,77 @@ public class ExpenseDAOImpl extends GenericDAOImpl<Expense, Integer> implements 
     @Override
     public List<MonthDTO> getMonthAmounts(Company company, Integer year) {
         List<MonthDTO> result = Util.getMonths();
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select month(expense_date), sum(amount) ");
-        sb.append(" from expense ");
-        sb.append(" where status = '").append(Status.ACTIVE).append("'");
-        sb.append(" and year(expense_date) = ").append(year).append(" ");
-        sb.append(" and id_company = ").append(company.getId());
-        sb.append(" group by month(expense_date) ");
+        String s = " select month(expense_date), sum(amount) "+
+                " from expense " +
+                " where status = :status "+
+                " and year(expense_date) = :year "+
+                " and id_company = :idCompany "+
+                " group by month(expense_date) ";
 
-        List<Object[]> data = sessionFactory.getCurrentSession().createNativeQuery(sb.toString()).list();
+        Query query = sessionFactory.getCurrentSession().createNativeQuery(s);
+        query.setParameter("status", Status.ACTIVE.name(), StringType.INSTANCE);
+        query.setParameter("year", year);
+        query.setParameter("idCompany", company.getId());
+
+        List<Object[]> data = query.list();
+
+        for (Object[] objects : data) {
+            result.get(((Integer) objects[0])-1).setAmount((Double) objects[1]);
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<MonthDTO> getMonthAmounts(Company company, Integer year, Integer idCategory){
+        List<MonthDTO> result = Util.getMonths();
+        String s = " select month(e.expense_date), sum(e.amount) "+
+                " from expense e " +
+                " inner join subcategory s on (s.id_subcategory = e.id_subcategory) "+
+                " inner join category c on (c.id_category = s.id_category ) "+
+                " where e.status = :status "+
+                " and year(e.expense_date) = :year "+
+                " and e.id_company = :idCompany "+
+                " and c.id_category = :idCategory "+
+                " group by month(e.expense_date) ";
+
+        Query query = sessionFactory.getCurrentSession().createNativeQuery(s);
+        query.setParameter("status", Status.ACTIVE.name(), StringType.INSTANCE);
+        query.setParameter("year", year);
+        query.setParameter("idCompany", company.getId());
+        query.setParameter("idCategory", idCategory);
+
+        List<Object[]> data = query.list();
+
+        for (Object[] objects : data) {
+            result.get(((Integer) objects[0])-1).setAmount((Double) objects[1]);
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<MonthDTO> getMonthAmounts(Company company, Integer year, Integer idCategory, Integer idSubcategory){
+        List<MonthDTO> result = Util.getMonths();
+        String s = " select month(e.expense_date), sum(e.amount) "+
+                " from expense e " +
+                " inner join subcategory s on (s.id_subcategory = e.id_subcategory) "+
+                " inner join category c on (c.id_category = s.id_category ) "+
+                " where e.status = :status "+
+                " and year(e.expense_date) = :year "+
+                " and e.id_company = :idCompany "+
+                " and c.id_category = :idCategory "+
+                " and s.id_subcategory = :idSubcategory "+
+                " group by month(e.expense_date) ";
+
+        Query query = sessionFactory.getCurrentSession().createNativeQuery(s);
+        query.setParameter("status", Status.ACTIVE.name(), StringType.INSTANCE);
+        query.setParameter("year", year);
+        query.setParameter("idCompany", company.getId());
+        query.setParameter("idCategory", idCategory);
+        query.setParameter("idSubcategory", idSubcategory);
+
+        List<Object[]> data = query.list();
 
         for (Object[] objects : data) {
             result.get(((Integer) objects[0])-1).setAmount((Double) objects[1]);
@@ -199,5 +262,6 @@ public class ExpenseDAOImpl extends GenericDAOImpl<Expense, Integer> implements 
         q.setParameter("month", month);
         return q.list();
     }
+
 
 }

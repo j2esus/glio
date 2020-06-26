@@ -3,9 +3,15 @@ package com.jeegox.glio.controllers.expenses;
 import com.jeegox.glio.controllers.BaseController;
 import com.jeegox.glio.dto.GeneralCategoryDTO;
 import com.jeegox.glio.dto.MonthDTO;
+import com.jeegox.glio.entities.expenses.Category;
+import com.jeegox.glio.entities.expenses.Subcategory;
+import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.services.ExpenseService;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+
+import org.omg.CosNaming.NamingContextExtPackage.AddressHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +28,8 @@ public class AnalyticController extends BaseController{
     
     @RequestMapping("init")
     public String index(Model model, HttpServletRequest request){
+        List<Category> categories = expenseService.findBy(getCurrentCompany(request), new Status[]{Status.ACTIVE}, "");
+        model.addAttribute("categories", categories);
         model.addAttribute("dates", expenseService.yearsExpenses(getCurrentCompany(request)));
         return "analytic/init";
     }
@@ -61,5 +69,17 @@ public class AnalyticController extends BaseController{
     public List<GeneralCategoryDTO> findDataSubcategoryYearMonth(HttpServletRequest request, @RequestParam Integer idCategory,
             @RequestParam Integer year, @RequestParam Integer month){
         return expenseService.findDataSubcategory(expenseService.findCategoryBy(idCategory), year, month);
+    }
+
+    @RequestMapping(value = "findDataCategoryAllYears", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<Integer, List<MonthDTO>> findDataCategoryAllYears(HttpServletRequest request, @RequestParam Integer idCategory, Integer idSubcategory){
+        return expenseService.findDataCategoryAllYears(getCurrentCompany(request), idCategory, idSubcategory);
+    }
+
+    @RequestMapping(value = "findSubcategories", method = RequestMethod.POST)
+    @ResponseBody
+    public List<Subcategory> findSubcategories(HttpServletRequest request, @RequestParam Integer idCategory){
+        return expenseService.findBy(expenseService.findCategoryBy(idCategory), new Status[]{Status.ACTIVE}, "");
     }
 }
