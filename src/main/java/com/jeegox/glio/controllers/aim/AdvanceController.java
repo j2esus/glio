@@ -21,9 +21,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/advance/**")
 public class AdvanceController extends BaseController{
+    private final ProjectService projectService;
+
     @Autowired
-    private ProjectService projectService;
-    
+    public AdvanceController(ProjectService projectService) {
+        this.projectService = projectService;
+    }
+
     @RequestMapping("init")
     public String index(Model model,HttpServletRequest request){
         return "advance/init";

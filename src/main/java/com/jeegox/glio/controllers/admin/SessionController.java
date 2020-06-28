@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/session/**")
 public class SessionController extends BaseController {
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public SessionController(UserService userService){
+        this.userService = userService;
+    }
     
     @RequestMapping("init")
     public String index(){

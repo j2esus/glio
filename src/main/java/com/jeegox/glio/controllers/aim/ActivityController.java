@@ -21,11 +21,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/activity/**")
 public class ActivityController extends BaseController {
+    private final UserService userService;
+    private final ProjectService projectService;
 
     @Autowired
-    private UserService userService;
-    @Autowired
-    private ProjectService projectService;
+    public ActivityController(UserService userService, ProjectService projectService) {
+        this.userService = userService;
+        this.projectService = projectService;
+    }
 
     @RequestMapping("init")
     public String index(Model model, HttpServletRequest request) {

@@ -16,8 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/company/**")
 public class CompanyController extends BaseController{
+    private final CompanyService companyService;
+
     @Autowired
-    private CompanyService companyService;
+    public CompanyController(CompanyService companyService){
+        this.companyService = companyService;
+    }
     
     @RequestMapping("")
     public String index(Model model){

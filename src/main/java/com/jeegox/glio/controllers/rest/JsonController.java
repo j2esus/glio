@@ -13,9 +13,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/json/**")
 public class JsonController {
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
-    
+    public JsonController(UserService userService) {
+        this.userService = userService;
+    }
+
     @RequestMapping(value = "login", method = RequestMethod.POST)
     @ResponseBody
     public UserResponse login(@RequestParam String username, @RequestParam String password){

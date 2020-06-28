@@ -27,12 +27,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/all/**")
 public class AllController extends BaseController {
+    private final CategoryMenuService categoryMenuService;
+    private final UserService userService;
+    private final ProjectService projectService;
+
     @Autowired
-    private CategoryMenuService categoryMenuService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private ProjectService projectService;
+    public AllController(CategoryMenuService categoryMenuService, UserService userService, ProjectService projectService) {
+        this.categoryMenuService = categoryMenuService;
+        this.userService = userService;
+        this.projectService = projectService;
+    }
 
     @RequestMapping("dash")
     public String dash(HttpServletRequest request, Model model){

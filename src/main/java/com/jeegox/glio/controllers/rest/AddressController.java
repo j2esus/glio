@@ -15,9 +15,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/json/address/**")
 public class AddressController {
+    private final AddressService addressService;
+
     @Autowired
-    private AddressService addressService;
-    
+    public AddressController(AddressService addressService) {
+        this.addressService = addressService;
+    }
+
     @RequestMapping(value = "findAllStates", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public List<State> findAllStates(){

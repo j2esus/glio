@@ -19,9 +19,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/article/**")
 public class ArticleController extends BaseController{
+    private final SupplyService supplyService;
+
     @Autowired
-    private SupplyService supplyService;
-    
+    public ArticleController(SupplyService supplyService) {
+        this.supplyService = supplyService;
+    }
+
     @RequestMapping("init")
     public String index(Model model){
         Status[] status = {Status.ACTIVE, Status.INACTIVE};

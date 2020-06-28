@@ -20,9 +20,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/expense/**")
 public class ExpenseController extends BaseController {
+    private final ExpenseService expenseService;
+
     @Autowired
-    private ExpenseService expenseService;
-    
+    public ExpenseController(ExpenseService expenseService) {
+        this.expenseService = expenseService;
+    }
+
     @RequestMapping("init")
     public String index(HttpServletRequest request, Model model){
         List<Category> categories = expenseService.findBy(getCurrentCompany(request), new Status[]{Status.ACTIVE}, "");

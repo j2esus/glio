@@ -24,10 +24,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class LoginController {
+    private final UserService userService;
+    private final CompanyService companyService;
+
     @Autowired
-    private UserService userService;
-    @Autowired
-    private CompanyService companyService;
+    public LoginController(UserService userService, CompanyService companyService) {
+        this.userService = userService;
+        this.companyService = companyService;
+    }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(Model model) {
@@ -110,7 +114,7 @@ public class LoginController {
     @ResponseBody
     public String logout(HttpServletRequest request) {
         try {
-            HttpSession httpSession = (HttpSession) request.getSession(false);
+            HttpSession httpSession = request.getSession(false);
             Session session = (Session) httpSession.getAttribute(Constants.Security.USER_SESSION);
             userService.changeStatus(session, Status.CLOSED);
             httpSession.invalidate();

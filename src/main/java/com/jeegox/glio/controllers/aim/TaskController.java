@@ -25,10 +25,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/task/**")
 public class TaskController extends BaseController {
+    private final ProjectService projectService;
+    private final UserService userService;
+
     @Autowired
-    private ProjectService projectService;
-    @Autowired
-    private UserService userService;
+    public TaskController(ProjectService projectService, UserService userService) {
+        this.projectService = projectService;
+        this.userService = userService;
+    }
 
     @RequestMapping("init")
     public String index(Model model, HttpServletRequest request) {

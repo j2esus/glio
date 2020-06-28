@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/token/**")
 public class TokenController extends BaseController{
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public TokenController(UserService userService){
+        this.userService = userService;
+    }
  
     @RequestMapping("init")
     public String index(){

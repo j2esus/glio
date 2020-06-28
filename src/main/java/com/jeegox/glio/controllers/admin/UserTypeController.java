@@ -17,9 +17,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/userType/**")
 public class UserTypeController extends BaseController {
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
-    
+    public UserTypeController(UserService userService) {
+        this.userService = userService;
+    }
+
     @RequestMapping("init")
     public String index(Model model){
         Status[] status = {Status.ACTIVE, Status.INACTIVE};
