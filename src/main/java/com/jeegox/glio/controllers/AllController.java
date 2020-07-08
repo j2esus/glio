@@ -11,9 +11,8 @@ import com.jeegox.glio.services.UserService;
 import com.jeegox.glio.services.ProjectService;
 import com.jeegox.glio.util.Constants;
 import com.jeegox.glio.util.Util;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +41,7 @@ public class AllController extends BaseController {
     public String dash(HttpServletRequest request, Model model){
         User user = getCurrentUser(request);
         List<CategoryMenuDTO> categoriesMenu = categoryMenuService.findByDTO(user.getUserType());
-        HttpSession httpSession = (HttpSession)request.getSession(false);
+        HttpSession httpSession = request.getSession(false);
         httpSession.setAttribute(Constants.Security.CATEGORY_LIST, categoriesMenu);
         return "all/dash";
     }
@@ -111,19 +110,14 @@ public class AllController extends BaseController {
     @RequestMapping(name = "module", method = RequestMethod.GET)
     public String module(Model model, @RequestParam Integer id,HttpServletRequest request){
         CategoryMenu cm = this.categoryMenuService.findById(id);
-        HttpSession httpSession = (HttpSession)request.getSession(false);
+        HttpSession httpSession = request.getSession(false);
         List<CategoryMenuDTO> categoriesMenu = (List<CategoryMenuDTO>)httpSession.getAttribute(Constants.Security.CATEGORY_LIST);
-        
-        Set<OptionMenu> optionsMenus = new TreeSet<>();
-        for(CategoryMenuDTO item: categoriesMenu){
-            if(item.getId().equals(id)){
-                optionsMenus = item.getOptionsMenus();
-                break;
-            }
-        }
-        if(cm != null)
-            model.addAttribute("moduleName", cm.getName());
-        httpSession.setAttribute(Constants.Security.MENU, optionsMenus);
+
+        CategoryMenuDTO category = categoriesMenu.stream().filter(x -> Objects.equals(x.getId(), id)).
+                findFirst().orElse(null);
+
+        model.addAttribute("moduleName", cm != null ? cm.getName(): "");
+        httpSession.setAttribute(Constants.Security.MENU, category != null ? category.getOptionsMenus(): new HashSet<>());
         return "all/module";
     }
     

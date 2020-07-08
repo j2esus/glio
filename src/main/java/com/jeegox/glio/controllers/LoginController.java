@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,16 +81,13 @@ public class LoginController {
             Session session = userService.login(username, Util.encodeSha256(password.trim()), "");
             if (session != null) {
                 Set<OptionMenu> options = session.getFather().getUserType().getOptions();
-                Map<String, Integer> mapaOptios = new HashMap<>();
-                Iterator<OptionMenu> it = options.iterator();
-                OptionMenu item;
-                while (it.hasNext()) {
-                    item = it.next();
-                    mapaOptios.put(item.getUrl().replace("/init", "").substring(1), 0);
-                }
-                mapaOptios.put("resources", 0);
-                mapaOptios.put("all", 0);
-                //options.stream().collect(Collectors.toMap(OptionMenu::getUrl, item -> item));
+
+                Map<String, String> mapaOptios = options.stream()
+                        .collect(Collectors.toMap(x -> x.getUrl().
+                                replace("/init","").substring(1), x -> x.getUrl()));
+
+                mapaOptios.put("resources", "");
+                mapaOptios.put("all", "");
                 HttpSession httpSession = request.getSession(false);
                 httpSession.setAttribute(Constants.Security.USER_SESSION, session);
                 httpSession.setAttribute(Constants.Security.OPTIONS_MAP, mapaOptios);
