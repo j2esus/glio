@@ -30,13 +30,14 @@ public class Article extends JComplexEntity<Integer, Company> implements Seriali
     private Status status;
     private Unity unity;
     private CategoryArticle categoryArticle;
+    private Size size;
     
     public Article(){
         
     }
 
     public Article(Integer id, String name, String sku, String description, Double cost, 
-            Double price, Status status, Unity unity, Company company, CategoryArticle categoryArticle) {
+            Double price, Status status, Unity unity, Company company, CategoryArticle categoryArticle, Size size) {
         this.id = id;
         this.name = name;
         this.sku = sku;
@@ -47,6 +48,7 @@ public class Article extends JComplexEntity<Integer, Company> implements Seriali
         this.unity = unity;
         this.father = company;
         this.categoryArticle = categoryArticle;
+        this.size = size;
     }
     
     
@@ -133,7 +135,17 @@ public class Article extends JComplexEntity<Integer, Company> implements Seriali
     public void setCategoryArticle(CategoryArticle categoryArticle) {
         this.categoryArticle = categoryArticle;
     }
-    
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_size", referencedColumnName = "id_size", nullable = false)
+    public Size getSize() {
+        return size;
+    }
+
+    public void setSize(Size size) {
+        this.size = size;
+    }
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_company", referencedColumnName = "id_company", nullable = false)
     @Override

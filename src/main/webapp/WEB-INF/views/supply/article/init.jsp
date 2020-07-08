@@ -24,6 +24,7 @@
                 <th>Sku</th>
                 <th>Descripción</th>
                 <th>Categoria</th>
+                <th>Tamaño</th>
                 <th>Costo</th>
                 <th>Precio</th>
                 <th>Estatus</th>
@@ -154,6 +155,16 @@
                             <div class="col-9">
                                 <input type="hidden" id="idCategoryArticle"/>
                                 <input type="text" class="form-control" id="categoryArticle" required="required">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3 col-form-label">
+                                Tamaño
+                            </div>
+                            <div class="col-9">
+                                <input type="hidden" id="idSize"/>
+                                <input type="text" class="form-control" id="size" required="required">
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>

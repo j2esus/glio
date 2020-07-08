@@ -2,9 +2,11 @@ package com.jeegox.glio.services;
 
 import com.jeegox.glio.dao.supply.ArticleDAO;
 import com.jeegox.glio.dao.supply.CategoryArticleDAO;
+import com.jeegox.glio.dao.supply.SizeDAO;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.supply.Article;
 import com.jeegox.glio.entities.supply.CategoryArticle;
+import com.jeegox.glio.entities.supply.Size;
 import com.jeegox.glio.enumerators.Status;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +18,13 @@ public class SupplyService {
 
     private final ArticleDAO articleDAO;
     private final CategoryArticleDAO categoryArticleDAO;
+    private final SizeDAO sizeDAO;
 
     @Autowired
-    public SupplyService(ArticleDAO articleDAO, CategoryArticleDAO categoryArticleDAO) {
+    public SupplyService(ArticleDAO articleDAO, CategoryArticleDAO categoryArticleDAO, SizeDAO sizeDAO) {
         this.articleDAO = articleDAO;
         this.categoryArticleDAO = categoryArticleDAO;
+        this.sizeDAO = sizeDAO;
     }
     
     @Transactional(readOnly = true)
@@ -68,5 +72,31 @@ public class SupplyService {
     @Transactional(readOnly = true)
     public List<CategoryArticle> findByCompany(Company company, String nameLike){
         return categoryArticleDAO.findByCompany(company, nameLike);
+    }
+
+    @Transactional
+    public void saveOrUpdate(Size size){
+        sizeDAO.save(size);
+    }
+
+    @Transactional
+    public void changeStatus(Size size, Status status) {
+        size.setStatus(status);
+        saveOrUpdate(size);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Size> findSizesBy(Company company, Status[] status) {
+        return sizeDAO.findSizesBy(company, status);
+    }
+
+    @Transactional(readOnly = true)
+    public Size findSizeById(Integer id){
+        return sizeDAO.findById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Size> findSizesByCompany(Company company, String nameLike){
+        return sizeDAO.findByCompany(company, nameLike);
     }
 }

@@ -3,6 +3,7 @@ package com.jeegox.glio.controllers.supply;
 import com.jeegox.glio.controllers.BaseController;
 import com.jeegox.glio.entities.supply.Article;
 import com.jeegox.glio.entities.supply.CategoryArticle;
+import com.jeegox.glio.entities.supply.Size;
 import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.enumerators.Unity;
 import com.jeegox.glio.services.SupplyService;
@@ -57,10 +58,11 @@ public class ArticleController extends BaseController{
     public String saveArticle(HttpServletRequest request, @RequestParam Integer id, @RequestParam String name,
             @RequestParam String sku, @RequestParam String description, @RequestParam Double cost,
             @RequestParam Double price,
-            @RequestParam Status status, @RequestParam Unity unity, @RequestParam Integer idCategoryArticle){
+            @RequestParam Status status, @RequestParam Unity unity, @RequestParam Integer idCategoryArticle,
+            @RequestParam Integer idSize){
         try{
             this.supplyService.saveOrUpdate(new Article(id.equals(0) ? null : id, name, sku, description, cost, 
-                    price, status, unity, getCurrentCompany(request), supplyService.findCategoryArticleBydId(idCategoryArticle)));
+                    price, status, unity, getCurrentCompany(request), supplyService.findCategoryArticleBydId(idCategoryArticle), supplyService.findSizeById(idSize)));
             return "OK";
         }catch(Exception e){
             return e.getMessage();
@@ -71,5 +73,11 @@ public class ArticleController extends BaseController{
     @ResponseBody
     public List<CategoryArticle> findByCompany(HttpServletRequest request, @RequestParam String name){
         return supplyService.findByCompany(getCurrentCompany(request), name);
+    }
+
+    @RequestMapping(value = "findSizesByCompany", method = RequestMethod.POST)
+    @ResponseBody
+    public List<Size> findSizesByCompany(HttpServletRequest request, @RequestParam String name){
+        return supplyService.findSizesByCompany(getCurrentCompany(request), name);
     }
 }

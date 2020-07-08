@@ -77,6 +77,31 @@ function initEvents() {
             $('#idCategoryArticle').val(ui.item.id);
         }
     });
+
+    $('#size').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                type: "POST",
+                url: $.PATH + "article/findSizesByCompany",
+                data: {
+                    name: request.term
+                },
+                success: function (data) {
+                    response($.map(data, function (size) {
+                        return {
+                            label: size.name,
+                            value: size.name,
+                            id: size.id
+                        };
+                    }));
+                }
+            });
+        },
+        minLength: 2,
+        select: function (event, ui) {
+            $('#idSize').val(ui.item.id);
+        }
+    });
 }
 
 function onClickNew() {
@@ -103,6 +128,7 @@ function addRowToTable(item, table) {
     fila += "<td>" + item.sku + "</td>";
     fila += "<td>" + item.description + "</td>";
     fila += "<td>" + item.categoryArticle.name + "</td>";
+    fila += "<td>" + item.size.name + "</td>";
     fila += "<td align='right'>" + accounting.formatMoney(item.cost) + "</td>";
     fila += "<td align='right'>" + accounting.formatMoney(item.price) + "</td>";
     fila += "<td>" + item.status + "</td>";
@@ -161,15 +187,16 @@ function deleteElement() {
 }
 
 function saveElement() {
-    var id = $('#idNew').val();
-    var sku = $('#sku').val();
-    var name = $('#name').val();
-    var description = $('#description').val();
-    var cost = $('#cost').val();
-    var price = $('#price').val();
-    var status = $('#status').val();
-    var unity = $('#unity').val();
-    var idCategoryArticle = $('#idCategoryArticle').val();
+    let id = $('#idNew').val();
+    let sku = $('#sku').val();
+    let name = $('#name').val();
+    let description = $('#description').val();
+    let cost = $('#cost').val();
+    let price = $('#price').val();
+    let status = $('#status').val();
+    let unity = $('#unity').val();
+    let idCategoryArticle = $('#idCategoryArticle').val();
+    let idSize = $('#idSize').val();
     $.ajax({
         type: "POST",
         url: $.PATH + "article/saveArticle",
@@ -182,7 +209,8 @@ function saveElement() {
             price: price,
             status: status, 
             unity: unity,
-            idCategoryArticle: idCategoryArticle
+            idCategoryArticle: idCategoryArticle,
+            idSize: idSize
         },
         beforeSend: function (xhr) {
             _blockUI.block();
@@ -230,6 +258,8 @@ function onClickBtnEdit() {
     $('#unity').val(item.unity);
     $('#idCategoryArticle').val(item.categoryArticle.id);
     $('#categoryArticle').val(item.categoryArticle.name);
+    $('#idSize').val(item.size.id);
+    $('#size').val(item.size.name);
 
     $saveModal.modal();
 }
