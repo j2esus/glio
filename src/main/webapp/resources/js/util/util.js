@@ -1,47 +1,3 @@
-_messageUtil = (function () {
-
-    function findMessage(code) {
-        var message = null;
-        message = localStorage.getItem(code);
-        if (message != null)
-            return message;
-        $.ajax({
-            method: "POST",
-            url: $.PATH + "i18n/findMessage",
-            data: "code=" + code,
-            async: false,
-            success: function (response) {
-                message = response;
-            }
-        }).done(function () {
-            localStorage.setItem(code, message);
-            return message;
-        });
-    }
-
-    function loadMessages(codes) {
-        $.ajax({
-            method: 'POST',
-            dataType: 'json',
-            contentType: 'application/json',
-            url: $.PATH + 'i18n/loadMessages',
-            data: JSON.stringify(codes),
-            async: false,
-            success: function (response) {
-                $.each(response, function (k, v) {
-                    if (localStorage.getItem(k) === null)
-                        localStorage.setItem(k, v);
-                });
-            }
-        });
-    }
-
-    return {
-        findMessage: findMessage,
-        loadMessages: loadMessages
-    };
-})();
-
 _uiUtil = (function () {
 
     function cleanControls(context) {
@@ -316,8 +272,27 @@ _notify = (function () {
         });
     }
 
+    function showDelay(message, type, delay) {
+        $.notify({
+            message: message
+        }, {
+            type: type,
+            z_index: 2000,
+            delay: delay,
+            animate: {
+                enter: 'animated fadeInDown',
+                exit: 'animated fadeOutUp'
+            },
+            placement: {
+                from: "top",
+                align: "center"
+            }
+        });
+    }
+
     return {
-        show: show
+        show: show,
+        showDelay: showDelay
     };
 
 })();
@@ -425,4 +400,198 @@ _jsUtil = (function () {
         init();
     }
     $.extend(true, window, {mx: {jeegox: {jChart: jChart}}});
+})(jQuery);
+
+(function ($) {
+
+    function Address(stateSelect, townSelect, suburbSelect, zipcode) {
+        let label = '--Seleccione';
+
+        function init(){
+            stateSelect.change(stateOnChange);
+            townSelect.change(townOnChange);
+            suburbSelect.change(suburbOnChange);
+            zipcode.blur(zipcodeOnBlur);
+        }
+
+        function loadStates() {
+            $.ajax({
+                method: "POST",
+                url: $.PATH + "all/findAllStates",
+                async: false,
+                beforeSend: function () {
+                    _blockUI.block();
+                    cleanControls();
+                },
+                success: function (items) {
+                    if (items.length > 0) {
+                        $.each(items, function (i, item) {
+                            stateSelect.append("<option value='" + item.id + "'>" + item.name + "</option>");
+0                        });
+                    }
+                }, complete: function () {
+                    _blockUI.unblock();
+                }
+            });
+        }
+
+        function findTowns() {
+            $.ajax({
+                method: "POST",
+                url: $.PATH + "all/findTowns",
+                async: false,
+                data: {
+                    idState: stateSelect.val()
+                },
+                beforeSend: function () {
+                    _blockUI.block();
+                    townSelect.empty();
+                    suburbSelect.empty();
+                    initSelect(townSelect);
+                    initSelect(suburbSelect);
+                },
+                success: function (items) {
+                    if (items.length > 0) {
+                        $.each(items, function (i, item) {
+                            townSelect.append("<option value='" + item.id + "'>" + item.name + "</option>");
+                        });
+                    }
+                }, complete: function () {
+                    _blockUI.unblock();
+                }
+            });
+        }
+
+        function findSuburbs() {
+            $.ajax({
+                method: "POST",
+                url: $.PATH + "all/findSuburbs",
+                async: false,
+                data: {
+                    idTown: townSelect.val()
+                },
+                beforeSend: function () {
+                    _blockUI.block();
+                    suburbSelect.empty();
+                    zipcode.val('');
+                    initSelect(suburbSelect);
+                },
+                success: function (items) {
+                    if (items.length > 0) {
+                        $.each(items, function (i, item) {
+                            suburbSelect.append("<option value='" + item.id + "' cp='" + item.cp + "'>" + item.name + "</option>");
+                        });
+                    }
+                }, complete: function () {
+                    _blockUI.unblock();
+                }
+            });
+        }
+
+        function findSuburbsByZipcode() {
+            if(zipcode.val() === '')
+                return;
+            $.ajax({
+                method: "POST",
+                url: $.PATH + "all/findSuburbsByZipcode",
+                async: false,
+                data: {
+                    cp: zipcode.val()
+                },
+                beforeSend: function () {
+                    _blockUI.block();
+                    suburbSelect.empty();
+                    townSelect.empty();
+                    initSelect(suburbSelect);
+                    initSelect(townSelect);
+                },
+                success: function (items) {
+                    if (items.length > 0) {
+                        let lastItem = items[0];
+                        stateSelect.val(lastItem.father.father.id);
+                        findTowns();
+                        townSelect.val(lastItem.father.id);
+                        $.each(items, function (i, item) {
+                            suburbSelect.append("<option value='" + item.id + "' cp='" + item.cp + "'>" + item.name + "</option>");
+                        });
+                    }else{
+                        _notify.show("Codigo postal introducido no produjo resultados.", 'danger');
+                    }
+                }, complete: function () {
+                    _blockUI.unblock();
+                }
+            });
+        }
+
+        function findSuburbsByZipCodeAndName(zc, name) {
+            $.ajax({
+                method: "POST",
+                url: $.PATH + "all/findSuburbsByZipCodeAndName",
+                async: false,
+                data: {
+                    zipcode: zc,
+                    name: name
+                },
+                beforeSend: function () {
+                    _blockUI.block();
+                    loadStates();
+                },
+                success: function (response) {
+                    stateSelect.val(response.father.father.id);
+                    findTowns();
+                    townSelect.val(response.father.id);
+                    findSuburbs();
+                    suburbSelect.val(response.id);
+                    zipcode.val(response.cp);
+                }, complete: function () {
+                    _blockUI.unblock();
+                }, error: function(xhr, status, error){
+                    _notify.showDelay('Colonia no encontrada: '+name +' con codigo postal: '+zc, 'danger', 20000);
+                }
+            });
+        }
+
+        function cleanControls(){
+            stateSelect.empty();
+            townSelect.empty();
+            suburbSelect.empty();
+            zipcode.val('');
+            initSelect(stateSelect);
+            initSelect(townSelect);
+            initSelect(suburbSelect);
+        }
+
+        function initSelect(select){
+            select.append("<option value=''>" + label + "</option>");
+        }
+
+        function stateOnChange(){
+            findTowns();
+        }
+
+        function townOnChange(){
+            findSuburbs();
+        }
+
+        function suburbOnChange(){
+            zipcode.val($("option:selected", this).attr("cp"));
+        }
+
+        function zipcodeOnBlur(){
+            findSuburbsByZipcode();
+        }
+
+        function changeLabel(newLabel){
+            label = newLabel;
+        }
+
+        $.extend(this, {
+            loadStates: loadStates,
+            changeLabel: changeLabel,
+            findSuburbsByZipCodeAndName: findSuburbsByZipCodeAndName
+        });
+
+        init();
+    }
+    $.extend(true, window, {mx: {jeegox: {Address: Address}}});
 })(jQuery);
