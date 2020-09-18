@@ -13,8 +13,6 @@ public interface GenericDAO<T, ID extends Serializable> {
 
     Long count();
 
-    void delete(T entity);
-
     Boolean exists(ID id);
 
     void flush();

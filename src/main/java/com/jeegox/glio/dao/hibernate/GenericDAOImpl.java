@@ -5,7 +5,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class GenericDAOImpl <T, ID extends Serializable> implements GenericDAO<T, ID>{
@@ -45,17 +44,14 @@ public abstract class GenericDAOImpl <T, ID extends Serializable> implements Gen
 
     @Override
     public List<T> findAll() {
-        return sessionFactory.getCurrentSession().createCriteria(getPersistentClass()).list();
+        String qry = " from "+getPersistentClass().getSimpleName();
+        return sessionFactory.getCurrentSession().createQuery(qry).getResultList();
     }
 
     @Override
     public Long count() {
-        return (Long)sessionFactory.getCurrentSession().createCriteria(getPersistentClass()).setProjection(Projections.rowCount()).uniqueResult();
-    }
-
-    @Override
-    public void delete(T entity) {
-        sessionFactory.getCurrentSession().delete(entity);
+        String qry = " select count(e) from "+getPersistentClass().getSimpleName() +" e ";
+        return (Long)sessionFactory.getCurrentSession().createQuery(qry).getResultList().stream().findFirst().orElse(0L);
     }
 
     @Override

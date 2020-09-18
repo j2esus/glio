@@ -50,11 +50,6 @@ public class CompanyService {
     }
 
     @Transactional(readOnly = true)
-    public List<Company> findByName(String name) {
-        return companyDAO.findByName(name);
-    }
-
-    @Transactional(readOnly = true)
     public Company findBydId(Integer id) {
         return companyDAO.findById(id);
     }
@@ -110,6 +105,6 @@ public class CompanyService {
 
     @Transactional(readOnly = true)
     public Company findBy(String name) {
-        return companyDAO.findBy(name);
+        return companyDAO.findByName(name);
     }
 }

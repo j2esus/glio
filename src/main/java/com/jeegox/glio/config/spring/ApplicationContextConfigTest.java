@@ -1,10 +1,9 @@
 package com.jeegox.glio.config.spring;
 
 import java.util.Properties;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
+
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +19,7 @@ import org.hsqldb.jdbc.JDBCDataSource;
 public class ApplicationContextConfigTest {
 
     @Bean
-    public LocalSessionFactoryBean sessionFactory() throws NamingException {
+    public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
         sessionFactory.setPackagesToScan(new String[]{"com.jeegox.glio.entities"});
@@ -29,17 +28,15 @@ public class ApplicationContextConfigTest {
     }
 
     @Bean(destroyMethod = "")
-    public DataSource dataSource() throws NamingException {
-        
+    public DataSource dataSource() {
         JDBCDataSource dataSource = new JDBCDataSource();
-        dataSource.setUrl("jdbc:hsqldb:mem:glio;shutdown=true;sql.syntax_mys=true;sql.ignore_case=true");
-        dataSource.setUser("SA");
+        dataSource.setUrl("jdbc:hsqldb:file:testdb;sql.syntax_mys=true;sql.ignore_case=true;shutdown=true");
+        dataSource.setUser("sa");
         dataSource.setPassword("");
         return dataSource;
     }
 
     @Bean
-    @Autowired
     public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
         HibernateTransactionManager txManager = new HibernateTransactionManager();
         txManager.setSessionFactory(sessionFactory);
@@ -53,10 +50,11 @@ public class ApplicationContextConfigTest {
 
     final Properties additionalProperties() {
         final Properties hibernateProperties = new Properties();
-        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create");
+        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "update");
         hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
         hibernateProperties.setProperty("hibernate.enable_lazy_load_no_trans", "true");
         hibernateProperties.setProperty("hibernate.connection.shutdown", "true");
+        hibernateProperties.setProperty("hibernate.show_sql", "false");
         return hibernateProperties;
     }
 }
