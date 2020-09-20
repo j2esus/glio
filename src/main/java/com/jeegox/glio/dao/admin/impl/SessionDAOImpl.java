@@ -15,61 +15,38 @@ public class SessionDAOImpl extends GenericDAOImpl<Session, Integer> implements 
     
     @Override
     public List<Session> findByCompany(Company company) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select s ");
-        sb.append(" from Session s ");
-        sb.append(" join s.father u ");
-        sb.append(" where u.father = :company ");
-        sb.append(" and s.status != :status  ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("company", company);
-        q.setParameter("status", Status.DELETED);
-        return q.list();
+        String query = " select s " +
+                " from Session s "+
+                " join s.father u "+
+                " where u.father = :company "+
+                " and s.status <> :status ";
+
+        return sessionFactory.getCurrentSession().createQuery(query).setParameter("company", company).
+                setParameter("status", Status.DELETED).getResultList();
     }
 
     @Override
     public List<Session> findByUser(User user) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select s ");
-        sb.append(" from Session s ");
-        sb.append(" where s.father = :user ");
-        sb.append(" and s.status != :status  ");
-        sb.append(" order by s.initDate desc ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("user", user);
-        q.setParameter("status", Status.DELETED);
-        return q.list();
+        String query = " select s "+
+                " from Session s "+
+                " where s.father = :user "+
+                " and s.status <> :status "+
+                " order by s.initDate desc ";
+        return sessionFactory.getCurrentSession().createQuery(query).setParameter("user", user).
+                setParameter("status", Status.DELETED).getResultList();
     }
 
     @Override
     public Session findOpenSession(User user) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select s ");
-        sb.append(" from Session s ");
-        sb.append(" where s.father = :user ");
-        sb.append(" and s.status != :status  ");
-        sb.append(" and s.initDate is not null  ");
-        sb.append(" and s.endDate is null  ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("user", user);
-        q.setParameter("status", Status.CLOSED);
-        List<Session> sessions = q.list();
-        if(sessions.isEmpty())
-            return null;
-        return sessions.get(0);
-    }
+        String query = " select s "+
+                " from Session s "+
+                " where s.father = :user "+
+                " and s.status <> :status "+
+                " and s.initDate is not null "+
+                " and s.endDate is null ";
 
-    @Override
-    public Session findBySession(String session) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select s ");
-        sb.append(" from Session s ");
-        sb.append(" where s.session = :session ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("session", session);
-        List<Session> sessions = q.list();
-        if(sessions.isEmpty())
-            return null;
-        return sessions.get(0);
+        return (Session)sessionFactory.getCurrentSession().createQuery(query).setParameter("user", user).
+                setParameter("status", Status.CLOSED).getResultList().stream().findFirst().orElse(null);
+
     }
 }

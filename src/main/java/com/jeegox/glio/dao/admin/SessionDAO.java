@@ -12,6 +12,4 @@ public interface SessionDAO extends GenericDAO<Session, Integer>{
     List<Session> findByUser(User user);
     
     Session findOpenSession(User user);
-    
-    Session findBySession(String session);
 }

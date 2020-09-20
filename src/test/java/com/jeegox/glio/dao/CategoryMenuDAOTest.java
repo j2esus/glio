@@ -50,12 +50,12 @@ public class CategoryMenuDAOTest {
     }
 
     @Test
-    public void findAll_notRequired_categoryMenuList(){
+    public void findAll_notRequired_listWithThreeElements(){
         assertThat(categoryMenuDAO.findAll()).isEqualTo(allExpectedCategories());
     }
 
     @Test
-    public void count_notRequired_totalNumbersOfRecords(){
+    public void count_notRequired_three(){
         assertThat(categoryMenuDAO.count()).isEqualTo(3);
     }
 

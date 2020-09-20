@@ -1,6 +1,7 @@
 package com.jeegox.glio.entities.admin;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.base.Objects;
 import com.jeegox.glio.entities.util.JComplexEntity;
 import com.jeegox.glio.enumerators.Status;
 import java.io.Serializable;
@@ -91,5 +92,21 @@ public class UserType extends JComplexEntity<Integer, Company> implements Serial
     
     public void addOptions(Set<OptionMenu> options){
         this.options.addAll(options);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserType)) return false;
+        UserType userType = (UserType) o;
+        return Objects.equal(id, userType.id) &&
+                Objects.equal(name, userType.name) &&
+                status == userType.status &&
+                Objects.equal(father, userType.father);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, name, status, father);
     }
 }

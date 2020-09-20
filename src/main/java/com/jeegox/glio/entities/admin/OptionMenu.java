@@ -1,10 +1,11 @@
 package com.jeegox.glio.entities.admin;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.jeegox.glio.entities.util.JComplexEntity;
 import com.jeegox.glio.enumerators.EntityType;
 import com.jeegox.glio.enumerators.Status;
 import java.io.Serializable;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -26,7 +27,22 @@ public class OptionMenu extends JComplexEntity<Integer, CategoryMenu> implements
     private Status status;
     private String icon;
     private EntityType entityType;
-    
+
+    public OptionMenu() {
+    }
+
+    public OptionMenu(Integer id, String name, Integer order, String url, Status status, String icon, EntityType entityType,
+                      CategoryMenu father) {
+        this.id = id;
+        this.name = name;
+        this.order = order;
+        this.url = url;
+        this.status = status;
+        this.icon = icon;
+        this.entityType = entityType;
+        this.father = father;
+    }
+
     @Id
     @Column(name = "id_option_menu")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -104,49 +120,36 @@ public class OptionMenu extends JComplexEntity<Integer, CategoryMenu> implements
     }
 
     @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 13 * hash + Objects.hashCode(this.name);
-        hash = 13 * hash + Objects.hashCode(this.order);
-        hash = 13 * hash + Objects.hashCode(this.url);
-        hash = 13 * hash + Objects.hashCode(this.status);
-        hash = 13 * hash + Objects.hashCode(this.icon);
-        hash = 13 * hash + Objects.hashCode(this.entityType);
-        return hash;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OptionMenu)) return false;
+        OptionMenu that = (OptionMenu) o;
+        return Objects.equal(id, that.id) &&
+                Objects.equal(name, that.name) &&
+                Objects.equal(order, that.order) &&
+                Objects.equal(url, that.url) &&
+                status == that.status &&
+                Objects.equal(icon, that.icon) &&
+                entityType == that.entityType &&
+                Objects.equal(father, that.father);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final OptionMenu other = (OptionMenu) obj;
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        if (!Objects.equals(this.url, other.url)) {
-            return false;
-        }
-        if (!Objects.equals(this.icon, other.icon)) {
-            return false;
-        }
-        if (!Objects.equals(this.order, other.order)) {
-            return false;
-        }
-        if (this.status != other.status) {
-            return false;
-        }
-        if (this.entityType != other.entityType) {
-            return false;
-        }
-        return true;
+    public int hashCode() {
+        return Objects.hashCode(id, name, order, url, status, icon, entityType, father);
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("name", name)
+                .add("order", order)
+                .add("url", url)
+                .add("status", status)
+                .add("icon", icon)
+                .add("entityType", entityType)
+                .add("father", father)
+                .toString();
+    }
 }

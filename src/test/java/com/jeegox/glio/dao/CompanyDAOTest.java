@@ -48,7 +48,7 @@ public class CompanyDAOTest {
     }
 
     @Test
-    public void count_empty_totalNumberOfRecords() {
+    public void count_empty_one() {
         assertThat(companyDAO.count()).isEqualTo(1);
     }
 
@@ -63,7 +63,7 @@ public class CompanyDAOTest {
     }
 
     @Test
-    public void findAll_empty_companyList(){
+    public void findAll_empty_listWithOnlyOneElement(){
         assertThat(companyDAO.findAll()).containsExactly(expectedCompany);
     }
 
