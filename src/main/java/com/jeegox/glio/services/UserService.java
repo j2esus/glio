@@ -179,7 +179,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User findById(String username) {
-        return userDAO.findById(username);
+        return userDAO.findByUsername(username);
     }
 
     @Transactional
@@ -321,7 +321,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Token find(User user) {
-        return tokenDAO.find(user);
+        return tokenDAO.getActive(user);
     }
 
     @Transactional(readOnly = true)
@@ -353,7 +353,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public String generateToken(User user) {
         String sToken = "";
-        Token token = tokenDAO.find(user);
+        Token token = tokenDAO.getActive(user);
         if(token == null){
             SecureRandom random = new SecureRandom();
             sToken = new BigInteger(130, random).toString(32);

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class CategoryMenuDAOImpl extends GenericDAOImpl<CategoryMenu,Integer> implements CategoryMenuDAO {
 
+    //todo change this method for a service method with streams functions
     @Override
     public List<CategoryMenu> findBy(UserType userType) {
         StringBuilder sb = new StringBuilder();

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TokenDAO extends GenericDAO<Token,Integer>{
     
-    Token find(User user);
+    Token getActive(User user);
 
     List<Token> findByUser(User user);
     

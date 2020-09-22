@@ -1,6 +1,7 @@
 package com.jeegox.glio.entities.admin;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.jeegox.glio.entities.util.JComplexEntity;
 import com.jeegox.glio.enumerators.Status;
@@ -108,5 +109,16 @@ public class UserType extends JComplexEntity<Integer, Company> implements Serial
     @Override
     public int hashCode() {
         return Objects.hashCode(id, name, status, father);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("name", name)
+                .add("status", status)
+                .add("options", options)
+                .add("father", father)
+                .toString();
     }
 }

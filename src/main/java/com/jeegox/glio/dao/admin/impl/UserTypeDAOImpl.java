@@ -17,17 +17,16 @@ public class UserTypeDAOImpl extends GenericDAOImpl<UserType,Integer> implements
 
     @Override
     public List<UserType> findByCompany(Company company) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select u ");
-        sb.append(" from UserType u ");
-        sb.append(" where u.father = :father ");
-        sb.append(" and u.status != :status ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("father", company);
-        q.setParameter("status", Status.DELETED);
-        return q.list();
+        String query = " select u "+
+                " from UserType u "+
+                " where u.father = :father "+
+                " and u.status <> :status ";
+
+        return sessionFactory.getCurrentSession().createQuery(query).setParameter("father", company).
+                setParameter("status", Status.DELETED).getResultList();
     }
 
+    //todo check this method in the service because it will be refactored
     @Override
     public List<OptionMenuUserTypeDTO> findOptionsMenu() {
         StringBuilder sb = new StringBuilder();
@@ -42,6 +41,7 @@ public class UserTypeDAOImpl extends GenericDAOImpl<UserType,Integer> implements
         return q.list();
     }
 
+    //todo check this method in the service because it will be refactored
     @Override
     public void deleteOptions(Integer idUserType, String[] idsOptions) {
         StringBuilder sb = new StringBuilder();
@@ -55,6 +55,7 @@ public class UserTypeDAOImpl extends GenericDAOImpl<UserType,Integer> implements
         query.executeUpdate();
     }
 
+    //todo check this method in the service because it will be refactored
     @Override
     public void addOption(Integer idUserType, String idOption) {
         StringBuilder sb = new StringBuilder();
@@ -67,6 +68,7 @@ public class UserTypeDAOImpl extends GenericDAOImpl<UserType,Integer> implements
         query.executeUpdate();
     }
 
+    //todo check this method in the service because it will be refactored
     @Override
     public Integer findOption(Integer idUserType, String idOption) {
         StringBuilder sb = new StringBuilder();

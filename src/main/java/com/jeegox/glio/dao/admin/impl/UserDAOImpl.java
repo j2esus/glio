@@ -12,86 +12,64 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserDAOImpl extends GenericDAOImpl<User, Integer> implements UserDAO {
 
+    //todo check this method because it might be divided in two different methods
     @Override
     public User login(String username, String password, String token) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select u ");
-        sb.append(" from Token t ");
-        sb.append(" right join t.father u ");
-        sb.append(" where ((u.username = :username ");
-        sb.append(" and u.password = :password ) ");
-        sb.append(" or t.token = :token ) ");
-        sb.append(" and u.status = :status ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("username", username);
-        q.setParameter("password", password);
-        q.setParameter("token", token);
-        q.setParameter("status", Status.ACTIVE);
-        List<User> users = q.list();
-        if (!users.isEmpty()) {
-            return users.get(0);
-        } else {
-            return null;
-        }
+        String query = "select u "+
+                " from Token t "+
+                " right join t.father u "+
+                " where ((u.username = :username "+
+                " and u.password = :password ) "+
+                " or t.token = :token ) "+
+                " and u.status = :status ";
+
+        return (User)sessionFactory.getCurrentSession().createQuery(query).setParameter("username", username).
+                setParameter("password", password).setParameter("token", token).setParameter("status", Status.ACTIVE).
+                getResultList().stream().findFirst().orElse(null);
     }
 
     @Override
     public List<User> findByCompany(Company company) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select u ");
-        sb.append(" from User u ");
-        sb.append(" where u.father = :father ");
-        sb.append(" and u.status != :status ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("father", company);
-        q.setParameter("status", Status.DELETED);
-        return q.list();
+        String query = "select u "+
+                " from User u "+
+                " where u.father = :father "+
+                " and u.status <> :status ";
+
+        return sessionFactory.getCurrentSession().createQuery(query).setParameter("father", company).
+                setParameter("status", Status.DELETED).getResultList();
     }
 
     @Override
     public Long count(Company company) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select count(u) ");
-        sb.append(" from User u ");
-        sb.append(" where u.father = :father ");
-        sb.append(" and u.status != :status ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("father", company);
-        q.setParameter("status", Status.DELETED);
-        return (Long) q.uniqueResult();
+        String query = "select count(u) "+
+                " from User u "+
+                " where u.father = :father "+
+                " and u.status <> :status ";
+
+        return (Long)sessionFactory.getCurrentSession().createQuery(query).setParameter("father", company).
+                setParameter("status", Status.DELETED).getResultList().stream().findFirst().orElse(0);
     }
 
     @Override
-    public User findById(String username) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select u ");
-        sb.append(" from User u ");
-        sb.append(" where u.username = :username ");
-        sb.append(" and u.status != :status ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("username", username);
-        q.setParameter("status", Status.DELETED);
-        List<User> users = q.list();
-        if(users.isEmpty())
-            return null;
-        else
-            return users.get(0);
+    public User findByUsername(String username) {
+        String query = "select u "+
+                " from User u "+
+                " where u.username = :username "+
+                " and u.status <> :status ";
+
+        return (User)sessionFactory.getCurrentSession().createQuery(query).setParameter("username", username).
+                setParameter("status", Status.DELETED).getResultList().stream().findFirst().orElse(null);
     }
 
     @Override
     public List<User> findByCompany(Company company, String nameLike) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select u ");
-        sb.append(" from User u ");
-        sb.append(" where u.father = :father ");
-        sb.append(" and u.status = :status ");
-        sb.append(" and upper(u.name) like :name ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("father", company);
-        q.setParameter("status", Status.ACTIVE);
-        q.setParameter("name", "%"+nameLike.toUpperCase()+"%");
-        q.setMaxResults(10);
-        return q.list();
+        String query = " select u "+
+                " from User u "+
+                " where u.father = :father "+
+                " and u.status = :status "+
+                " and upper(u.name) like :name ";
+        return sessionFactory.getCurrentSession().createQuery(query).setParameter("father", company)
+                .setParameter("status", Status.ACTIVE).setParameter("name", "%"+nameLike.toUpperCase()+"%").setMaxResults(10).getResultList();
     }
     
 }
