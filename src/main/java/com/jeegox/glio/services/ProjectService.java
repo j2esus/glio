@@ -117,7 +117,7 @@ public class ProjectService {
 
     @Transactional(readOnly = true)
     public List<Aim> findBy(Project project) {
-        return aimDAO.findBy(project);
+        return aimDAO.findByProject(project);
     }
 
     @Transactional
@@ -133,7 +133,7 @@ public class ProjectService {
 
     @Transactional(readOnly = true)
     public List<Aim> findBy(Project project, Status[] status) {
-        return aimDAO.findBy(project, status);
+        return aimDAO.findByProject(project, status);
     }
     
     @Transactional

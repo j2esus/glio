@@ -16,32 +16,29 @@ public class AimDAOImpl extends GenericDAOImpl<Aim,Integer> implements AimDAO{
 
     @Override
     public List<Aim> findByCompany(Company company) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select a ");
-        sb.append(" from Aim a ");
-        sb.append(" join a.father p ");
-        sb.append(" join p.father u ");
-        sb.append(" where u.father = :company ");
-        sb.append(" and a.status != :status  ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("company", company);
-        q.setParameter("status", Status.DELETED);
-        return q.list();
+        String query = " select a "+
+                " from Aim a "+
+                " join a.father p "+
+                " join p.father u "+
+                " where u.father = :company "+
+                " and a.status <> :status ";
+
+        return sessionFactory.getCurrentSession().createQuery(query).setParameter("company", company).
+                setParameter("status", Status.DELETED).getResultList();
     }
 
     @Override
-    public List<Aim> findBy(Project project) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select a ");
-        sb.append(" from Aim a ");
-        sb.append(" where a.father = :project ");
-        sb.append(" and a.status != :status  ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("project", project);
-        q.setParameter("status", Status.DELETED);
-        return q.list();
+    public List<Aim> findByProject(Project project) {
+        String query = " select a "+
+                " from Aim a "+
+                " where a.father = :project "+
+                " and a.status <> :status ";
+
+        return sessionFactory.getCurrentSession().createQuery(query).setParameter("project", project).
+                setParameter("status", Status.DELETED).getResultList();
     }
 
+    //todo check this method because it might to be changed with lambdas functions
     @Override
     public List<GraphStatusVO> findDataGraphAim(Integer idAim) {
         StringBuilder sb = new StringBuilder();
@@ -59,18 +56,14 @@ public class AimDAOImpl extends GenericDAOImpl<Aim,Integer> implements AimDAO{
     }
 
     @Override
-    public List<Aim> findBy(Project project, Status[] status) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select a ");
-        sb.append(" from Aim a ");
-        sb.append(" join a.father p ");
-        sb.append(" where p= :project ");
-        sb.append(" and a.status not in ( :status )  ");
+    public List<Aim> findByProject(Project project, Status[] status) {
+        String query = " select a "+
+                " from Aim a "+
+                " where a.father = :project "+
+                " and a.status in ( :status ) ";
         
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("project", project);
-        q.setParameterList("status", status);
-        return q.list();
+        return sessionFactory.getCurrentSession().createQuery(query).setParameter("project", project).
+                setParameterList("status", status).getResultList();
     }
     
 }

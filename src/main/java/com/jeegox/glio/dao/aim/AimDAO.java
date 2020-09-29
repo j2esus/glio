@@ -12,10 +12,10 @@ public interface AimDAO extends GenericDAO<Aim,Integer>{
     
     List<Aim> findByCompany(Company company);
     
-    List<Aim> findBy(Project project);
+    List<Aim> findByProject(Project project);
     
     List<GraphStatusVO> findDataGraphAim(Integer idAim);
     
-    List<Aim> findBy(Project project,Status[] status);
+    List<Aim> findByProject(Project project, Status[] status);
     
 }
