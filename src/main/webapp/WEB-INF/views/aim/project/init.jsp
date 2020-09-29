@@ -16,23 +16,17 @@
                 Filtros
             </div>
             <div class="card-body">
-                <div class="form-inline">
-                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                        <div class="input-group-addon">Nombre</div>
-                        <input type="text" class="form-control" id="txtFilterName" placeholder="Nombre" autocomplete="off">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <input type="text" class="form-control" id="txtFilterQuery" placeholder="Buscar..." autocomplete="off">
                     </div>
-                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                        <div class="input-group-addon">Estatus</div>
+                    <div class="col-lg-1">
                         <select class="custom-select" id="txtFilterStatus">
                             <option value="">--Todos</option>
                             <c:forEach items="${status}" var="statusItem">
                                 <option value="${statusItem}">${statusItem}</option>
                             </c:forEach>
                         </select>
-                    </div>
-                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                        <div class="input-group-addon">Descripción</div>
-                        <input type="text" class="form-control" id="txtFilterDescription" placeholder="Descripción" autocomplete="off">
                     </div>
                     <input type="submit" class="btn btn-success" value="Buscar"/>
                 </div>

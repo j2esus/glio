@@ -62,13 +62,10 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public List<Project> findBy(User user, String name, Status status, String description) {
-        return projectDAO.findBy(user, name, status, description);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Project> findBy(User user, String query, Status[] status) {
-        return projectDAO.findBy(user, query, status);
+    public List<Project> findBy(User user, String query, Status status) {
+        if(status == null)
+            return projectDAO.findByUser(user, query);
+        return projectDAO.findByUser(user, query, status);
     }
 
     @Transactional(readOnly = true)
@@ -94,13 +91,13 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public List<Project> findBy(Company company, String query, Status[] status) {
-        return projectDAO.findBy(company, query, status);
+    public List<Project> findByCompany(Company company, String query, Status[] status) {
+        return projectDAO.findByCompany(company, query, status);
     }
 
     @Transactional(readOnly = true)
-    public List<Project> findBy(Company company, Status[] status) {
-        return projectDAO.findBy(company, status);
+    public List<Project> findByCompany(Company company, Status[] status) {
+        return projectDAO.findByCompany(company, status);
     }
     
     @Transactional

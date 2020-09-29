@@ -36,7 +36,7 @@ public class TaskController extends BaseController {
 
     @RequestMapping("init")
     public String index(Model model, HttpServletRequest request) {
-        List<Project> projects = projectService.findBy(getCurrentCompany(request), new Status[]{Status.ACTIVE});
+        List<Project> projects = projectService.findByCompany(getCurrentCompany(request), new Status[]{Status.ACTIVE});
         Priority[] priorities = Priority.values();
         model.addAttribute("projects", projects);
         model.addAttribute("priorities", priorities);

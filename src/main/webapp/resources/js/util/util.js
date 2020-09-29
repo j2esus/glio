@@ -68,43 +68,42 @@ _uiUtil = (function () {
     }
 
     function getFormattedDate(dateParam) {
+        let parts = dateParam.split("-");
+        let dateToFormat = new Date(parts[0], parts[1]-1, parts[2]);
 
-        var dateToFormat = new Date();
-        dateToFormat.setTime(dateParam);
-
-        var date = dateToFormat.getDate();
+        let date = dateToFormat.getDate();
 
         if (date.toString().length == 1)
             date = "0" + date.toString();
 
-        var month = dateToFormat.getMonth();
+        let month = dateToFormat.getMonth();
         month++;
 
         if (month.toString().length == 1)
             month = "0" + month.toString();
 
-        var year = dateToFormat.getFullYear();
+        let year = dateToFormat.getFullYear();
 
         return date + "/" + month + "/" + year;
     }
 
     function getFormattedDateUS(dateParam) {
 
-        var dateToFormat = new Date();
-        dateToFormat.setTime(dateParam);
+        let parts = dateParam.split("-");
+        let dateToFormat = new Date(parts[0], parts[1]-1, parts[2]);
 
-        var date = dateToFormat.getDate();
+        let date = dateToFormat.getDate();
 
         if (date.toString().length == 1)
             date = "0" + date.toString();
 
-        var month = dateToFormat.getMonth();
+        let month = dateToFormat.getMonth();
         month++;
 
         if (month.toString().length == 1)
             month = "0" + month.toString();
 
-        var year = dateToFormat.getFullYear();
+        let year = dateToFormat.getFullYear();
 
         return year + "-" + month + "-" + date;
     }

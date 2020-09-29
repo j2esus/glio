@@ -7,17 +7,7 @@ import com.jeegox.glio.entities.util.JComplexEntity;
 import com.jeegox.glio.enumerators.Status;
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "expense")
@@ -111,6 +101,7 @@ public class Expense extends JComplexEntity<Integer, Company> implements Seriali
     }
 
     @Column(name = "expense_date")
+    @Temporal(TemporalType.DATE)
     public Date getDate() {
         return date;
     }

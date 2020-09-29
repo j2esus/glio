@@ -45,9 +45,8 @@ public class ProjectController extends BaseController{
     
     @RequestMapping(value = "findProjects", method = RequestMethod.POST)
     @ResponseBody
-    public List<Project> findProjects(HttpServletRequest request, @RequestParam String name, @RequestParam String status,
-            @RequestParam String description){
-        return projectService.findBy(getCurrentUser(request), name, status.equals("")?null:Status.valueOf(status), description);
+    public List<Project> findProjects(HttpServletRequest request, @RequestParam String query, @RequestParam String status){
+        return projectService.findBy(getCurrentUser(request), query, status.equals("")?null:Status.valueOf(status));
     }
     
     @RequestMapping(value = "deleteProject", method = RequestMethod.POST)

@@ -36,7 +36,7 @@ public class AdvanceController extends BaseController{
     @RequestMapping(value = "findProjects", method = RequestMethod.POST)
     @ResponseBody
     public List<Project> findProjects(HttpServletRequest request, @RequestParam String query){
-        return projectService.findBy(getCurrentCompany(request), query, new Status[]{Status.ACTIVE});
+        return projectService.findByCompany(getCurrentCompany(request), query, new Status[]{Status.ACTIVE});
     }
     
     @RequestMapping(value = "findDataGraphProject", method = RequestMethod.POST)

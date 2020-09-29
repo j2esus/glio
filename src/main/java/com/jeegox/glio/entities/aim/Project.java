@@ -1,22 +1,14 @@
 package com.jeegox.glio.entities.aim;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.jeegox.glio.entities.admin.User;
 import com.jeegox.glio.entities.util.JComplexEntity;
 import com.jeegox.glio.enumerators.Status;
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "project")
@@ -43,14 +35,14 @@ public class Project extends JComplexEntity<Integer, User> implements Serializab
     }
 
     @Id
-    @Column(name = "id_project")
+    @Column(name = "id_project", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Override
     public Integer getId() {
         return id;
     }
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     public String getName() {
         return name;
     }
@@ -68,7 +60,8 @@ public class Project extends JComplexEntity<Integer, User> implements Serializab
         this.description = description;
     }
 
-    @Column(name = "init_date")
+    @Column(name = "init_date", nullable = false)
+    @Temporal(TemporalType.DATE)
     public Date getInitDate() {
         return initDate;
     }
@@ -77,7 +70,8 @@ public class Project extends JComplexEntity<Integer, User> implements Serializab
         this.initDate = initDate;
     }
 
-    @Column(name = "end_date")
+    @Column(name = "end_date", nullable = false)
+    @Temporal(TemporalType.DATE)
     public Date getEndDate() {
         return endDate;
     }
@@ -101,6 +95,37 @@ public class Project extends JComplexEntity<Integer, User> implements Serializab
     @Override
     public User getFather() {
         return father;
-    }    
-    
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Project)) return false;
+        Project project = (Project) o;
+        return Objects.equal(id, project.id) &&
+                Objects.equal(name, project.name) &&
+                Objects.equal(description, project.description) &&
+                Objects.equal(initDate, project.initDate) &&
+                Objects.equal(endDate, project.endDate) &&
+                Objects.equal(father, project.father) &&
+                status == project.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, name, description, initDate, endDate, status, father);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("name", name)
+                .add("description", description)
+                .add("initDate", initDate)
+                .add("endDate", endDate)
+                .add("status", status)
+                .add("father", father)
+                .toString();
+    }
 }

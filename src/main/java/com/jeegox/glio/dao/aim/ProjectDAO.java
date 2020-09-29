@@ -12,13 +12,13 @@ public interface ProjectDAO extends GenericDAO<Project, Integer>{
     
     List<Project> findByCompany(Company company);
     
-    List<Project> findBy(User user, String name, Status status, String description);
+    List<Project> findByUser(User user, String value);
     
-    List<Project> findBy(User user, String query, Status[] status);
+    List<Project> findByUser(User user, String value, Status status);
     
     List<GraphStatusVO> findDataGraphProject(Integer idProject);
     
-    List<Project> findBy(Company company, String query, Status[] status);
-    
-    List<Project> findBy(Company company, Status[] status);
+    List<Project> findByCompany(Company company, String value, Status[] status);
+
+    List<Project> findByCompany(Company company, Status[] status);
 }

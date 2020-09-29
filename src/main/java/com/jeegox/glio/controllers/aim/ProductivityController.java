@@ -32,7 +32,7 @@ public class ProductivityController extends BaseController {
 
     @RequestMapping("init")
     public String index(Model model,HttpServletRequest request){
-        List<Project> projects = projectService.findBy(getCurrentCompany(request), 
+        List<Project> projects = projectService.findByCompany(getCurrentCompany(request),
                 new Status[]{Status.ACTIVE, Status.INACTIVE, Status.FINISHED});
         model.addAttribute("projects", projects);
         return "productivity/init";

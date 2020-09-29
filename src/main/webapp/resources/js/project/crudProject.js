@@ -17,7 +17,7 @@ var $btnNewProject,
         $initDate,
         $endDate;
 
-var $txtFilterName,
+var $txtFilterQuery,
         $txtFilterStatus,
         $txtFilterDescription;
 
@@ -68,7 +68,7 @@ function initComponents() {
 
     $tableProject = $('#dataTableProject');
 
-    $txtFilterName = $('#txtFilterName');
+    $txtFilterQuery = $('#txtFilterQuery');
     $txtFilterStatus = $('#txtFilterStatus');
     $txtFilterDescription = $('#txtFilterDescription');
 
@@ -246,8 +246,7 @@ function findProjectData() {
     $.ajax({
         type: "POST",
         url: $.PATH + "project/findProjects",
-        data: {name: $txtFilterName.val(), status: $txtFilterStatus.val(),
-            description: $txtFilterDescription.val()},
+        data: {query: $txtFilterQuery.val(), status: $txtFilterStatus.val()},
         beforeSend: function (xhr) {
             _blockUI.block();
             _uiUtil.clearDataTable($tableProject);

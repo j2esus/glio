@@ -16,61 +16,42 @@ public class ProjectDAOImpl extends GenericDAOImpl<Project,Integer> implements P
 
     @Override
     public List<Project> findByCompany(Company company) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select p ");
-        sb.append(" from Project p ");
-        sb.append(" join p.father u ");
-        sb.append(" where u.father = :company ");
-        sb.append(" and p.status != :status  ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("company", company);
-        q.setParameter("status", Status.DELETED);
-        return q.list();
+        String query = " select p "+
+                " from Project p "+
+                " join p.father u "+
+                " where u.father = :company "+
+                " and p.status <> :status ";
+
+        return sessionFactory.getCurrentSession().createQuery(query).setParameter("company", company).
+                setParameter("status", Status.DELETED).getResultList();
     }
 
     @Override
-    public List<Project> findBy(User user, String name, Status status, String description) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select p ");
-        sb.append(" from Project p ");
-        sb.append(" where p.father = :user ");
-        sb.append(" and upper(p.name) like :name ");
-        sb.append(" and upper(p.description) like :description ");
-       
-        if(status != null)
-            sb.append(" and p.status = :status  ");
-        else
-            sb.append(" and p.status != :status  ");
+    public List<Project> findByUser(User user, String value) {
+        String query = " select p "+
+                " from Project p "+
+                " where p.father = :user "+
+                " and ( upper(p.name) like :value or upper(p.description) like :value ) "+
+                " and p.status <> :status ";
         
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("user", user);
-        q.setParameter("name", "%"+name.toUpperCase()+"%");
-        q.setParameter("description", "%"+description.toUpperCase()+"%");
-        
-        if(status != null)
-            q.setParameter("status", status);
-        else
-            q.setParameter("status", Status.DELETED);
-        
-        return q.list();
+        return sessionFactory.getCurrentSession().createQuery(query).setParameter("user", user).
+                setParameter("value", "%"+value.toUpperCase()+"%").
+                setParameter("status", Status.DELETED).getResultList();
     }
 
     @Override
-    public List<Project> findBy(User user, String query, Status[] status) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select p ");
-        sb.append(" from Project p ");
-        sb.append(" where p.father = :user ");
-        sb.append(" and ( upper(p.name) like :query or upper(p.description) like :query )");
-        sb.append(" and p.status in ( :status ) ");
+    public List<Project> findByUser(User user, String value, Status status) {
+        String query = " select p "+
+                " from Project p "+
+                " where p.father = :user "+
+                " and ( upper(p.name) like :value or upper(p.description) like :value )"+
+                " and p.status = :status ";
         
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("user", user);
-        q.setParameter("query", "%"+query.toUpperCase()+"%");
-        q.setParameterList("status", status);
-        return q.list();
+        return sessionFactory.getCurrentSession().createQuery(query).setParameter("user", user).
+                setParameter("value", "%"+value.toUpperCase()+"%").setParameter("status", status).getResultList();
     }
 
+    //todo check if this method can be refactored by streams
     @Override
     public List<GraphStatusVO> findDataGraphProject(Integer idProject) {
         StringBuilder sb = new StringBuilder();
@@ -89,35 +70,27 @@ public class ProjectDAOImpl extends GenericDAOImpl<Project,Integer> implements P
     }
 
     @Override
-    public List<Project> findBy(Company company, String query, Status[] status) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select p ");
-        sb.append(" from Project p ");
-        sb.append(" join p.father u ");
-        sb.append(" where u.father = :company ");
-        sb.append(" and ( upper(p.name) like :query or upper(p.description) like :query )");
-        sb.append(" and p.status in ( :status ) ");
+    public List<Project> findByCompany(Company company, String value, Status[] status) {
+        String query = " select p "+
+                " from Project p "+
+                " join p.father u "+
+                " where u.father = :company "+
+                " and ( upper(p.name) like :value or upper(p.description) like :value )"+
+                " and p.status in ( :status )";
         
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("company", company);
-        q.setParameter("query", "%"+query.toUpperCase()+"%");
-        q.setParameterList("status", status);
-        return q.list();
+        return sessionFactory.getCurrentSession().createQuery(query).setParameter("company", company).
+                setParameter("value", "%"+value.toUpperCase()+"%").setParameterList("status", status).getResultList();
     }
 
     @Override
-    public List<Project> findBy(Company company, Status[] status) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select p ");
-        sb.append(" from Project p ");
-        sb.append(" join p.father u ");
-        sb.append(" where u.father = :company ");
-        sb.append(" and p.status in ( :status ) ");
-        
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("company", company);
-        q.setParameterList("status", status);
-        return q.list();
+    public List<Project> findByCompany(Company company, Status[] status) {
+        String query = " select p "+
+                " from Project p "+
+                " join p.father u "+
+                " where u.father = :company "+
+                " and p.status in ( :status )";
+
+        return sessionFactory.getCurrentSession().createQuery(query).setParameter("company", company).
+                setParameterList("status", status).getResultList();
     }
-    
 }
