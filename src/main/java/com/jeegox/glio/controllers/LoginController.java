@@ -78,7 +78,7 @@ public class LoginController {
         ModelAndView mv = null;
         try {
             String username = user.trim()+"@"+company.trim();
-            Session session = userService.login(username, Util.encodeSha256(password.trim()), "");
+            Session session = userService.login(username, Util.encodeSha256(password.trim()));
             if (session != null) {
                 Set<OptionMenu> options = session.getFather().getUserType().getOptions();
 

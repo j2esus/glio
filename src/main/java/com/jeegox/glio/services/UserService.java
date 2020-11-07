@@ -61,9 +61,9 @@ public class UserService {
     }
     
     @Transactional
-    public Session login(String username, String password, String token) throws Exception{
+    public Session login(String username, String password) throws Exception{
         Session session = null;
-        User user = userDAO.login(username, password, token);
+        User user = userDAO.login(username, password);
         if(user != null){
             //buscar sesion abierta
             session = sessionDAO.findOpenSession(user);
@@ -163,7 +163,7 @@ public class UserService {
     public UserResponse getToken(String username, String password) {
         UserResponse userResponse = null;
         try{
-            Session session = login(username, password,"");
+            Session session = login(username, password);
             User user = session.getFather();
             if(user != null){
                 userResponse = new UserResponse(StatusResponse.OK,"OK",user.getId(), user.getUsername(), 

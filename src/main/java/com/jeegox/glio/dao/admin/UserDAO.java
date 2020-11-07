@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface UserDAO extends GenericDAO<User, Integer>{
     
-    User login(String username,String password, String token);
+    User login(String username,String password);
+
+    User login(String token);
     
     List<User> findByCompany(Company company);
     

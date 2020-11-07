@@ -6,25 +6,37 @@ import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.admin.User;
 import com.jeegox.glio.enumerators.Status;
 import java.util.List;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserDAOImpl extends GenericDAOImpl<User, Integer> implements UserDAO {
 
-    //todo check this method because it might be divided in two different methods
     @Override
-    public User login(String username, String password, String token) {
+    public User login(String username, String password) {
         String query = "select u "+
-                " from Token t "+
-                " right join t.father u "+
-                " where ((u.username = :username "+
-                " and u.password = :password ) "+
-                " or t.token = :token ) "+
+                " from User u "+
+                " where u.username = :username "+
+                " and u.password = :password  "+
                 " and u.status = :status ";
 
-        return (User)sessionFactory.getCurrentSession().createQuery(query).setParameter("username", username).
-                setParameter("password", password).setParameter("token", token).setParameter("status", Status.ACTIVE).
+        return (User)sessionFactory.getCurrentSession().createQuery(query).
+                setParameter("username", username).
+                setParameter("password", password).
+                setParameter("status", Status.ACTIVE).
+                getResultList().stream().findFirst().orElse(null);
+    }
+
+    @Override
+    public User login(String token) {
+        String query = "select u "+
+                " from Token t "+
+                " join t.father u "+
+                " where t.token = :token "+
+                " and u.status = :status "+
+                " and t.status = :status ";
+
+        return (User)sessionFactory.getCurrentSession().createQuery(query).setParameter("token", token).
+                setParameter("status", Status.ACTIVE).
                 getResultList().stream().findFirst().orElse(null);
     }
 

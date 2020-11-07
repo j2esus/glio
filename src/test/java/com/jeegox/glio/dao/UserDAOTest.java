@@ -130,27 +130,22 @@ public class UserDAOTest {
 
     @Test
     public void login_validUserAndPassword_user(){
-        assertThat(userDAO.login("admin@mcdonals", "password", "")).isEqualTo(expectedUser);
+        assertThat(userDAO.login("admin@mcdonals", "password")).isEqualTo(expectedUser);
     }
 
     @Test
     public void login_invalidUserAndPassword_null(){
-        assertThat(userDAO.login("admin@mcdonals", "otropassword", "")).isNull();
+        assertThat(userDAO.login("admin@mcdonals", "otropassword")).isNull();
     }
 
     @Test
     public void login_validToken_user(){
-        assertThat(userDAO.login("", "", "4j3g1ska8d6")).isEqualTo(expectedUser);
+        assertThat(userDAO.login("4j3g1ska8d6")).isEqualTo(expectedUser);
     }
 
     @Test
     public void login_invalidToken_null(){
-        assertThat(userDAO.login("", "", "4ha6dg5a64aga4")).isNull();
-    }
-
-    @Test
-    public void login_allParametersEmpty_null(){
-        assertThat(userDAO.login("", "", "")).isNull();
+        assertThat(userDAO.login("4ha6dg5a64aga4")).isNull();
     }
 
     private void insertInitialData() throws SQLException{
