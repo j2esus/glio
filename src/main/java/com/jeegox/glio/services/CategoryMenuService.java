@@ -33,11 +33,6 @@ public class CategoryMenuService {
     }
 
     @Transactional(readOnly = true)
-    public List<CategoryMenu> findBy(UserType userType) {
-        return categoryMenuDAO.findBy(userType);
-    }
-
-    @Transactional(readOnly = true)
     public List<CategoryMenuDTO> findByDTO(UserType userType) {
         List<CategoryMenuDTO> categories = new ArrayList<>();
         Set<OptionMenu> options = userType.getOptions();
