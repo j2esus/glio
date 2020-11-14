@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,8 +77,8 @@ public class ProjectService {
     @Transactional(readOnly = true)
     public List<Map> findDataGraphAimByProject(Integer idProject) {
         List<Map> dataMap = new ArrayList<Map>();
-        Project project = findBydId(idProject);
-        List<Aim> aims = findBy(project, new Status[]{Status.DELETED, Status.INACTIVE});
+        Project project = projectDAO.findById(idProject);
+        List<Aim> aims = aimDAO.findByProject(project, new Status[]{Status.ACTIVE, Status.FINISHED});
         List<GraphStatusVO> graphs = null;
         Map<String, Object> map = null;
         for(Aim aim : aims){
@@ -129,6 +130,12 @@ public class ProjectService {
     @Transactional(readOnly = true)
     public List<GraphStatusVO> findDataGraphAim(Integer idAim) {
         return aimDAO.findDataGraphAim(idAim);
+    }
+
+    @Transactional(readOnly = true)
+    public Map<Status, Long> countTasksByStatus(Aim aim){
+        List<Task> tasks = taskDAO.findBy(aim);
+        return tasks.stream().collect(Collectors.groupingBy(Task::getStatus, Collectors.counting()));
     }
 
     @Transactional(readOnly = true)
