@@ -15,9 +15,7 @@ import com.jeegox.glio.entities.aim.Time;
 import com.jeegox.glio.enumerators.Priority;
 import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.util.Util;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -90,11 +88,6 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public List<Aim> findAimByCompany(Company company) {
-        return aimDAO.findByCompany(company);
-    }
-
-    @Transactional(readOnly = true)
     public Aim findAimBydId(Integer id) {
         return aimDAO.findById(id);
     }
@@ -124,11 +117,6 @@ public class ProjectService {
     @Transactional
     public void saveOrUpdate(Task task) {
         taskDAO.save(task);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Task> findTasksByCompany(Company company) {
-        return taskDAO.findByCompany(company);
     }
 
     @Transactional(readOnly = true)
@@ -209,15 +197,5 @@ public class ProjectService {
     @Transactional
     public void saveOrUpdate(Time time) {
         timeDAO.save(time);
-    }
-
-    @Transactional(readOnly = true)
-    public Time findTimeById(Integer id) {
-        return timeDAO.findById(id);
-    }
-
-    @Transactional(readOnly = true)
-    public Time findCurrentTime(Task task) {
-        return timeDAO.findCurrentTime(task);
     }
 }
