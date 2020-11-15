@@ -75,23 +75,6 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public List<Map> findDataGraphAimByProject(Integer idProject) {
-        List<Map> dataMap = new ArrayList<Map>();
-        Project project = projectDAO.findById(idProject);
-        List<Aim> aims = aimDAO.findByProject(project, new Status[]{Status.ACTIVE, Status.FINISHED});
-        List<GraphStatusVO> graphs = null;
-        Map<String, Object> map = null;
-        for(Aim aim : aims){
-            map = new HashMap<>();
-            graphs = findDataGraphAim(aim.getId());
-            map.put("aim", aim);
-            map.put("data", graphs);
-            dataMap.add(map);
-        }
-        return dataMap;
-    }
-
-    @Transactional(readOnly = true)
     public List<Project> findByCompany(Company company, String query, Status[] status) {
         return projectDAO.findByCompany(company, query, status);
     }
@@ -125,11 +108,6 @@ public class ProjectService {
     public void changeStatus(Aim aim, Status status) throws Exception {
         aim.setStatus(status);
         this.saveOrUpdate(aim);
-    }
-
-    @Transactional(readOnly = true)
-    public List<GraphStatusVO> findDataGraphAim(Integer idAim) {
-        return aimDAO.findDataGraphAim(idAim);
     }
 
     @Transactional(readOnly = true)

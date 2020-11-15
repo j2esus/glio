@@ -38,23 +38,6 @@ public class AimDAOImpl extends GenericDAOImpl<Aim,Integer> implements AimDAO{
                 setParameter("status", Status.DELETED).getResultList();
     }
 
-    //todo check this method because it might to be changed with lambdas functions
-    @Override
-    public List<GraphStatusVO> findDataGraphAim(Integer idAim) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select new com.jeegox.glio.dto.GraphStatusVO(t.status, count(t) ) ");
-        sb.append(" from Task t ");
-        sb.append(" join t.father a ");
-        sb.append(" where a.id = :idAim ");
-        sb.append(" and a.status not in ( :idsStatus ) and t.status not in ( :idsStatus ) ");
-        sb.append(" group by t.status ");
-        
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString(), GraphStatusVO.class);
-        q.setParameter("idAim", idAim);
-        q.setParameterList("idsStatus",new Status[]{Status.DELETED, Status.INACTIVE});
-        return q.list();
-    }
-
     @Override
     public List<Aim> findByProject(Project project, Status[] status) {
         String query = " select a "+
