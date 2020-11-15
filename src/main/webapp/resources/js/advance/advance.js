@@ -118,16 +118,16 @@ function toBuildGraphProject() {
                         }]
                 }
             });
-            toBuildGraphAim(item.id);
+            toBuildDivForAims(item.id);
         }
     });
 }
 
-function toBuildGraphAim(idProject) {
+function toBuildDivForAims(idProject) {
     $divAims = $('#divAims');
     $.ajax({
         type: "POST",
-        url: $.PATH + "advance/findDataGraphAim",
+        url: $.PATH + "advance/findAims",
         data: {idProject: idProject},
         beforeSend: function (xhr) {
             _blockUI.block();
@@ -135,50 +135,62 @@ function toBuildGraphAim(idProject) {
             _aimData = [];
         },
         success: function (data) {
-            var i = 0;
-            var html = '';
-            for(i = 0;i<data.length;i++){
+            let html = '';
+            for(let i = 0;i<data.length;i++){
                 html += writeAimGraphHtml(i, data[i]);
                 _aimData.push(data[i]);
             }
             $divAims.html(html);
-            //graficas
-            
-            for(i = 0;i<data.length;i++){
-                var dataGraph = data[i].data;
-                var labelsAim = [];
-                var dataGraphAim = [];
-                var total = 0;
-                for(j = 0;j<dataGraph.length;j++){
-                    var value = dataGraph[j];
-                    total += value.quantity;
-                }
-                for(j = 0;j<dataGraph.length;j++){
-                    var value = dataGraph[j];
-                    labelsAim[j] = value.status;
-                    dataGraphAim[j] = (value.quantity / total) * 100;
-                }
-                
-                new Chart($('#'+data[i].aim.id), {
-                    type: 'pie',
-                    data: {
-                        labels: labelsAim,
-                        datasets: [{
-                                data: dataGraphAim,
-                                backgroundColor: ['#007bff', '#dc3545', '#ffc107', '#28a745']
-                            }]
-                    }
-                });
-            }
+            $.each(_aimData, function(i, item){
+                toBuildAimChart(item.id);
+            });
         }, complete: function () {
             _blockUI.unblock();
         }
     });
 }
 
-function writeAimGraphHtml(index, aimData){
+function toBuildAimChart(idAim) {
+    $.ajax({
+        type: "POST",
+        url: $.PATH + "advance/countTasksByStatus",
+        data: {
+            idAim: idAim
+        },
+        beforeSend: function (xhr) {
+            _blockUI.block();
+        },
+        success: function (data) {
+            let labelsAim = [];
+            let dataGraphAim = [];
+            let total = 0;
+            $.each(data, function(key,value) {
+                total += value;
+            });
+
+            $.each(data, function(key,value) {
+                labelsAim.push(key);
+                dataGraphAim.push(_jsUtil.round((value / total ) * 100));
+            });
+
+            new Chart($('#'+idAim), {
+                type: 'pie',
+                data: {
+                    labels: labelsAim,
+                    datasets: [{
+                            data: dataGraphAim,
+                            backgroundColor: ['#007bff', '#dc3545', '#ffc107', '#28a745']
+                        }]
+                }
+            });
+        }, complete: function () {
+            _blockUI.unblock();
+        }
+    });
+}
+
+function writeAimGraphHtml(index, item){
     var html = '';
-    var item = aimData.aim;
     if(index%3 == 0){
         html += '<div class="row">';
     }
@@ -208,15 +220,15 @@ function writeAimGraphHtml(index, aimData){
 function showDetails(index){
     var item = _aimData[index];
     $dataTableTask = $('#dataTableTask');
-    $('#titleModalDetail').html(item.aim.name);
-    $('#descriptionModal').html(item.aim.description);
-    $('#initDateModal').html(_uiUtil.getFormattedDate(item.aim.initDate));
-    $('#endDateModal').html(_uiUtil.getFormattedDate(item.aim.endDate));
+    $('#titleModalDetail').html(item.name);
+    $('#descriptionModal').html(item.description);
+    $('#initDateModal').html(_uiUtil.getFormattedDate(item.initDate));
+    $('#endDateModal').html(_uiUtil.getFormattedDate(item.endDate));
     
     $.ajax({
         type: "POST",
         url: $.PATH + "advance/findTasks",
-        data: {idAim: item.aim.id},
+        data: {idAim: item.id},
         beforeSend: function (xhr) {
             _blockUI.block();
             _uiUtil.clearDataTable($dataTableTask);

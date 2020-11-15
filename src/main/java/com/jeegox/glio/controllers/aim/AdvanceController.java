@@ -45,10 +45,10 @@ public class AdvanceController extends BaseController{
         return projectService.findDataGraphProject(idProject);
     }
     
-    @RequestMapping(value = "findDataGraphAim", method = RequestMethod.POST)
+    @RequestMapping(value = "findAims", method = RequestMethod.POST)
     @ResponseBody
-    public List<Map> findDataGraphAim(HttpServletRequest request, @RequestParam Integer idProject){
-        return projectService.findDataGraphAimByProject(idProject);
+    public List<Aim> findAims(@RequestParam Integer idProject){
+        return projectService.findBy(projectService.findBydId(idProject), new Status[]{Status.ACTIVE, Status.FINISHED});
     }
     
     @RequestMapping(value = "findTasks", method = RequestMethod.POST)
@@ -57,4 +57,11 @@ public class AdvanceController extends BaseController{
         Aim aim = projectService.findAimBydId(idAim);
         return projectService.findBy(aim, new Status[]{Status.DELETED, Status.INACTIVE});
     }
+
+    @RequestMapping(value = "countTasksByStatus", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<Status, Long> countTasksByStatus(@RequestParam Integer idAim){
+        return projectService.countTasksByStatus(projectService.findAimBydId(idAim));
+    }
+
 }

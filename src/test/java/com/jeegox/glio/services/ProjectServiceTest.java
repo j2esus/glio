@@ -71,7 +71,6 @@ public class ProjectServiceTest {
         tasks.add(new Task(11, "task 11", "description task 11", Status.INACTIVE, Priority.MEDIA, 2, admin, worker, aim));
     }
 
-
     @Before
     public void setUp(){
         projectDAO = mock(ProjectDAOImpl.class);
