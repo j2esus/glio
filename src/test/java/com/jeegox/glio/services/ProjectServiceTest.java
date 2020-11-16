@@ -53,23 +53,10 @@ public class ProjectServiceTest {
             new Company(1, "company", "description", Status.ACTIVE, 3), "user@company.com");
     private final static Project project = new Project(1, "Project", "This is a really big project", Status.ACTIVE,
             java.sql.Date.valueOf("2010-01-01"), java.sql.Date.valueOf("2020-12-31"), admin);
-    private static final Aim aim = new Aim(1, "selling screen", "create a new screen about selling", Status.ACTIVE,
+    private static final Aim sellingScreen = new Aim(1, "selling screen", "create a new screen about selling", Status.ACTIVE,
             java.sql.Date.valueOf("2020-01-01"), java.sql.Date.valueOf("2020-01-31"), admin, project);
-
-    private static List<Task> tasks = new ArrayList<>();
-    static{
-        tasks.add(new Task(1, "task 1", "description task 1", Status.ACTIVE, Priority.MEDIA, 2, admin, worker, aim));
-        tasks.add(new Task(2, "task 2", "description task 2", Status.ACTIVE, Priority.MEDIA, 2, admin, worker, aim));
-        tasks.add(new Task(3, "task 3", "description task 3", Status.ACTIVE, Priority.MEDIA, 2, admin, worker, aim));
-        tasks.add(new Task(4, "task 4", "description task 4", Status.IN_PROCESS, Priority.MEDIA, 2, admin, worker, aim));
-        tasks.add(new Task(5, "task 5", "description task 5", Status.IN_PROCESS, Priority.MEDIA, 2, admin, worker, aim));
-        tasks.add(new Task(6, "task 6", "description task 6", Status.FINISHED, Priority.BAJA, 3, admin, worker, aim));
-        tasks.add(new Task(7, "task 7", "description task 7", Status.FINISHED, Priority.BAJA, 3, admin, worker, aim));
-        tasks.add(new Task(8, "task 8", "description task 8", Status.FINISHED, Priority.ALTA, 5, admin, worker, aim));
-        tasks.add(new Task(9, "task 9", "description task 9", Status.FINISHED, Priority.BAJA, 7, admin, worker, aim));
-        tasks.add(new Task(10, "task 9", "description task 10", Status.PAUSED, Priority.ALTA, 7, admin, worker, aim));
-        tasks.add(new Task(11, "task 11", "description task 11", Status.INACTIVE, Priority.MEDIA, 2, admin, worker, aim));
-    }
+    private static final Aim loginScreen = new Aim(2, "login screen", "create a new screen about login", Status.ACTIVE,
+            java.sql.Date.valueOf("2020-01-01"), java.sql.Date.valueOf("2020-01-31"), admin, project);
 
     @Before
     public void setUp(){
@@ -81,18 +68,52 @@ public class ProjectServiceTest {
     }
 
     @Test
-    public void countTasksByStatus_aimWithTasks_notEmptyMap(){
-        when(taskDAO.findBy(any())).thenReturn(tasks);
-        assertThat(projectService.countTasksByStatus(aim)).isEqualTo(resultsExpected());
+    public void countTasksGroupedByStatus_aimWithTasks_notEmptyMap(){
+        when(taskDAO.findBy(any())).thenReturn(tasksByAim());
+        assertThat(projectService.countTasksGroupedByStatus(sellingScreen)).isEqualTo(resultsExpectedByAim());
     }
 
     @Test
-    public void countTasksByStatus_aimWithoutTasks_emptyMap(){
+    public void countTasksGroupedByStatus_aimWithoutTasks_emptyMap(){
         when(taskDAO.findBy(any())).thenReturn(Lists.newArrayList());
-        assertThat(projectService.countTasksByStatus(aim)).isEmpty();
+        assertThat(projectService.countTasksGroupedByStatus(sellingScreen)).isEmpty();
     }
 
-    private Map<Status, Long> resultsExpected(){
+    @Test
+    public void countTasksGroupedByStatus_projectWithTasks_notEmptyMap(){
+        when(taskDAO.findByProject(any())).thenReturn(tasksByProject());
+        assertThat(projectService.countTasksGroupedByStatus(project)).isEqualTo(resultsExpectedByProject());
+    }
+
+    @Test
+    public void countTasksGroupedByStatus_projectWithoutTasks_emptyMap(){
+        when(taskDAO.findByProject(any())).thenReturn(Lists.newArrayList());
+        assertThat(projectService.countTasksGroupedByStatus(project)).isEmpty();
+    }
+
+    private List<Task> tasksByAim(){
+        List<Task> tasks = new ArrayList<>();
+        tasks.add(new Task(1, "task 1", "description task 1", Status.ACTIVE, Priority.MEDIA, 2, admin, worker, sellingScreen));
+        tasks.add(new Task(2, "task 2", "description task 2", Status.ACTIVE, Priority.MEDIA, 2, admin, worker, sellingScreen));
+        tasks.add(new Task(3, "task 3", "description task 3", Status.ACTIVE, Priority.MEDIA, 2, admin, worker, sellingScreen));
+        tasks.add(new Task(4, "task 4", "description task 4", Status.IN_PROCESS, Priority.MEDIA, 2, admin, worker, sellingScreen));
+        tasks.add(new Task(5, "task 5", "description task 5", Status.IN_PROCESS, Priority.MEDIA, 2, admin, worker, sellingScreen));
+        tasks.add(new Task(6, "task 6", "description task 6", Status.FINISHED, Priority.BAJA, 3, admin, worker, sellingScreen));
+        tasks.add(new Task(7, "task 7", "description task 7", Status.FINISHED, Priority.BAJA, 3, admin, worker, sellingScreen));
+        tasks.add(new Task(8, "task 8", "description task 8", Status.FINISHED, Priority.ALTA, 5, admin, worker, sellingScreen));
+        tasks.add(new Task(9, "task 9", "description task 9", Status.FINISHED, Priority.BAJA, 7, admin, worker, sellingScreen));
+        tasks.add(new Task(10, "task 9", "description task 10", Status.PAUSED, Priority.ALTA, 7, admin, worker, sellingScreen));
+        tasks.add(new Task(11, "task 11", "description task 11", Status.INACTIVE, Priority.MEDIA, 2, admin, worker, sellingScreen));
+        return tasks;
+    }
+
+    private List<Task> tasksByProject() {
+        List<Task> tasks = tasksByAim();
+        tasks.add(new Task(12, "task 12", "description task 12", Status.PAUSED, Priority.MEDIA, 2, admin, worker, loginScreen));
+        return tasks;
+    }
+
+    private Map<Status, Long> resultsExpectedByAim(){
         Map<Status, Long> result = new HashMap<>();
         result.put(Status.FINISHED, 4L);
         result.put(Status.IN_PROCESS, 2L);
@@ -102,4 +123,13 @@ public class ProjectServiceTest {
         return result;
     }
 
+    private Map<Status, Long> resultsExpectedByProject(){
+        Map<Status, Long> result = new HashMap<>();
+        result.put(Status.FINISHED, 4L);
+        result.put(Status.IN_PROCESS, 2L);
+        result.put(Status.INACTIVE, 1L);
+        result.put(Status.PAUSED, 2L);
+        result.put(Status.ACTIVE, 3L);
+        return result;
+    }
 }

@@ -68,8 +68,9 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public List<GraphStatusVO> findDataGraphProject(Integer idProject) {
-        return projectDAO.findDataGraphProject(idProject);
+    public Map<Status, Long> countTasksGroupedByStatus(Project project) {
+        List<Task> tasks = taskDAO.findByProject(project);
+        return tasks.stream().collect(Collectors.groupingBy(Task::getStatus, Collectors.counting()));
     }
 
     @Transactional(readOnly = true)
@@ -104,7 +105,7 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public Map<Status, Long> countTasksByStatus(Aim aim){
+    public Map<Status, Long> countTasksGroupedByStatus(Aim aim){
         List<Task> tasks = taskDAO.findBy(aim);
         return tasks.stream().collect(Collectors.groupingBy(Task::getStatus, Collectors.counting()));
     }

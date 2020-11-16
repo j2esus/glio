@@ -1,7 +1,6 @@
 package com.jeegox.glio.dao.aim;
 
 import com.jeegox.glio.dao.hibernate.GenericDAO;
-import com.jeegox.glio.dto.GraphStatusVO;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.admin.User;
 import com.jeegox.glio.entities.aim.Project;
@@ -15,8 +14,6 @@ public interface ProjectDAO extends GenericDAO<Project, Integer>{
     List<Project> findByUser(User user, String value);
     
     List<Project> findByUser(User user, String value, Status status);
-    
-    List<GraphStatusVO> findDataGraphProject(Integer idProject);
     
     List<Project> findByCompany(Company company, String value, Status[] status);
 

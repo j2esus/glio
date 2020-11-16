@@ -39,10 +39,10 @@ public class AdvanceController extends BaseController{
         return projectService.findByCompany(getCurrentCompany(request), query, new Status[]{Status.ACTIVE});
     }
     
-    @RequestMapping(value = "findDataGraphProject", method = RequestMethod.POST)
+    @RequestMapping(value = "countTasksGroupedByStatus_project", method = RequestMethod.POST)
     @ResponseBody
-    public List<GraphStatusVO> findDataGraphProject(HttpServletRequest request, @RequestParam Integer idProject){
-        return projectService.findDataGraphProject(idProject);
+    public Map<Status, Long> countTasksGroupedByStatus_project(@RequestParam Integer idProject){
+        return projectService.countTasksGroupedByStatus(projectService.findBydId(idProject));
     }
     
     @RequestMapping(value = "findAims", method = RequestMethod.POST)
@@ -58,10 +58,10 @@ public class AdvanceController extends BaseController{
         return projectService.findBy(aim, new Status[]{Status.DELETED, Status.INACTIVE});
     }
 
-    @RequestMapping(value = "countTasksByStatus", method = RequestMethod.POST)
+    @RequestMapping(value = "countTasksGroupedByStatus_aim", method = RequestMethod.POST)
     @ResponseBody
-    public Map<Status, Long> countTasksByStatus(@RequestParam Integer idAim){
-        return projectService.countTasksByStatus(projectService.findAimBydId(idAim));
+    public Map<Status, Long> countTasksGroupedByStatus_aim(@RequestParam Integer idAim){
+        return projectService.countTasksGroupedByStatus(projectService.findAimBydId(idAim));
     }
 
 }

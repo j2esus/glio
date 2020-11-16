@@ -87,7 +87,7 @@ function toBuildGraphProject() {
     var dataGraph = [];
     $.ajax({
         type: "POST",
-        url: $.PATH + "advance/findDataGraphProject",
+        url: $.PATH + "advance/countTasksGroupedByStatus_project",
         data: {idProject: item.id},
         beforeSend: function (xhr) {
             _blockUI.block();
@@ -95,17 +95,14 @@ function toBuildGraphProject() {
             dataGraph = [];
         },
         success: function (data) {
-            var i = 0;
-            var total = 0;
-            for(i = 0; i<data.length; i++){
-                var value = data[i];
-                total += value.quantity;
-            }
-            for(i = 0; i<data.length; i++){
-                var value = data[i];
-                labels[i] = value.status;
-                dataGraph[i] = (value.quantity / total) * 100;
-            }
+            let total = 0;
+            $.each(data, function(key, value){
+                total += value;
+            });
+            $.each(data, function(key, value){
+                labels.push(key);
+                dataGraph.push(_jsUtil.round((value / total) * 100));
+            });
         }, complete: function () {
             _blockUI.unblock();
             new Chart(ctxPie, {
@@ -153,7 +150,7 @@ function toBuildDivForAims(idProject) {
 function toBuildAimChart(idAim) {
     $.ajax({
         type: "POST",
-        url: $.PATH + "advance/countTasksByStatus",
+        url: $.PATH + "advance/countTasksGroupedByStatus_aim",
         data: {
             idAim: idAim
         },

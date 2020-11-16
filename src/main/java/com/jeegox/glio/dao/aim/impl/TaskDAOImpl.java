@@ -6,6 +6,7 @@ import com.jeegox.glio.dto.TaskDTO;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.admin.User;
 import com.jeegox.glio.entities.aim.Aim;
+import com.jeegox.glio.entities.aim.Project;
 import com.jeegox.glio.entities.aim.Task;
 import com.jeegox.glio.enumerators.Priority;
 import com.jeegox.glio.enumerators.Status;
@@ -48,6 +49,19 @@ public class TaskDAOImpl extends GenericDAOImpl<Task,Integer> implements TaskDAO
         q.setParameter("aim", aim);
         q.setParameter("status", Status.DELETED);
         return q.list();
+    }
+
+    @Override
+    public List<Task> findByProject(Project project) {
+        String query = " select t "+
+                " from Task t "+
+                " join t.father a "+
+                " where a.father = :project "+
+                " and t.status <> :status ";
+
+        return sessionFactory.getCurrentSession().createQuery(query).
+                setParameter("project", project).
+                setParameter("status", Status.DELETED).getResultList();
     }
 
     @Override
