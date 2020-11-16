@@ -14,8 +14,6 @@ import java.util.List;
 
 public interface TaskDAO extends GenericDAO<Task,Integer>{
     
-    List<Task> findByCompany(Company company);
-    
     List<Task> findBy(Aim aim);
 
     List<Task> findByProject(Project project);

@@ -22,22 +22,6 @@ import org.springframework.stereotype.Repository;
 public class TaskDAOImpl extends GenericDAOImpl<Task,Integer> implements TaskDAO{
 
     @Override
-    public List<Task> findByCompany(Company company) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select t ");
-        sb.append(" from Task t ");
-        sb.append(" join t.father a ");
-        sb.append(" join a.father p ");
-        sb.append(" join p.father u ");
-        sb.append(" where u.father = :company ");
-        sb.append(" and a.status != :status  ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("company", company);
-        q.setParameter("status", Status.DELETED);
-        return q.list();
-    }
-
-    @Override
     public List<Task> findBy(Aim aim) {
         StringBuilder sb = new StringBuilder();
         sb.append(" select t ");
