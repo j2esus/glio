@@ -49,8 +49,9 @@ public class TaskController extends BaseController {
             @RequestParam("priorities[]") Priority[] priorities, @RequestParam Integer idProject) {
         Company company = getCurrentCompany(request);
         Map<String, Object> response = new HashMap<>();
-        response.put("count", projectService.count(company, new Status[]{Status.PENDING}, query, priorities, idProject));
-        response.put("actives", projectService.findBy(company, new Status[]{Status.PENDING}, query, priorities, idProject));
+        List<Task> tasks = projectService.findBy(company, new Status[]{Status.PENDING}, query, priorities, idProject);
+        response.put("count", tasks.size());
+        response.put("actives", tasks);
         return response;
     }
 
@@ -60,8 +61,9 @@ public class TaskController extends BaseController {
             @RequestParam("priorities[]") Priority[] priorities, @RequestParam Integer idProject) {
         Company company = getCurrentCompany(request);
         Map<String, Object> response = new HashMap<>();
-        response.put("count", projectService.count(company, new Status[]{Status.PAUSED, Status.IN_PROCESS}, query, priorities, idProject));
-        response.put("inProcess", projectService.findBy(company, new Status[]{Status.PAUSED, Status.IN_PROCESS}, query, priorities, idProject));
+        List<Task> tasks = projectService.findBy(company, new Status[]{Status.PAUSED, Status.IN_PROCESS}, query, priorities, idProject);
+        response.put("count", tasks.size());
+        response.put("inProcess", tasks);
         return response;
     }
 
@@ -71,8 +73,9 @@ public class TaskController extends BaseController {
             @RequestParam("priorities[]") Priority[] priorities, @RequestParam Integer idProject) {
         Company company = getCurrentCompany(request);
         Map<String, Object> response = new HashMap<>();
-        response.put("count", projectService.count(company, new Status[]{Status.FINISHED}, query, priorities, idProject));
-        response.put("finished", projectService.findBy(company, new Status[]{Status.FINISHED}, query, priorities, idProject));
+        List<Task> tasks = projectService.findBy(company, new Status[]{Status.FINISHED}, query, priorities, idProject);
+        response.put("count", tasks.size());
+        response.put("finished", tasks);
         return response;
     }
 

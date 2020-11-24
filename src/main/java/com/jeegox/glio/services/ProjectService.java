@@ -1,11 +1,10 @@
 package com.jeegox.glio.services;
 
+import com.google.common.collect.Lists;
 import com.jeegox.glio.dao.aim.AimDAO;
 import com.jeegox.glio.dao.aim.ProjectDAO;
 import com.jeegox.glio.dao.aim.TaskDAO;
 import com.jeegox.glio.dao.aim.TimeDAO;
-import com.jeegox.glio.dto.GraphStatusVO;
-import com.jeegox.glio.dto.TaskDTO;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.admin.User;
 import com.jeegox.glio.entities.aim.Aim;
@@ -15,7 +14,7 @@ import com.jeegox.glio.entities.aim.Time;
 import com.jeegox.glio.enumerators.Priority;
 import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.util.Util;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,11 +41,6 @@ public class ProjectService {
     @Transactional
     public void saveOrUpdate(Project project) {
         projectDAO.save(project);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Project> findByCompany(Company company) {
-        return projectDAO.findByCompany(company);
     }
 
     @Transactional(readOnly = true)
@@ -135,11 +129,6 @@ public class ProjectService {
         task.setStatus(status);
         this.saveOrUpdate(task);
     }
-
-    @Transactional(readOnly = true)
-    public List<Task> findBy(User user, Status[] status, String query, Priority[] priorities) {
-        return taskDAO.findBy(user, status, query, priorities);
-    }
     
     @Transactional
     public void work(User user, Integer idTask, Status status) throws Exception {
@@ -176,27 +165,9 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public Long count(User user, Status[] status, String query, Priority[] priorities) {
-        return taskDAO.count(user, status, query, priorities);
-    }
-
-    @Transactional(readOnly = true)
-    public Long count(Company company, Status[] status, String query, Priority[] priorities, Integer idProject) {
-        return taskDAO.count(company, status, query, priorities, idProject);
-    }
-
-    @Transactional(readOnly = true)
     public List<Task> findBy(Company company, Status[] status, String query, Priority[] priorities, Integer idProject) {
-        return taskDAO.findBy(company, status, query, priorities, idProject);
-    }
-
-    @Transactional(readOnly = true)
-    public List<TaskDTO> findBy(User userOwner, Status[] status, Date initDate, Date endDate, Integer idProject, Integer idAim) {
-        return taskDAO.findBy(userOwner, status, initDate, endDate, idProject, idAim);
-    }
-    
-    @Transactional
-    public void saveOrUpdate(Time time) {
-        timeDAO.save(time);
+        if(idProject != 0)
+            return taskDAO.findBy(company, status, query, priorities, projectDAO.findById(idProject));
+        return taskDAO.findBy(company, status, query, priorities);
     }
 }

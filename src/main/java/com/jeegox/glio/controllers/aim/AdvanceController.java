@@ -1,7 +1,6 @@
 package com.jeegox.glio.controllers.aim;
 
 import com.jeegox.glio.controllers.BaseController;
-import com.jeegox.glio.dto.GraphStatusVO;
 import com.jeegox.glio.entities.aim.Aim;
 import com.jeegox.glio.entities.aim.Project;
 import com.jeegox.glio.entities.aim.Task;
@@ -53,9 +52,9 @@ public class AdvanceController extends BaseController{
     
     @RequestMapping(value = "findTasks", method = RequestMethod.POST)
     @ResponseBody
-    public List<Task> findTasks(HttpServletRequest request, @RequestParam Integer idAim){
+    public List<Task> findTasks(@RequestParam Integer idAim){
         Aim aim = projectService.findAimBydId(idAim);
-        return projectService.findBy(aim, new Status[]{Status.DELETED, Status.INACTIVE});
+        return projectService.findBy(aim, new Status[]{Status.PENDING, Status.FINISHED, Status.IN_PROCESS, Status.PAUSED, Status.ACCEPTED});
     }
 
     @RequestMapping(value = "countTasksGroupedByStatus_aim", method = RequestMethod.POST)

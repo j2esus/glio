@@ -18,17 +18,13 @@ public interface TaskDAO extends GenericDAO<Task,Integer>{
 
     List<Task> findByProject(Project project);
     
-    List<Task> findBy(User user, Status[] status, String query, Priority[] priorities);
-    
     List<Task> findBy(Aim aim, Status[] status);
     
     Long count(User user, Status[] status);
-    
-    Long count(User user, Status[] status, String query, Priority[] priorities);
-    
-    Long count(Company company, Status[] status, String query, Priority[] priorities, Integer idProject);
-    
-    List<Task> findBy(Company company, Status[] status, String query, Priority[] priorities, Integer idProject);
+
+    List<Task> findBy(Company company, Status[] status, String value, Priority[] priorities, Project project);
+
+    List<Task> findBy(Company company, Status[] status, String value, Priority[] priorities);
     
     List<TaskDTO> findBy(User userOwner, Status[] status, Date initDate, Date endDate, Integer idProject, Integer idAim);
 }
