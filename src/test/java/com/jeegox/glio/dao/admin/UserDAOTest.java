@@ -1,7 +1,6 @@
-package com.jeegox.glio.dao;
+package com.jeegox.glio.dao.admin;
 
 import com.jeegox.glio.config.spring.ApplicationContextConfigTest;
-import com.jeegox.glio.dao.admin.UserDAO;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.admin.User;
 import com.jeegox.glio.entities.admin.UserType;

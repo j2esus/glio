@@ -1,7 +1,6 @@
-package com.jeegox.glio.dao;
+package com.jeegox.glio.dao.admin;
 
 import com.jeegox.glio.config.spring.ApplicationContextConfigTest;
-import com.jeegox.glio.dao.admin.CategoryMenuDAO;
 import com.jeegox.glio.entities.admin.CategoryMenu;
 import com.jeegox.glio.enumerators.Status;
 import org.hibernate.Session;

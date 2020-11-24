@@ -1,8 +1,7 @@
-package com.jeegox.glio.dao;
+package com.jeegox.glio.dao.admin;
 
 import static com.google.common.truth.Truth.assertThat;
 import com.jeegox.glio.config.spring.ApplicationContextConfigTest;
-import com.jeegox.glio.dao.admin.CompanyDAO;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.enumerators.Status;
 import org.hibernate.Session;
