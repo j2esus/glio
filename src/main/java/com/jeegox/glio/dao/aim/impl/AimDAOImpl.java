@@ -2,13 +2,11 @@ package com.jeegox.glio.dao.aim.impl;
 
 import com.jeegox.glio.dao.aim.AimDAO;
 import com.jeegox.glio.dao.hibernate.GenericDAOImpl;
-import com.jeegox.glio.dto.GraphStatusVO;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.aim.Aim;
 import com.jeegox.glio.entities.aim.Project;
 import com.jeegox.glio.enumerators.Status;
 import java.util.List;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
