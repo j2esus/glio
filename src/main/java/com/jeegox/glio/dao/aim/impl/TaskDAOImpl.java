@@ -15,14 +15,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class TaskDAOImpl extends GenericDAOImpl<Task,Integer> implements TaskDAO{
 
     @Override
-    public List<Task> findBy(Aim aim) {
+    public List<Task> findByAim(Aim aim) {
         String query = " select t "+
                 " from Task t "+
                 " where t.father = :aim "+
@@ -42,18 +41,6 @@ public class TaskDAOImpl extends GenericDAOImpl<Task,Integer> implements TaskDAO
         return sessionFactory.getCurrentSession().createQuery(query).
                 setParameter("project", project).
                 setParameter("status", Status.DELETED).getResultList();
-    }
-
-    @Override
-    public List<Task> findBy(Aim aim, Status[] status) {
-        String query = " select t "+
-                " from Task t "+
-                " where t.father = :aim "+
-                " and t.status in ( :status )";
-        
-        return sessionFactory.getCurrentSession().createQuery(query)
-                .setParameter("aim", aim)
-                .setParameterList("status", status).getResultList();
     }
 
     @Override

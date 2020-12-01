@@ -14,11 +14,9 @@ import java.util.List;
 
 public interface TaskDAO extends GenericDAO<Task,Integer>{
     
-    List<Task> findBy(Aim aim);
+    List<Task> findByAim(Aim aim);
 
     List<Task> findByProject(Project project);
-    
-    List<Task> findBy(Aim aim, Status[] status);
     
     Long count(User user, Status[] status);
 

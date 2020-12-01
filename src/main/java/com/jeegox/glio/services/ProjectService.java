@@ -1,6 +1,5 @@
 package com.jeegox.glio.services;
 
-import com.google.common.collect.Lists;
 import com.jeegox.glio.dao.aim.AimDAO;
 import com.jeegox.glio.dao.aim.ProjectDAO;
 import com.jeegox.glio.dao.aim.TaskDAO;
@@ -14,7 +13,6 @@ import com.jeegox.glio.entities.aim.Time;
 import com.jeegox.glio.enumerators.Priority;
 import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.util.Util;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -100,7 +98,7 @@ public class ProjectService {
 
     @Transactional(readOnly = true)
     public Map<Status, Long> countTasksGroupedByStatus(Aim aim){
-        List<Task> tasks = taskDAO.findBy(aim);
+        List<Task> tasks = taskDAO.findByAim(aim);
         return tasks.stream().collect(Collectors.groupingBy(Task::getStatus, Collectors.counting()));
     }
 
@@ -121,7 +119,7 @@ public class ProjectService {
 
     @Transactional(readOnly = true)
     public List<Task> findBy(Aim aim) {
-        return taskDAO.findBy(aim);
+        return taskDAO.findByAim(aim);
     }
 
     @Transactional
@@ -152,11 +150,6 @@ public class ProjectService {
         }catch(Exception e){
             throw e;        
         }
-    }
-
-    @Transactional(readOnly = true)
-    public List<Task> findBy(Aim aim, Status[] status) {
-        return taskDAO.findBy(aim, status);
     }
 
     @Transactional(readOnly = true)

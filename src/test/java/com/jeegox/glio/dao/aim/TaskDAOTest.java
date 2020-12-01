@@ -103,26 +103,14 @@ public class TaskDAOTest {
 
     @Test
     public void findByAim_aimExists_listWithThreeElements(){
-        assertThat(taskDAO.findBy(loginScreen)).isEqualTo(getExpectedTasksByAim());
+        assertThat(taskDAO.findByAim(loginScreen)).isEqualTo(getExpectedTasksByAim());
     }
 
     @Test
     public void findByAim_aimNotExists_emptyList(){
         Aim aim = new Aim();
         aim.setId(100);
-        assertThat(taskDAO.findBy(aim)).isEmpty();
-    }
-
-    @Test
-    public void findByAimAndStatus_aimExists_listWithOnlyOneElement(){
-        assertThat(taskDAO.findBy(loginScreen, new Status[]{Status.INACTIVE})).containsExactly(screenTask);
-    }
-
-    @Test
-    public void findByAimAndStatus_aimNotExists_emptyList(){
-        Aim aim = new Aim();
-        aim.setId(100);
-        assertThat(taskDAO.findBy(aim, new Status[]{Status.ACTIVE})).isEmpty();
+        assertThat(taskDAO.findByAim(aim)).isEmpty();
     }
 
     @Test

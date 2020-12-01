@@ -69,13 +69,13 @@ public class ProjectServiceTest {
 
     @Test
     public void countTasksGroupedByStatus_aimWithTasks_notEmptyMap(){
-        when(taskDAO.findBy(any())).thenReturn(tasksByAim());
+        when(taskDAO.findByAim(any())).thenReturn(tasksByAim());
         assertThat(projectService.countTasksGroupedByStatus(sellingScreen)).isEqualTo(resultsExpectedByAim());
     }
 
     @Test
     public void countTasksGroupedByStatus_aimWithoutTasks_emptyMap(){
-        when(taskDAO.findBy(any())).thenReturn(Lists.newArrayList());
+        when(taskDAO.findByAim(any())).thenReturn(Lists.newArrayList());
         assertThat(projectService.countTasksGroupedByStatus(sellingScreen)).isEmpty();
     }
 
