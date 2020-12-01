@@ -34,7 +34,7 @@ function onClickBtnConfiguration(){
 }
 
 function btnLogoutOnClick(){
-    countInProcess();
+    countTasksInProcess();
 }
 
 function btnDashOnClick(){
@@ -59,10 +59,10 @@ function logout(){
    });
 }
 
-function countInProcess(){
+function countTasksInProcess(){
     $.ajax({
         type: "POST",
-        url: $.PATH+"all/countInProcess",
+        url: $.PATH+"all/countTasksInProcess",
         beforeSend: function (xhr) {
             //_blockUI.block();
         },

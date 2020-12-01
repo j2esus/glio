@@ -153,8 +153,8 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public Long count(User user, Status[] status) {
-        return taskDAO.count(user, status);
+    public Long countTasksInProcess(User user) {
+        return taskDAO.countInProcess(user);
     }
 
     @Transactional(readOnly = true)

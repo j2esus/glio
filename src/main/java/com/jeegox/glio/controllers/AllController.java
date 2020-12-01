@@ -129,10 +129,10 @@ public class AllController extends BaseController {
         return "all/module";
     }
     
-    @RequestMapping(name = "countInProcess", method = RequestMethod.POST)
+    @RequestMapping(name = "countTasksInProcess", method = RequestMethod.POST)
     @ResponseBody
-    public Long countInProcess(HttpServletRequest request){
-        return projectService.count(getCurrentUser(request), new Status[]{Status.IN_PROCESS});
+    public Long countTasksInProcess(HttpServletRequest request){
+        return projectService.countTasksInProcess(getCurrentUser(request));
     }
     
     @RequestMapping(value = "findUsers", method = RequestMethod.POST)

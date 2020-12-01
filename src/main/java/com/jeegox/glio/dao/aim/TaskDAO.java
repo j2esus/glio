@@ -18,7 +18,7 @@ public interface TaskDAO extends GenericDAO<Task,Integer>{
 
     List<Task> findByProject(Project project);
     
-    Long count(User user, Status[] status);
+    Long countInProcess(User user);
 
     List<Task> findBy(Company company, Status[] status, String value, Priority[] priorities, Project project);
 

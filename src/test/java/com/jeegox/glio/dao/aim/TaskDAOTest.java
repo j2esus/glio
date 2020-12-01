@@ -51,7 +51,7 @@ public class TaskDAOTest {
     private final static Aim welcomeScreen = new Aim(2, "Welcome screen", "Create a welcome screen",
             Status.ACTIVE, java.sql.Date.valueOf("2010-01-01"), java.sql.Date.valueOf("2010-01-05"), admin, project);
 
-    private static Task screenTask = new Task(1, "screen", "create screen", Status.INACTIVE, Priority.MEDIA, 8, admin, worker, loginScreen);
+    private static Task screenTask = new Task(1, "screen", "create screen", Status.IN_PROCESS, Priority.MEDIA, 8, admin, worker, loginScreen);
 
     private final static Project smallProject = new Project(2, "Small project", "This is a really small project", Status.ACTIVE,
             java.sql.Date.valueOf("2010-01-01"), java.sql.Date.valueOf("2020-12-31"), admin);
@@ -114,13 +114,13 @@ public class TaskDAOTest {
     }
 
     @Test
-    public void countByUser_userExists_four(){
-        assertThat(taskDAO.count(worker, new Status[]{Status.ACTIVE})).isEqualTo(4);
+    public void countInProcessByUser_userExists_one(){
+        assertThat(taskDAO.countInProcess(worker)).isEqualTo(1);
     }
 
     @Test
-    public void countByUser_userWithoutTasks_zero(){
-        assertThat(taskDAO.count(admin, new Status[]{Status.ACTIVE})).isEqualTo(0);
+    public void countInProcessByUser_userWithoutTasks_zero(){
+        assertThat(taskDAO.countInProcess(admin)).isEqualTo(0);
     }
 
     @Test
@@ -130,8 +130,8 @@ public class TaskDAOTest {
     }
 
     @Test
-    public void findBy_inactiveStatus_listWithOnlyOneElement(){
-        List<Task> tasks = taskDAO.findBy(company, new Status[]{Status.INACTIVE}, "screen", Priority.values());
+    public void findBy_inProcessStatus_listWithOnlyOneElement(){
+        List<Task> tasks = taskDAO.findBy(company, new Status[]{Status.IN_PROCESS}, "screen", Priority.values());
         assertThat(tasks).containsExactly(screenTask);
     }
 
@@ -179,8 +179,8 @@ public class TaskDAOTest {
     }
 
     @Test
-    public void findBy_overloadMethodWithProjectParam_inactiveStatus_listWithOnlyOneElement(){
-        List<Task> tasks = taskDAO.findBy(company, new Status[]{Status.INACTIVE}, "screen", Priority.values(), project);
+    public void findBy_overloadMethodWithProjectParam_inProcessStatus_listWithOnlyOneElement(){
+        List<Task> tasks = taskDAO.findBy(company, new Status[]{Status.IN_PROCESS}, "screen", Priority.values(), project);
         assertThat(tasks).containsExactly(screenTask);
     }
 
@@ -293,7 +293,7 @@ public class TaskDAOTest {
                 " values (2, 'Welcome screen', 'Create a welcome screen', '2010-01-01', '2010-01-05', 'ACTIVE', 1, 1)");
 
         connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"+
-                " values(1, 'screen', 'create screen', 'INACTIVE', 1, 8, 1, 1, 2)");
+                " values(1, 'screen', 'create screen', 'IN_PROCESS', 1, 8, 1, 1, 2)");
 
         connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"+
                 " values(2, 'screen', 'create screen', 'DELETED', 1, 8, 1, 1, 2)");

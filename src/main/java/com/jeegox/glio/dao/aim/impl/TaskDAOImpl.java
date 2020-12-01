@@ -44,15 +44,15 @@ public class TaskDAOImpl extends GenericDAOImpl<Task,Integer> implements TaskDAO
     }
 
     @Override
-    public Long count(User user, Status[] status) {
+    public Long countInProcess(User user) {
         String query = " select count(t) "+
                 " from Task t "+
                 " where t.userOwner = :user "+
-                " and t.status in ( :status )";
+                " and t.status = :status ";
 
         return (Long)sessionFactory.getCurrentSession().createQuery(query).
                 setParameter("user", user).
-                setParameterList("status", status).
+                setParameter("status", Status.IN_PROCESS).
                 getResultList().stream().
                 findFirst().orElse(0);
     }
