@@ -1,6 +1,8 @@
 package com.jeegox.glio.entities.supply;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.util.JComplexEntity;
 import com.jeegox.glio.enumerators.Status;
@@ -151,5 +153,45 @@ public class Article extends JComplexEntity<Integer, Company> implements Seriali
     @Override
     public Company getFather() {
         return father;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Article)) return false;
+        Article article = (Article) o;
+        return Objects.equal(id, article.id) &&
+                Objects.equal(name, article.name) &&
+                Objects.equal(sku, article.sku) &&
+                Objects.equal(description, article.description) &&
+                Objects.equal(cost, article.cost) &&
+                Objects.equal(price, article.price) &&
+                status == article.status &&
+                unity == article.unity &&
+                Objects.equal(categoryArticle, article.categoryArticle) &&
+                Objects.equal(size, article.size) &&
+                Objects.equal(father, article.father);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, name, sku, description, cost, price, status, unity, categoryArticle, size, father);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("name", name)
+                .add("sku", sku)
+                .add("description", description)
+                .add("cost", cost)
+                .add("price", price)
+                .add("status", status)
+                .add("unity", unity)
+                .add("categoryArticle", categoryArticle)
+                .add("size", size)
+                .add("father", father)
+                .toString();
     }
 }

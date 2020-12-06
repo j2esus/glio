@@ -39,7 +39,7 @@ public class ArticleController extends BaseController{
     @RequestMapping("findArticles")
     @ResponseBody
     public List<Article> findArticles(HttpServletRequest request){
-        return supplyService.findArticlesBy(getCurrentCompany(request), new Status[]{Status.ACTIVE, Status.INACTIVE});
+        return supplyService.findArticlesBy(getCurrentCompany(request));
     }
     
     @RequestMapping("deleteArticle")

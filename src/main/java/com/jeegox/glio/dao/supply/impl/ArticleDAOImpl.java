@@ -13,14 +13,14 @@ import org.springframework.stereotype.Repository;
 public class ArticleDAOImpl extends GenericDAOImpl<Article, Integer> implements ArticleDAO {
 
     @Override
-    public List<Article> findArticlesBy(Company company, Status[] status) {
+    public List<Article> findByCompany(Company company) {
         String qry = " select a "
                 + " from Article a "
                 + " where a.father = :company "
-                + " and a.status in ( :status ) ";
+                + " and a.status <> :status  ";
         Query query = sessionFactory.getCurrentSession().createQuery(qry);
         query.setParameter("company", company);
-        query.setParameterList("status", status);
+        query.setParameter("status", Status.DELETED);
 
         return query.list();
     }
