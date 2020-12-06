@@ -86,8 +86,8 @@ public class SupplyService {
     }
 
     @Transactional(readOnly = true)
-    public List<Size> findSizesBy(Company company, Status[] status) {
-        return sizeDAO.findSizesBy(company, status);
+    public List<Size> findSizesBy(Company company) {
+        return sizeDAO.findByCompany(company);
     }
 
     @Transactional(readOnly = true)

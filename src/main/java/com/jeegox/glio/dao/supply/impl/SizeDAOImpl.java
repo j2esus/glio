@@ -3,7 +3,6 @@ package com.jeegox.glio.dao.supply.impl;
 import com.jeegox.glio.dao.hibernate.GenericDAOImpl;
 import com.jeegox.glio.dao.supply.SizeDAO;
 import com.jeegox.glio.entities.admin.Company;
-import com.jeegox.glio.entities.supply.CategoryArticle;
 import com.jeegox.glio.entities.supply.Size;
 import com.jeegox.glio.enumerators.Status;
 import org.hibernate.query.Query;
@@ -15,14 +14,14 @@ import java.util.List;
 public class SizeDAOImpl extends GenericDAOImpl<Size, Integer> implements SizeDAO {
 
     @Override
-    public List<Size> findSizesBy(Company company, Status[] status) {
+    public List<Size> findByCompany(Company company) {
         String qry = " select s "
                 + " from Size s "
                 + " where s.father = :company "
-                + " and s.status in ( :status ) ";
+                + " and s.status <> :status  ";
         Query query = sessionFactory.getCurrentSession().createQuery(qry);
         query.setParameter("company", company);
-        query.setParameterList("status", status);
+        query.setParameter("status", Status.DELETED);
         return query.list();
     }
 

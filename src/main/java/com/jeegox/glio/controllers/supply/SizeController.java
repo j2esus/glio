@@ -33,7 +33,7 @@ public class SizeController extends BaseController {
     @RequestMapping("findSizes")
     @ResponseBody
     public List<Size> findSizes(HttpServletRequest request){
-        return supplyService.findSizesBy(getCurrentCompany(request), new Status[]{Status.ACTIVE, Status.INACTIVE});
+        return supplyService.findSizesBy(getCurrentCompany(request));
     }
 
     @RequestMapping("delete")

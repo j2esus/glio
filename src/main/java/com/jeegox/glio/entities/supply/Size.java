@@ -1,6 +1,8 @@
 package com.jeegox.glio.entities.supply;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.util.JComplexEntity;
 import com.jeegox.glio.enumerators.Status;
@@ -58,5 +60,32 @@ public class Size extends JComplexEntity<Integer, Company> implements Serializab
     @Override
     public Company getFather() {
         return father;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Size)) return false;
+        Size size = (Size) o;
+        return Objects.equal(id, size.id) &&
+                Objects.equal(name, size.name) &&
+                Objects.equal(father, size.father) &&
+                status == size.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, name, status, father);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("name", name)
+                .add("status", status)
+                .add("father", father)
+                .add("id", id)
+                .toString();
     }
 }
