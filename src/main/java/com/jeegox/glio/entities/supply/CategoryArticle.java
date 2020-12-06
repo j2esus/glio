@@ -1,6 +1,8 @@
 package com.jeegox.glio.entities.supply;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.util.JComplexEntity;
 import com.jeegox.glio.enumerators.Status;
@@ -69,5 +71,30 @@ public class CategoryArticle  extends JComplexEntity<Integer, Company> implement
     public Company getFather() {
         return father;
     }
-    
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CategoryArticle)) return false;
+        CategoryArticle that = (CategoryArticle) o;
+        return Objects.equal(id, that.id) &&
+                Objects.equal(name, that.name) &&
+                Objects.equal(father, that.father) &&
+                status == that.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, name, status, father);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("name", name)
+                .add("status", status)
+                .add("father", father)
+                .toString();
+    }
 }

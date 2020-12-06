@@ -54,8 +54,8 @@ public class SupplyService {
     }
 
     @Transactional(readOnly = true)
-    public List<CategoryArticle> findCategoriesArticlesBy(Company company, Status[] status) {
-        return categoryArticleDAO.findCategoriesArticlesBy(company, status);
+    public List<CategoryArticle> findCategoriesArticlesBy(Company company) {
+        return categoryArticleDAO.findByCompany(company);
     }
 
     @Transactional

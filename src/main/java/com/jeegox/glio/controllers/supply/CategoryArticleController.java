@@ -36,7 +36,7 @@ public class CategoryArticleController extends BaseController{
     @RequestMapping("findCategoriesArticles")
     @ResponseBody
     public List<CategoryArticle> findCategoriesArticles(HttpServletRequest request){
-        return supplyService.findCategoriesArticlesBy(getCurrentCompany(request), new Status[]{Status.ACTIVE, Status.INACTIVE});
+        return supplyService.findCategoriesArticlesBy(getCurrentCompany(request));
     }
     
     @RequestMapping("deleteCategoryArticle")
