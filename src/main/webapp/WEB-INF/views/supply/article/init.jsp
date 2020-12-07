@@ -29,6 +29,7 @@
                 <th>Precio</th>
                 <th>Estatus</th>
                 <th>Unidad</th>
+                <th>Requiere existencia</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -165,6 +166,16 @@
                             <div class="col-9">
                                 <input type="hidden" id="idSize"/>
                                 <input type="text" class="form-control" id="size" required="required">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-3 col-form-label">
+                                Requiere existencia
+                            </div>
+                            <div class="col-9">
+                                <input type="checkbox" id="requiredStock"/>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>

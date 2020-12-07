@@ -59,10 +59,11 @@ public class ArticleController extends BaseController{
             @RequestParam String sku, @RequestParam String description, @RequestParam Double cost,
             @RequestParam Double price,
             @RequestParam Status status, @RequestParam Unity unity, @RequestParam Integer idCategoryArticle,
-            @RequestParam Integer idSize){
+            @RequestParam Integer idSize, @RequestParam Boolean requiredStock){
         try{
             this.supplyService.saveOrUpdate(new Article(id.equals(0) ? null : id, name, sku, description, cost, 
-                    price, status, unity, getCurrentCompany(request), supplyService.findCategoryArticleBydId(idCategoryArticle), supplyService.findSizeById(idSize)));
+                    price, status, unity, getCurrentCompany(request), supplyService.findCategoryArticleBydId(idCategoryArticle),
+                    supplyService.findSizeById(idSize), requiredStock));
             return "OK";
         }catch(Exception e){
             return e.getMessage();

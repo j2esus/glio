@@ -33,13 +33,14 @@ public class Article extends JComplexEntity<Integer, Company> implements Seriali
     private Unity unity;
     private CategoryArticle categoryArticle;
     private Size size;
+    private boolean requiredStock;
     
     public Article(){
         
     }
 
     public Article(Integer id, String name, String sku, String description, Double cost, 
-            Double price, Status status, Unity unity, Company company, CategoryArticle categoryArticle, Size size) {
+            Double price, Status status, Unity unity, Company company, CategoryArticle categoryArticle, Size size, boolean requiredStock) {
         this.id = id;
         this.name = name;
         this.sku = sku;
@@ -51,6 +52,7 @@ public class Article extends JComplexEntity<Integer, Company> implements Seriali
         this.father = company;
         this.categoryArticle = categoryArticle;
         this.size = size;
+        this.requiredStock = requiredStock;
     }
     
     
@@ -148,6 +150,15 @@ public class Article extends JComplexEntity<Integer, Company> implements Seriali
         this.size = size;
     }
 
+    @Column(name = "required_stock", nullable = false)
+    public boolean isRequiredStock() {
+        return requiredStock;
+    }
+
+    public void setRequiredStock(boolean requiredStock) {
+        this.requiredStock = requiredStock;
+    }
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_company", referencedColumnName = "id_company", nullable = false)
     @Override
@@ -170,6 +181,7 @@ public class Article extends JComplexEntity<Integer, Company> implements Seriali
                 unity == article.unity &&
                 Objects.equal(categoryArticle, article.categoryArticle) &&
                 Objects.equal(size, article.size) &&
+                Objects.equal(requiredStock, article.isRequiredStock()) &&
                 Objects.equal(father, article.father);
     }
 
@@ -191,6 +203,7 @@ public class Article extends JComplexEntity<Integer, Company> implements Seriali
                 .add("unity", unity)
                 .add("categoryArticle", categoryArticle)
                 .add("size", size)
+                .add("requiredStock", requiredStock)
                 .add("father", father)
                 .toString();
     }

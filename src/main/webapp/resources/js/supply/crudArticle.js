@@ -133,6 +133,7 @@ function addRowToTable(item, table) {
     fila += "<td align='right'>" + accounting.formatMoney(item.price) + "</td>";
     fila += "<td>" + item.status + "</td>";
     fila += "<td>" + item.unity + "</td>";
+    fila += "<td>" + _uiUtil.getBooleanValueLabel(item.requiredStock) + "</td>";
     fila += "</tr>";
     table.append(fila);
 }
@@ -197,6 +198,7 @@ function saveElement() {
     let unity = $('#unity').val();
     let idCategoryArticle = $('#idCategoryArticle').val();
     let idSize = $('#idSize').val();
+    let requiredStock = $('#requiredStock').is(':checked');
     $.ajax({
         type: "POST",
         url: $.PATH + "article/saveArticle",
@@ -210,7 +212,8 @@ function saveElement() {
             status: status, 
             unity: unity,
             idCategoryArticle: idCategoryArticle,
-            idSize: idSize
+            idSize: idSize,
+            requiredStock: requiredStock
         },
         beforeSend: function (xhr) {
             _blockUI.block();
@@ -260,7 +263,9 @@ function onClickBtnEdit() {
     $('#categoryArticle').val(item.categoryArticle.name);
     $('#idSize').val(item.size.id);
     $('#size').val(item.size.name);
-
+    $('#requiredStock').removeAttr("checked");
+    if(item.requiredStock)
+        $('#requiredStock').attr("checked", "checked");
     $saveModal.modal();
 }
 

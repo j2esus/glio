@@ -39,7 +39,7 @@ public class ArticleDAOTest {
     private static final CategoryArticle categoryArticle = new CategoryArticle(1, "Burgers", Status.ACTIVE, mcdonals);
     private static final Size size = new Size(1, "Small", Status.ACTIVE, mcdonals);
     private static final Article bigMacSmall = new Article(1, "Small bigmac", "BGMCC","Bigmac with cheese", 0D, 115D, Status.ACTIVE,
-            Unity.PIEZA, mcdonals, categoryArticle, size);
+            Unity.PIEZA, mcdonals, categoryArticle, size,false);
 
     @Before
     public void setUp() throws SQLException {
@@ -75,7 +75,7 @@ public class ArticleDAOTest {
         List<Article> articles = new ArrayList<>();
         articles.add(bigMacSmall);
         articles.add(new Article(2, "Big bigmac", "BGMCG","Bigmac with cheese", 0D, 145D, Status.ACTIVE,
-                Unity.PIEZA, mcdonals, categoryArticle, new Size(2, "Big", Status.ACTIVE, mcdonals)));
+                Unity.PIEZA, mcdonals, categoryArticle, new Size(2, "Big", Status.ACTIVE, mcdonals), false));
         return articles;
     }
 
@@ -99,9 +99,9 @@ public class ArticleDAOTest {
         List<Article> articles = new ArrayList<>();
         articles.add(bigMacSmall);
         articles.add(new Article(2, "Big bigmac", "BGMCG","Bigmac with cheese", 0D, 145D, Status.ACTIVE,
-                Unity.PIEZA, mcdonals, categoryArticle, new Size(2, "Big", Status.ACTIVE, mcdonals)));
+                Unity.PIEZA, mcdonals, categoryArticle, new Size(2, "Big", Status.ACTIVE, mcdonals), false));
         articles.add(new Article(3, "Big bigmac", "BGMCG","Bigmac with cheese", 0D, 145D, Status.DELETED,
-                Unity.PIEZA, mcdonals, categoryArticle, new Size(2, "Big", Status.ACTIVE, mcdonals)));
+                Unity.PIEZA, mcdonals, categoryArticle, new Size(2, "Big", Status.ACTIVE, mcdonals), false));
         return articles;
     }
 
@@ -122,16 +122,16 @@ public class ArticleDAOTest {
                 " values (1, 'Burgers', 1, 'ACTIVE')");
 
         connection.createStatement().execute(" insert into article(id_article, name, sku, description, cost, price," +
-                " status, unity, id_company, id_category_article, id_size) "+
-                " values(1, 'Small bigmac', 'BGMCC', 'Bigmac with cheese', 0, 115, 'ACTIVE', 'PIEZA', 1, 1, 1) ");
+                " status, unity, id_company, id_category_article, id_size, required_stock) "+
+                " values(1, 'Small bigmac', 'BGMCC', 'Bigmac with cheese', 0, 115, 'ACTIVE', 'PIEZA', 1, 1, 1, false) ");
 
         connection.createStatement().execute(" insert into article(id_article, name, sku, description, cost, price," +
-                " status, unity, id_company, id_category_article, id_size) "+
-                " values(2, 'Big bigmac', 'BGMCG', 'Bigmac with cheese', 0, 145, 'ACTIVE', 'PIEZA', 1, 1, 2) ");
+                " status, unity, id_company, id_category_article, id_size, required_stock) "+
+                " values(2, 'Big bigmac', 'BGMCG', 'Bigmac with cheese', 0, 145, 'ACTIVE', 'PIEZA', 1, 1, 2, false) ");
 
         connection.createStatement().execute(" insert into article(id_article, name, sku, description, cost, price," +
-                " status, unity, id_company, id_category_article, id_size) "+
-                " values(3, 'Big bigmac', 'BGMCG', 'Bigmac with cheese', 0, 145, 'DELETED', 'PIEZA', 1, 1, 2) ");
+                " status, unity, id_company, id_category_article, id_size, required_stock) "+
+                " values(3, 'Big bigmac', 'BGMCG', 'Bigmac with cheese', 0, 145, 'DELETED', 'PIEZA', 1, 1, 2, false) ");
 
 
 
