@@ -207,6 +207,12 @@ _uiUtil = (function () {
         return colors;
     }
 
+    function getBooleanValueLabel(value){
+        if(value)
+            return "<span class='badge badge-success'>Si<span>";
+        return "<span class='badge badge-warning'>No<span>";
+    }
+
     return {
         cleanControls: cleanControls,
         describeEntity: describeEntity,
@@ -219,7 +225,8 @@ _uiUtil = (function () {
         getStringPriority: getStringPriority,
         writePriorityColorInt: writePriorityColorInt,
         today: today,
-        randomArrayColorGenerator: randomArrayColorGenerator
+        randomArrayColorGenerator: randomArrayColorGenerator,
+        getBooleanValueLabel: getBooleanValueLabel
     };
 })();
 
