@@ -79,7 +79,7 @@ function addRowToTable(item, table) {
     fila += "<td>" + item.status + "</td>";
     fila += "<td>" + item.userType.name + "</td>";
     fila += "<td>" + item.email + "</td>";
-    fila += "<td>" + item.onlyOneAccess + "</td>";
+    fila += "<td>" + _uiUtil.getBooleanValueLabel(item.onlyOneAccess) + "</td>";
     fila += "</tr>";
     table.append(fila);
 }
@@ -107,7 +107,9 @@ function onClickBtnEdit() {
     $('#userType').val(item.userType.id);
     $('#status').val(item.status);
     $('#email').val(item.email);
-    $('#onlyOneAccess').val(item.onlyOneAccess);
+    $('#onlyOneAccess').removeAttr("checked");
+    if(item.onlyOneAccess)
+        $('#onlyOneAccess').attr("checked", "checked");
     $('#password').prop('disabled', true);
     $saveModal.modal();
 }
