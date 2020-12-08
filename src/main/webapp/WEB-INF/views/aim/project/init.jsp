@@ -9,7 +9,6 @@
 <h1>Proyectos</h1>
 <hr/>
 <div id="divProjects">
-    <br/>
     <form action="javascript:findProjectData()">
         <div class="card">
             <div class="card-header">
