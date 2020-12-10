@@ -21,7 +21,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @WebAppConfiguration
 @ContextConfiguration(classes = ApplicationContextConfigTest.class)
@@ -70,6 +72,20 @@ public class StockServiceTest {
                 "Attempt to add stock an exists stock", StockType.IN, openShoes);
         BusinessException businessException = assertThrows(BusinessException.class, ()->stockService.add(negativeStock));
         assertThat(businessException).hasMessageThat().isEqualTo("The quantity should not be negative or zero.");
+    }
+
+    @Test
+    public void getAvailableStock_articleAndDepot_320(){
+        when(stockDAO.getTotalIn(any(), any())).thenReturn(400L);
+        when(stockDAO.getTotalOut(any(), any())).thenReturn(80L);
+        assertThat(stockService.getAvailableStock(elegance, main)).isEqualTo(320);
+    }
+
+    @Test
+    public void getAvailableStock_articleAndDepot_54(){
+        when(stockDAO.getTotalIn(any(), any())).thenReturn(80L);
+        when(stockDAO.getTotalOut(any(), any())).thenReturn(26L);
+        assertThat(stockService.getAvailableStock(elegance, main)).isEqualTo(54);
     }
 
 }
