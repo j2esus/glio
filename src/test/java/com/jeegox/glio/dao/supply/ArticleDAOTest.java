@@ -105,6 +105,16 @@ public class ArticleDAOTest {
         return articles;
     }
 
+    @Test
+    public void findBySku_skuExists_article(){
+        assertThat(articleDAO.findBySku(mcdonals, "BGMCC")).isEqualTo(bigMacSmall);
+    }
+
+    @Test
+    public void findBySku_skuNotExists_null(){
+        assertThat(articleDAO.findBySku(mcdonals, "BGMCNOT")).isNull();
+    }
+
     private void insertInitialData() throws SQLException{
         Session session = sessionFactory.getCurrentSession();
         Connection connection = ((SessionImpl)session.getSession()).connection();
