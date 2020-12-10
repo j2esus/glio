@@ -88,4 +88,38 @@ public class StockServiceTest {
         assertThat(stockService.getAvailableStock(elegance, main)).isEqualTo(54);
     }
 
+    @Test
+    public void take_stockExists_thrownException(){
+        Stock stockWithId = new Stock(1, Util.getCurrentDate(), userAdmin, main, elegance, 100,
+                "Attempt to add stock an exists stock", StockType.IN, openShoes);
+        FunctionalException functionalException = assertThrows(FunctionalException.class, ()->stockService.take(stockWithId));
+        assertThat(functionalException).hasMessageThat().isEqualTo("The stock should not have an id.");
+    }
+
+    @Test
+    public void take_wrongStockType_thrownException(){
+        Stock outStock = new Stock(Util.getCurrentDate(), userAdmin, main, elegance, 100,
+                "Attempt to add stock with OUT as type of the stock", StockType.IN, openShoes);
+        BusinessException businessException = assertThrows(BusinessException.class, ()->stockService.take(outStock));
+        assertThat(businessException).hasMessageThat().isEqualTo("The type of the stock should be OUT.");
+    }
+
+    @Test
+    public void take_negativeQuantity_thrownException(){
+        Stock negativeStock = new Stock(Util.getCurrentDate(), userAdmin, main, elegance, -10,
+                "Attempt to add stock an exists stock", StockType.OUT, openShoes);
+        BusinessException businessException = assertThrows(BusinessException.class, ()->stockService.take(negativeStock));
+        assertThat(businessException).hasMessageThat().isEqualTo("The quantity should not be negative or zero.");
+    }
+
+    @Test
+    public void take_quantityMajorThanAvailableStock_thrownException(){
+        Stock stock = new Stock(Util.getCurrentDate(), userAdmin, main, elegance, 101,
+                "Attempt to add stock an exists stock", StockType.OUT, openShoes);
+        when(stockDAO.getTotalIn(any(), any())).thenReturn(150L);
+        when(stockDAO.getTotalOut(any(), any())).thenReturn(50L);
+        BusinessException businessException = assertThrows(BusinessException.class, ()->stockService.take(stock));
+        assertThat(businessException).hasMessageThat().isEqualTo("The quantity to take must to be less that available stock.");
+    }
+
 }
