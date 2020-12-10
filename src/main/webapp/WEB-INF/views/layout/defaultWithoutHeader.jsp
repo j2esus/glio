@@ -41,9 +41,13 @@
                                 <i class="fa fa-fw fa-user" style="padding-right: 15px"></i>${userSession.father.username}
                             </button>
                             <div class="dropdown-menu">
-                                <button class="dropdown-item" id="btnConfiguration">Configuración</button>
+                                <button class="dropdown-item" id="btnConfiguration">
+                                    <i class="fa fa-wrench" style="padding-right: 10px"></i>Configuración
+                                </button>
                                 <div class="dropdown-divider"></div>
-                                <button class="dropdown-item" id="btnLogout">Salir</button>
+                                <button class="dropdown-item" id="btnLogout">
+                                    <i class="fa fa-sign-out" style="padding-right: 10px"></i>Salir
+                                </button>
                             </div>
                         </div>
                     </li>
