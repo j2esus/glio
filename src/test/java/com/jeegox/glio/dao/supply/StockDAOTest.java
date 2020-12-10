@@ -72,6 +72,28 @@ public class StockDAOTest {
         assertThat(stockDAO.exists(100)).isFalse();
     }
 
+    @Test
+    public void getTotalIn_articleAndDepot_750(){
+        assertThat(stockDAO.getTotalIn(elegance, main)).isEqualTo(750);
+    }
+
+    @Test
+    public void getTotalIn_articleAndDepotNotExists_0(){
+        Depot second = new Depot(2,"Second", Status.ACTIVE, openShoes);
+        assertThat(stockDAO.getTotalIn(elegance, second)).isEqualTo(0);
+    }
+
+    @Test
+    public void getTotalOut_articleAndDepot_20(){
+        assertThat(stockDAO.getTotalOut(elegance, main)).isEqualTo(20);
+    }
+
+    @Test
+    public void getTotalOut_articleAndDepotNotExists_0(){
+        Depot second = new Depot(2,"Second", Status.ACTIVE, openShoes);
+        assertThat(stockDAO.getTotalOut(elegance, second)).isEqualTo(00);
+    }
+
     private void insertInitialData() throws SQLException{
         Session session = sessionFactory.getCurrentSession();
         Connection connection = ((SessionImpl)session.getSession()).connection();
@@ -100,8 +122,17 @@ public class StockDAOTest {
         connection.createStatement().execute("insert into depot(id_depot, name, status, id_company)"+
                 " values (1, 'Main', 'ACTIVE', 1)");
 
+        connection.createStatement().execute("insert into depot(id_depot, name, status, id_company)"+
+                " values (2, 'Second', 'ACTIVE', 1)");
+
         connection.createStatement().execute(
                 "insert into stock(id_stock, stock_date, id_user, id_depot, id_article, quantity, description, type, id_company) "+
                 " values (1, '2020-12-08 19:10:26', 1, 1, 1, 600, 'Initial stock', 'IN', 1)");
+        connection.createStatement().execute(
+                "insert into stock(id_stock, stock_date, id_user, id_depot, id_article, quantity, description, type, id_company) "+
+                        " values (2, '2020-12-10 19:10:26', 1, 1, 1, 150, 'Add new stock', 'IN', 1)");
+        connection.createStatement().execute(
+                "insert into stock(id_stock, stock_date, id_user, id_depot, id_article, quantity, description, type, id_company) "+
+                        " values (3, '2020-12-10 19:10:26', 1, 1, 1, 20, 'take stock', 'OUT', 1)");
     }
 }
