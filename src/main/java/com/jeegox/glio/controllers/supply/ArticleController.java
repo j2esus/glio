@@ -9,6 +9,7 @@ import com.jeegox.glio.enumerators.Unity;
 import com.jeegox.glio.services.SupplyService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import com.jeegox.glio.services.supply.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,10 +21,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/article/**")
 public class ArticleController extends BaseController{
+    private final ArticleService articleService;
     private final SupplyService supplyService;
 
     @Autowired
-    public ArticleController(SupplyService supplyService) {
+    public ArticleController(ArticleService articleService, SupplyService supplyService) {
+        this.articleService = articleService;
         this.supplyService = supplyService;
     }
 
@@ -39,14 +42,14 @@ public class ArticleController extends BaseController{
     @RequestMapping("findArticles")
     @ResponseBody
     public List<Article> findArticles(HttpServletRequest request){
-        return supplyService.findArticlesBy(getCurrentCompany(request));
+        return articleService.findArticlesBy(getCurrentCompany(request));
     }
     
     @RequestMapping("deleteArticle")
     @ResponseBody
-    public String deleteArticle(HttpServletRequest request,@RequestParam Integer id){
+    public String deleteArticle(@RequestParam Integer id){
         try{
-            supplyService.changeStatus(supplyService.findBydId(id), Status.DELETED);
+            articleService.delete(articleService.findBydId(id));
             return "OK";
         }catch(Exception e){
             return e.getMessage();
@@ -61,7 +64,7 @@ public class ArticleController extends BaseController{
             @RequestParam Status status, @RequestParam Unity unity, @RequestParam Integer idCategoryArticle,
             @RequestParam Integer idSize, @RequestParam Boolean requiredStock){
         try{
-            this.supplyService.saveOrUpdate(new Article(id.equals(0) ? null : id, name, sku, description, cost, 
+            this.articleService.saveOrUpdate(new Article(id.equals(0) ? null : id, name, sku, description, cost,
                     price, status, unity, getCurrentCompany(request), supplyService.findCategoryArticleBydId(idCategoryArticle),
                     supplyService.findSizeById(idSize), requiredStock));
             return "OK";
