@@ -102,7 +102,7 @@ function executeOperation(){
             clearControlsStock();
             _blockUI.unblock();
         }, error: function(xhr, status, error){
-            _notify.showDelay('Ocurrio un error, intentelo mas tarde.', 'danger');
+            _notify.showDelay(xhr.responseText, 'danger');
         }
     });
 }
