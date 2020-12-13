@@ -25,15 +25,17 @@ public class ArticleDAOImpl extends GenericDAOImpl<Article, Integer> implements 
     }
 
     @Override
-    public Article findBySku(Company company, String sku) {
+    public Article findBySkuAndStockRequired(Company company, String sku) {
         String query = " select a "+
                 " from Article a "+
                 " where a.father = :company "+
                 " and a.status = :status "+
+                " and a.requiredStock = :requiredStock "+
                 " and a.sku = :sku ";
         return (Article)sessionFactory.getCurrentSession().createQuery(query)
                 .setParameter("company", company)
                 .setParameter("status", Status.ACTIVE)
+                .setParameter("requiredStock", true)
                 .setParameter("sku", sku)
                 .uniqueResultOptional().orElse(null);
     }

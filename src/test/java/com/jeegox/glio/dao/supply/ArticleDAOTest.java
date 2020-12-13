@@ -38,8 +38,8 @@ public class ArticleDAOTest {
     private static final Company mcdonals = new Company(1, "Mcdonals", "burgers", Status.ACTIVE, 3);
     private static final CategoryArticle categoryArticle = new CategoryArticle(1, "Burgers", Status.ACTIVE, mcdonals);
     private static final Size size = new Size(1, "Small", Status.ACTIVE, mcdonals);
-    private static final Article bigMacSmall = new Article(1, "Small bigmac", "BGMCC","Bigmac with cheese", 0D, 115D, Status.ACTIVE,
-            Unity.PIEZA, mcdonals, categoryArticle, size,false);
+    private static final Article bigMacSmall = new Article(1, "Small bigmac", "BGMCC","Bigmac with cheese",
+            0D, 115D, Status.ACTIVE, Unity.PIEZA, mcdonals, categoryArticle, size,true);
 
     @Before
     public void setUp() throws SQLException {
@@ -106,13 +106,13 @@ public class ArticleDAOTest {
     }
 
     @Test
-    public void findBySku_skuExists_article(){
-        assertThat(articleDAO.findBySku(mcdonals, "BGMCC")).isEqualTo(bigMacSmall);
+    public void findBySkuAndStockRequired_skuExists_article(){
+        assertThat(articleDAO.findBySkuAndStockRequired(mcdonals, "BGMCC")).isEqualTo(bigMacSmall);
     }
 
     @Test
-    public void findBySku_skuNotExists_null(){
-        assertThat(articleDAO.findBySku(mcdonals, "BGMCNOT")).isNull();
+    public void findBySkuAndStockRequired_skuExists_article_skuNotExists_null(){
+        assertThat(articleDAO.findBySkuAndStockRequired(mcdonals, "BGMCNOT")).isNull();
     }
 
     private void insertInitialData() throws SQLException{
@@ -133,7 +133,7 @@ public class ArticleDAOTest {
 
         connection.createStatement().execute(" insert into article(id_article, name, sku, description, cost, price," +
                 " status, unity, id_company, id_category_article, id_size, required_stock) "+
-                " values(1, 'Small bigmac', 'BGMCC', 'Bigmac with cheese', 0, 115, 'ACTIVE', 'PIEZA', 1, 1, 1, false) ");
+                " values(1, 'Small bigmac', 'BGMCC', 'Bigmac with cheese', 0, 115, 'ACTIVE', 'PIEZA', 1, 1, 1, true) ");
 
         connection.createStatement().execute(" insert into article(id_article, name, sku, description, cost, price," +
                 " status, unity, id_company, id_category_article, id_size, required_stock) "+

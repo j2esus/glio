@@ -34,8 +34,8 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public Article findBySku(Company company, String sku) {
-        return articleDAO.findBySku(company, sku);
+    public Article findBySkuAndStockRequired(Company company, String sku) {
+        return articleDAO.findBySkuAndStockRequired(company, sku);
     }
 
     @Transactional
