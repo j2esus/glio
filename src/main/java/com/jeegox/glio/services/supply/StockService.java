@@ -65,6 +65,6 @@ public class StockService {
 
     private void validateAvailableStock(Stock stock){
         if(stock.getQuantity() > getAvailableStock(stock.getArticle(), stock.getDepot()))
-            throw new BusinessException("The quantity to take must to be less that available stock.");
+            throw new BusinessException("The quantity to take must to be less than available stock.");
     }
 }

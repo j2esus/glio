@@ -119,7 +119,7 @@ public class StockServiceTest {
         when(stockDAO.getTotalIn(any(), any())).thenReturn(150L);
         when(stockDAO.getTotalOut(any(), any())).thenReturn(50L);
         BusinessException businessException = assertThrows(BusinessException.class, ()->stockService.take(stock));
-        assertThat(businessException).hasMessageThat().isEqualTo("The quantity to take must to be less that available stock.");
+        assertThat(businessException).hasMessageThat().isEqualTo("The quantity to take must to be less than available stock.");
     }
 
 }
