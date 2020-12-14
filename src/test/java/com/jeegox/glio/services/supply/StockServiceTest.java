@@ -75,7 +75,7 @@ public class StockServiceTest {
     }
 
     @Test
-    public void getAvailableStock_articleAndDepot_320(){
+    public void getAvailableStock_articleAndDepotExists_320(){
         when(stockDAO.getTotalIn(any(), any())).thenReturn(400L);
         when(stockDAO.getTotalOut(any(), any())).thenReturn(80L);
         assertThat(stockService.getAvailableStock(elegance, main)).isEqualTo(320);

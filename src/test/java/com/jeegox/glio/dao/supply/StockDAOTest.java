@@ -1,6 +1,7 @@
 package com.jeegox.glio.dao.supply;
 
 import com.jeegox.glio.config.spring.ApplicationContextConfigTest;
+import com.jeegox.glio.dto.supply.ArticleStockDTO;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.admin.User;
 import com.jeegox.glio.entities.admin.UserType;
@@ -21,6 +22,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import static com.google.common.truth.Truth.assertThat;
 
 @WebAppConfiguration
@@ -91,7 +94,67 @@ public class StockDAOTest {
     @Test
     public void getTotalOut_articleAndDepotNotExists_0(){
         Depot second = new Depot(2,"Second", Status.ACTIVE, openShoes);
-        assertThat(stockDAO.getTotalOut(elegance, second)).isEqualTo(00);
+        assertThat(stockDAO.getTotalOut(elegance, second)).isEqualTo(0);
+    }
+
+    @Test
+    public void findAvailableStockGroupedByArticle_companyAndNameExists_listWithTwoElements(){
+        assertThat(stockDAO.findAvailableStockGroupedByArticle(openShoes, "elegance")).isEqualTo(getExpectedAvailableStocksWithCoincidence());
+    }
+
+    private List<ArticleStockDTO> getExpectedAvailableStocksWithCoincidence(){
+        List<ArticleStockDTO> articleStockDTOS = new ArrayList<>();
+        articleStockDTOS.add(new ArticleStockDTO(1, "Elegance shoe north", "ESNTH", Unity.PIEZA,
+                "Man", "28", 750L, 20L));
+        articleStockDTOS.add(new ArticleStockDTO(2, "Elegance bigshoe", "ESNTB", Unity.PIEZA,
+                "Man", "28", 0L, 0L));
+        return articleStockDTOS;
+    }
+
+    @Test
+    public void findAvailableStockGroupedByArticle_companyExistsAndEmptyName_listWithThreeElements(){
+        assertThat(stockDAO.findAvailableStockGroupedByArticle(openShoes, "")).isEqualTo(getExpectedAvailableStocksWithoutCoincidence());
+    }
+
+    private List<ArticleStockDTO> getExpectedAvailableStocksWithoutCoincidence(){
+        List<ArticleStockDTO> articleStockDTOS = new ArrayList<>();
+        articleStockDTOS.add(new ArticleStockDTO(1, "Elegance shoe north", "ESNTH", Unity.PIEZA,
+                "Man", "28", 750L, 20L));
+        articleStockDTOS.add(new ArticleStockDTO(2, "Elegance bigshoe", "ESNTB", Unity.PIEZA,
+                "Man", "28", 0L, 0L));
+        articleStockDTOS.add(new ArticleStockDTO(3, "another shoe", "ANOTH", Unity.PIEZA,
+                "Man", "28", 0L, 0L));
+        return articleStockDTOS;
+    }
+
+    @Test
+    public void findAvailableStockGroupedByArticle_companyExistsAndNameNotExists_emptyList(){
+        assertThat(stockDAO.findAvailableStockGroupedByArticle(openShoes, "test")).isEmpty();
+    }
+
+    @Test
+    public void count_3(){
+        assertThat(stockDAO.count()).isEqualTo(3);
+    }
+
+    @Test
+    public void findAvailableStockGroupedByArticle_companyAndNameAndCategoryExists_listWithTwoElements(){
+        assertThat(stockDAO.findAvailableStockGroupedByArticle(openShoes, "elegance", categoryMan)).isEqualTo(getExpectedAvailableStocksWithCoincidence());
+    }
+
+    @Test
+    public void findAvailableStockGroupedByArticle_companyExistsAndEmptyNameAndCategoryExists_listWithThreeElements(){
+        assertThat(stockDAO.findAvailableStockGroupedByArticle(openShoes, "", categoryMan)).isEqualTo(getExpectedAvailableStocksWithoutCoincidence());
+    }
+
+    public void findAvailableStockGroupedByArticle_companyExistsAndCategoryExistsAndNameNotExists_emptyList(){
+        assertThat(stockDAO.findAvailableStockGroupedByArticle(openShoes, "test", categoryMan)).isEmpty();
+    }
+
+    @Test
+    public void findAvailableStockGroupedByArticle_companyAndNameAndCategoryNotExists_emptyList(){
+        CategoryArticle category = new CategoryArticle(100, "Not exists", Status.ACTIVE, openShoes);
+        assertThat(stockDAO.findAvailableStockGroupedByArticle(openShoes, "elegance", category)).isEmpty();
     }
 
     private void insertInitialData() throws SQLException{
@@ -118,6 +181,18 @@ public class StockDAOTest {
         connection.createStatement().execute(" insert into article(id_article, name, sku, description, cost, price," +
                 " status, unity, id_company, id_category_article, id_size, required_stock) "+
                 " values(1, 'Elegance shoe north', 'ESNTH', 'This is a great pair of shoes', 340, 950, 'ACTIVE', 'PIEZA', 1, 1, 1, true) ");
+
+        connection.createStatement().execute(" insert into article(id_article, name, sku, description, cost, price," +
+                " status, unity, id_company, id_category_article, id_size, required_stock) "+
+                " values(2, 'Elegance bigshoe', 'ESNTB', 'This is a great pair of shoes', 310, 890, 'ACTIVE', 'PIEZA', 1, 1, 1, true) ");
+
+        connection.createStatement().execute(" insert into article(id_article, name, sku, description, cost, price," +
+                " status, unity, id_company, id_category_article, id_size, required_stock) "+
+                " values(3, 'another shoe', 'ANOTH', 'This is another kind of shoe', 280, 460, 'ACTIVE', 'PIEZA', 1, 1, 1, true) ");
+
+        connection.createStatement().execute(" insert into article(id_article, name, sku, description, cost, price," +
+                " status, unity, id_company, id_category_article, id_size, required_stock) "+
+                " values(4, 'another shoe', 'ANOTH', 'This is another kind of shoe', 280, 460, 'DELETED', 'PIEZA', 1, 1, 1, true) ");
 
         connection.createStatement().execute("insert into depot(id_depot, name, status, id_company)"+
                 " values (1, 'Main', 'ACTIVE', 1)");
