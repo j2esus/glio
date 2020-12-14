@@ -48,6 +48,7 @@ public final class DataConfig {
         PAGES.add(new Page("depot/init","/WEB-INF/views/supply/depot.jsp", Layout.DEFAULT));
         PAGES.add(new Page("stockIn/init","/WEB-INF/views/supply/stockInOut.jsp", Layout.DEFAULT));
         PAGES.add(new Page("stockOut/init","/WEB-INF/views/supply/stockInOut.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("availableStock/init","/WEB-INF/views/supply/availableStock.jsp", Layout.DEFAULT));
 
         PAGES.add(new Page("client/init","/WEB-INF/views/commerce/person.jsp", Layout.DEFAULT));
         PAGES.add(new Page("provider/init","/WEB-INF/views/commerce/person.jsp", Layout.DEFAULT));
@@ -80,6 +81,7 @@ public final class DataConfig {
         PRIVATES_URLS.add("/depot/");
         PRIVATES_URLS.add("/stockIn/");
         PRIVATES_URLS.add("/stockOut/");
+        PRIVATES_URLS.add("/availableStock/");
 
         PRIVATES_URLS.add("/client/");
         PRIVATES_URLS.add("/provider/");

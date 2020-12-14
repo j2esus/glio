@@ -1,7 +1,10 @@
 package com.jeegox.glio.services.supply;
 
 import com.jeegox.glio.dao.supply.StockDAO;
+import com.jeegox.glio.dto.supply.ArticleStockDTO;
+import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.supply.Article;
+import com.jeegox.glio.entities.supply.CategoryArticle;
 import com.jeegox.glio.entities.supply.Depot;
 import com.jeegox.glio.entities.supply.Stock;
 import com.jeegox.glio.enumerators.StockType;
@@ -10,6 +13,8 @@ import com.jeegox.glio.exceptions.FunctionalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -66,5 +71,12 @@ public class StockService {
     private void validateAvailableStock(Stock stock){
         if(stock.getQuantity() > getAvailableStock(stock.getArticle(), stock.getDepot()))
             throw new BusinessException("The quantity to take must to be less than available stock.");
+    }
+
+    @Transactional(readOnly = true)
+    public List<ArticleStockDTO> findAvailableStockGroupedByArticle(Company company, String articleCoincidence, CategoryArticle category){
+        if(category == null)
+            return stockDAO.findAvailableStockGroupedByArticle(company, articleCoincidence);
+        return stockDAO.findAvailableStockGroupedByArticle(company, articleCoincidence, category);
     }
 }
