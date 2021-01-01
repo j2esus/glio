@@ -40,4 +40,9 @@ public class DepotService {
             return depotDAO.findByNameAndStatus(company, name, status);
         return depotDAO.findByName(company, name);
     }
+
+    @Transactional(readOnly = true)
+    public Long countByCompany(Company company){
+        return depotDAO.countByCompany(company);
+    }
 }

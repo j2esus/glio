@@ -353,11 +353,15 @@ _jsUtil = (function () {
         return Math.round(value * 100) / 100;
     }
 
+    function numberWithCommas(number) {
+        return number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    }
 
     return {
         redirect: redirect,
         compareDate: compareDate,
-        round: round
+        round: round,
+        numberWithCommas: numberWithCommas
     };
 })();
 
@@ -398,9 +402,53 @@ _jsUtil = (function () {
             buildPie([], []);
         }
 
+        function buildHorizontal(data, labels){
+            div.html('');
+            div.html('<canvas id="'+_canvas+'" style="width: 100%"></canvas>');
+
+            let myChart = document.getElementById(_canvas);
+            let ctx = myChart.getContext('2d');
+
+            new Chart(ctx, {
+                type: 'horizontalBar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        backgroundColor: "rgba(2,117,216,1)",
+                        borderColor: "rgba(2,117,216,1)",
+                        data: data
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        xAxes: [{
+                            gridLines: {
+                                display: false
+                            }
+                        }],
+                        yAxes: [{
+                            gridLines: {
+                                display: true
+                            }
+                        }]
+                    },
+                    legend: {
+                        display: false
+                    }
+                }
+            });
+        }
+
+        function clearHorizontal(){
+            buildHorizontal([],[]);
+        }
+
         $.extend(this, {
             buildPie: buildPie,
-            clearPie: clearPie
+            clearPie: clearPie,
+            buildHorizontal: buildHorizontal,
+            clearHorizontal: clearHorizontal
         });
         
         init();

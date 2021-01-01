@@ -115,6 +115,17 @@ public class ArticleDAOTest {
         assertThat(articleDAO.findBySkuAndStockRequired(mcdonals, "BGMCNOT")).isNull();
     }
 
+    @Test
+    public void countWithStockRequired_companyExists_one(){
+        assertThat(articleDAO.countWithStockRequired(mcdonals)).isEqualTo(1);
+    }
+
+    @Test
+    public void countWithStockRequired_companyNotExists_zero(){
+        Company notExists = new Company(2, "company", "company test", Status.ACTIVE, 3);
+        assertThat(articleDAO.countWithStockRequired(notExists)).isEqualTo(0);
+    }
+
     private void insertInitialData() throws SQLException{
         Session session = sessionFactory.getCurrentSession();
         Connection connection = ((SessionImpl)session.getSession()).connection();

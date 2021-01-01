@@ -28,7 +28,6 @@ public class Stock extends JComplexEntity<Integer, Company> implements Serializa
 
     public Stock(Date date, User user, Depot depot, Article article, Integer quantity, String description,
                  StockType stockType, Company father) {
-        this.id = id;
         this.date = date;
         this.user = user;
         this.depot = depot;

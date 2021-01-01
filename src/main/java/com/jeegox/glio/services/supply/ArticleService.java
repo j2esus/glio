@@ -43,4 +43,9 @@ public class ArticleService {
         article.setStatus(Status.DELETED);
         articleDAO.save(article);
     }
+
+    @Transactional(readOnly = true)
+    public Long countWithStockRequired(Company company){
+        return articleDAO.countWithStockRequired(company);
+    }
 }

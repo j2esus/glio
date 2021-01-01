@@ -122,4 +122,18 @@ public class StockServiceTest {
         assertThat(businessException).hasMessageThat().isEqualTo("The quantity to take must to be less than available stock.");
     }
 
+    @Test
+    public void countArticleUnities_companyExists_100(){
+        when(stockDAO.getTotalInByCompany(any())).thenReturn(300L);
+        when(stockDAO.getTotalOutByCompany(any())).thenReturn(200L);
+        assertThat(stockService.countArticleUnities(openShoes)).isEqualTo(100);
+    }
+
+    @Test
+    public void getTotalStockValue_companyExists_14026_67(){
+        when(stockDAO.getTotalValueIn(any())).thenReturn(15480.45);
+        when(stockDAO.getTotalValueOut(any())).thenReturn(1453.78);
+        assertThat(stockService.getTotalStockValue(openShoes)).isEqualTo(14026.67);
+    }
+
 }

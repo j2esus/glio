@@ -10,4 +10,6 @@ public interface ArticleDAO extends GenericDAO<Article, Integer>{
     List<Article> findByCompany(Company company);
 
     Article findBySkuAndStockRequired(Company company, String sku);
+
+    Long countWithStockRequired(Company company);
 }

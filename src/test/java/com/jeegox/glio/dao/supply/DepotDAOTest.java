@@ -98,6 +98,17 @@ public class DepotDAOTest {
         return depots;
     }
 
+    @Test
+    public void countByCompany_companyExists_one(){
+        assertThat(depotDAO.countByCompany(mcdonals)).isEqualTo(1);
+    }
+
+    @Test
+    public void countByCompany_companyNotExists_zero(){
+        Company notExists = new Company(2, "company", "company test", Status.ACTIVE, 3);
+        assertThat(depotDAO.countByCompany(notExists)).isEqualTo(0);
+    }
+
     private void insertInitialData() throws SQLException{
         Session session = sessionFactory.getCurrentSession();
         Connection connection = ((SessionImpl)session.getSession()).connection();

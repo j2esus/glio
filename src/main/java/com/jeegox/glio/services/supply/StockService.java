@@ -2,6 +2,7 @@ package com.jeegox.glio.services.supply;
 
 import com.jeegox.glio.dao.supply.StockDAO;
 import com.jeegox.glio.dto.supply.ArticleStockDTO;
+import com.jeegox.glio.dto.supply.CategoryStockDTO;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.supply.Article;
 import com.jeegox.glio.entities.supply.CategoryArticle;
@@ -78,5 +79,25 @@ public class StockService {
         if(category == null)
             return stockDAO.findAvailableStockGroupedByArticle(company, articleCoincidence);
         return stockDAO.findAvailableStockGroupedByArticle(company, articleCoincidence, category);
+    }
+
+    @Transactional(readOnly = true)
+    public Long countArticleUnities(Company company){
+        return stockDAO.getTotalInByCompany(company) - stockDAO.getTotalOutByCompany(company);
+    }
+
+    @Transactional(readOnly = true)
+    public Double getTotalStockValue(Company company){
+        return stockDAO.getTotalValueIn(company) - stockDAO.getTotalValueOut(company);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CategoryStockDTO> getTotalStockGroupedByCategory(Company company){
+        return stockDAO.getTotalStockGroupedByCategory(company);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CategoryStockDTO> getTotalValueStockGroupedByCategory(Company company){
+        return stockDAO.getTotalValueStockGroupedByCategory(company);
     }
 }

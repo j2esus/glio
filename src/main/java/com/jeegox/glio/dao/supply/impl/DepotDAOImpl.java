@@ -39,4 +39,16 @@ public class DepotDAOImpl extends GenericDAOImpl<Depot, Integer> implements Depo
                 .setParameter("status", status)
                 .getResultList();
     }
+
+    @Override
+    public Long countByCompany(Company company) {
+        String query = " select count(d) "+
+                " from Depot d "+
+                " where d.father = :company "+
+                " and d.status = :status ";
+        return (Long)sessionFactory.getCurrentSession().createQuery(query)
+                .setParameter("company", company)
+                .setParameter("status", Status.ACTIVE)
+                .uniqueResultOptional().orElse(0L);
+    }
 }

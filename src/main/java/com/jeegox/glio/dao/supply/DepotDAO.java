@@ -12,4 +12,6 @@ public interface DepotDAO extends GenericDAO<Depot, Integer> {
     List<Depot> findByName(Company company, String name);
 
     List<Depot> findByNameAndStatus(Company company, String name, Status status);
+
+    Long countByCompany(Company company);
 }

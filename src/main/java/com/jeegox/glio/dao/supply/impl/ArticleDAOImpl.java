@@ -40,4 +40,18 @@ public class ArticleDAOImpl extends GenericDAOImpl<Article, Integer> implements 
                 .uniqueResultOptional().orElse(null);
     }
 
+    @Override
+    public Long countWithStockRequired(Company company) {
+        String query = " select count(a) "+
+                " from Article a "+
+                " where a.father = :company "+
+                " and a.requiredStock = :requiredStock "+
+                " and a.status = :status ";
+        return (Long)sessionFactory.getCurrentSession().createQuery(query)
+                .setParameter("company", company)
+                .setParameter("requiredStock", true)
+                .setParameter("status", Status.ACTIVE)
+                .uniqueResultOptional().orElse(0L);
+    }
+
 }
