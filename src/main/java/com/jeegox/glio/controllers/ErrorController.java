@@ -3,10 +3,6 @@ package com.jeegox.glio.controllers;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-/**
- *
- * @author j2esus
- */
 @Controller
 public class ErrorController {
     

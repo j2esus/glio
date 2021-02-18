@@ -1,6 +1,8 @@
 package com.jeegox.glio.entities.aim;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.jeegox.glio.entities.admin.User;
 import com.jeegox.glio.entities.util.JComplexEntity;
 import com.jeegox.glio.enumerators.Priority;
@@ -18,10 +20,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- *
- * @author j2esus
- */
 @Entity
 @Table(name = "task")
 @JsonIgnoreProperties({"father","hibernateLazyInitializer", "handler"})
@@ -130,5 +128,41 @@ public class Task extends JComplexEntity<Integer, Aim> implements Serializable {
     @Override
     public Aim getFather() {
         return father;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Task)) return false;
+        Task task = (Task) o;
+        return Objects.equal(id, task.id) &&
+                Objects.equal(name, task.name) &&
+                Objects.equal(description, task.description) &&
+                status == task.status &&
+                priority == task.priority &&
+                Objects.equal(estimatedTime, task.estimatedTime) &&
+                Objects.equal(userRequester, task.userRequester) &&
+                Objects.equal(userOwner, task.userOwner) &&
+                Objects.equal(father, task.father);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, name, description, status, priority, estimatedTime, userRequester, userOwner, father);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("name", name)
+                .add("description", description)
+                .add("status", status)
+                .add("priority", priority)
+                .add("estimatedTime", estimatedTime)
+                .add("userRequester", userRequester)
+                .add("userOwner", userOwner)
+                .add("father", father)
+                .toString();
     }
 }

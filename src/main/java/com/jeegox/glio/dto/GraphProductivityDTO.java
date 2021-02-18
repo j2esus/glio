@@ -3,10 +3,6 @@ package com.jeegox.glio.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-/**
- *
- * @author j2esus
- */
 public class GraphProductivityDTO implements Serializable{
     private Integer idUser;
     private String username;

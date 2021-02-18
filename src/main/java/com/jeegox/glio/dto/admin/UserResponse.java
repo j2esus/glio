@@ -4,10 +4,6 @@ import com.jeegox.glio.dto.GenericResponse;
 import com.jeegox.glio.enumerators.StatusResponse;
 import java.io.Serializable;
 
-/**
- *
- * @author j2esus
- */
 public class UserResponse extends GenericResponse implements Serializable{
     private UserDTO userDTO;
     

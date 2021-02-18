@@ -76,6 +76,7 @@ function onClickNew() {
     _uiUtil.cleanControls($saveModal);
     $('#titleModalNew').html("Agregar");
     $('#idNew').val(0);
+    $('#status').val($("#status option:first").val());
     $saveModal.modal();
 }
 

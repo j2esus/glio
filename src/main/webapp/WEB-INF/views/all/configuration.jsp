@@ -18,8 +18,8 @@
                     <form id="dataUserForm" method="post" data-toggle="validator">
                         <input type="hidden" id="idUserData" value="${idUser}"/>
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-2 col-form-label">Nombre usuario:</label>
-                            <div class="col-10">
+                            <label for="example-text-input" class="col-sm-3 col-form-label">Usuario</label>
+                            <div class="col-sm-9">
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="txtUsername" value="${username}" required="required" maxlength="50" pattern="^[_A-z0-9]{1,}$"/>
                                     <span class="input-group-addon" id="basic-addon2">@${company}</span>
@@ -28,21 +28,21 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-2 col-form-label">Nombre:</label>
-                            <div class="col-10">
+                            <label for="example-text-input" class="col-sm-3 col-form-label">Nombre</label>
+                            <div class="col-sm-9">
                                 <input class="form-control" type="text" id="txtName" value="${name}" required="required" maxlength="50"/>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-2 col-form-label">Email:</label>
-                            <div class="col-10">
+                            <label for="example-text-input" class="col-sm-3 col-form-label">Email</label>
+                            <div class="col-sm-9">
                                 <input class="form-control" type="email" id="txtEmail" value="${email}" required="required" maxlength="50"/>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="offset-sm-2 col-sm-10">
+                            <div class="offset-sm-3 col-sm-9">
                                 <button type="submit" class="btn btn-primary">Guardar</button>
                             </div>
                         </div>
@@ -53,35 +53,35 @@
         <div id="divChangePassword">
             <div class="card">
                 <div class="card-header">
-                    Cambiar password
+                    Cambiar contraseña
                 </div>
                 <div class="card-block">
                     <form id="changePasswordForm" method="post" data-toggle="validator">
                         <input type="hidden" id="idUserPassword" value="${idUser}"/>
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-2 col-form-label">Anterior:</label>
-                            <div class="col-10">
+                            <label for="example-text-input" class="col-sm-3 col-form-label">Anterior:</label>
+                            <div class="col-sm-9">
                                 <input class="form-control" type="password" id="txtPassword" required="required" data-minlength="6"/>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-2 col-form-label">Nuevo:</label>
-                            <div class="col-10">
+                            <label for="example-text-input" class="col-sm-3 col-form-label">Nuevo:</label>
+                            <div class="col-sm-9">
                                 <input class="form-control" type="password" id="txtNewPassword" required="required" data-minlength="6"/>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-2 col-form-label">Confirmar:</label>
-                            <div class="col-10">
+                            <label for="example-text-input" class="col-sm-3 col-form-label">Confirmar:</label>
+                            <div class="col-sm-9">
                                 <input class="form-control" type="password" id="txtConfirmPassword" required="required" data-minlength="6" data-match="#txtNewPassword"
                                        data-match-error="No corresponde con el nuevo password"/>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="offset-sm-2 col-sm-10">
+                            <div class="offset-sm-3 col-sm-9">
                                 <button type="submit" class="btn btn-primary">Guardar</button>
                             </div>
                         </div>
@@ -120,7 +120,7 @@
         <div class="list-group">
             <button type="button" class="list-group-item active">Acciones</button>
             <button type="button" class="list-group-item list-group-item-action" id="btnDataUser">Datos personales</button>
-            <button type="button" class="list-group-item list-group-item-action" id="btnChangePassword">Cambiar password</button>
+            <button type="button" class="list-group-item list-group-item-action" id="btnChangePassword">Cambiar contraseña</button>
             <button type="button" class="list-group-item list-group-item-action" id="btnToken">Tokens</button>
         </div>    
     </div>

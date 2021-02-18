@@ -6,10 +6,6 @@ import com.jeegox.glio.entities.State;
 
 import org.springframework.stereotype.Repository;
 
-/**
- *
- * @author j2esus
- */
 @Repository
 public class StateDAOImpl extends GenericDAOImpl<State,Integer> implements StateDAO{
 

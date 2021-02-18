@@ -6,28 +6,26 @@ import java.io.Serializable;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- *
- * @author j2esus
- */
 public class CategoryMenuDTO implements Serializable{
     private Integer id;
     private String name;
     private Integer order;
     private Status status;
     private String icon;
+    private String clazz;
     private Set<OptionMenu> optionsMenus = new TreeSet<>();
     
     public CategoryMenuDTO(){
         
     }
     
-    public CategoryMenuDTO(Integer id, String name, Integer order, Status status, String icon){
+    public CategoryMenuDTO(Integer id, String name, Integer order, Status status, String icon, String clazz){
         this.id = id;
         this.name = name;
         this.order = order;
         this.status = status;
         this.icon = icon;
+        this.clazz = clazz;
     }
 
     public Integer getId() {
@@ -76,5 +74,13 @@ public class CategoryMenuDTO implements Serializable{
 
     public void setOptionsMenus(Set<OptionMenu> optionsMenus) {
         this.optionsMenus = optionsMenus;
+    }
+    
+    public String getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
     }
 }

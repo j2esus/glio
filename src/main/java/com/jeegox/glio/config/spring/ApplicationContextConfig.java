@@ -22,31 +22,26 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import org.springframework.web.servlet.view.tiles3.TilesView;
-//org/hibernate/engine/transaction/spi/TransactionContext
 
-
-/**
- *
- * @author j2esus
- */
 @Configuration
 @EnableTransactionManagement
-@PropertySource({ "classpath:persistence-jndi.properties","classpath:persistence-mysql.properties" })
+@PropertySource({"classpath:persistence-jndi.properties", "classpath:persistence-mysql.properties"})
 @ComponentScan("com.jeegox.glio.*")
 public class ApplicationContextConfig {
+
     @Autowired
     private Environment env;
-    
+
     @Bean(name = "viewResolverTiles")
-    public UrlBasedViewResolver getViewResolverTiles(){
+    public UrlBasedViewResolver getViewResolverTiles() {
         UrlBasedViewResolver viewResolver = new UrlBasedViewResolver();
         viewResolver.setViewClass(TilesView.class);
         viewResolver.setOrder(1);
         return viewResolver;
     }
-    
+
     @Bean(name = "jspViewResolver")
-    public InternalResourceViewResolver getJspViewResolver(){
+    public InternalResourceViewResolver getJspViewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setViewClass(JstlView.class);
         viewResolver.setPrefix("/WEB-INF/views/");
@@ -54,53 +49,51 @@ public class ApplicationContextConfig {
         viewResolver.setOrder(2);
         return viewResolver;
     }
-    
-    //jdni
+
     @Bean
     public LocalSessionFactoryBean sessionFactory() throws NamingException {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan( new String[] { "com.jeegox.glio.entities" });
+        sessionFactory.setPackagesToScan(new String[]{"com.jeegox.glio.entities"});
         sessionFactory.setHibernateProperties(additionalProperties());
         return sessionFactory;
     }
-    
-    
+
     @Bean(destroyMethod = "")
     public DataSource dataSource() throws NamingException {
         return (DataSource) new JndiTemplate().lookup(env.getProperty("jdbc.url"));
     }
-    
+
     @Bean
     @Autowired
     public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
         HibernateTransactionManager txManager = new HibernateTransactionManager();
         txManager.setSessionFactory(sessionFactory);
-      return txManager;
-   }
-    
+        return txManager;
+    }
+
     @Bean
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
-    
+
     @Bean
-    public JavaMailSender getMailSender(){
+    public JavaMailSender getMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-         
+
         //Using gmail
         mailSender.setHost(Constants.Mail.HOST);
         mailSender.setPort(Constants.Mail.PORT);
         mailSender.setUsername(Constants.Mail.EMAIL);
         mailSender.setPassword("@mWrc~yEcI{w");
-         
+
         Properties javaMailProperties = new Properties();
         javaMailProperties.put("mail.smtp.starttls.enable", "true");
         javaMailProperties.put("mail.smtp.auth", "true");
         javaMailProperties.put("mail.transport.protocol", "smtp");
         javaMailProperties.put("mail.smtp.ssl.enable", "true");
-        javaMailProperties.put("mail.debug", "false");//Prints out everything on screen
-         
+        javaMailProperties.put("mail.debug", "false");
+
         mailSender.setJavaMailProperties(javaMailProperties);
         return mailSender;
     }
@@ -109,7 +102,7 @@ public class ApplicationContextConfig {
         final Properties hibernateProperties = new Properties();
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
         hibernateProperties.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
-        hibernateProperties.setProperty("hibernate.cache.use_second_level_cache", 
+        hibernateProperties.setProperty("hibernate.cache.use_second_level_cache",
                 env.getProperty("hibernate.cache.use_second_level_cache"));
         hibernateProperties.setProperty("hibernate.connection.autoReconnect", env.getProperty("hibernate.connection.autoReconnect"));
         hibernateProperties.setProperty("current_session_context_class", env.getProperty("hibernate.current_session_context_class"));

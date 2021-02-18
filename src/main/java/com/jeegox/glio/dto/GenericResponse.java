@@ -3,10 +3,6 @@ package com.jeegox.glio.dto;
 import com.jeegox.glio.enumerators.StatusResponse;
 import java.io.Serializable;
 
-/**
- *
- * @author j2esus
- */
 public class GenericResponse implements Serializable{
     protected StatusResponse statusResponse;
     protected String message;

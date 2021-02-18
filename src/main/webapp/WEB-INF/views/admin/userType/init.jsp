@@ -74,7 +74,6 @@
                             </div>
                             <div class="col-9">
                                 <select id="status" class="form-control" required="required">
-                                    <option value="">--Seleccione</option>
                                     <c:forEach items="${status}" var="status">
                                         <option value="${status}">${status}</option>
                                     </c:forEach>

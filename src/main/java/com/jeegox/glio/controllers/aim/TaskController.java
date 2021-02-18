@@ -8,10 +8,8 @@ import com.jeegox.glio.entities.aim.Project;
 import com.jeegox.glio.entities.aim.Task;
 import com.jeegox.glio.enumerators.Priority;
 import com.jeegox.glio.enumerators.Status;
-import com.jeegox.glio.services.admin.UserService;
-import com.jeegox.glio.services.aim.AimService;
-import com.jeegox.glio.services.aim.ProjectService;
-import com.jeegox.glio.services.aim.TaskService;
+import com.jeegox.glio.services.UserService;
+import com.jeegox.glio.services.ProjectService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,26 +22,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-/**
- *
- * @author j2esus
- */
 @Controller
 @RequestMapping("/task/**")
 public class TaskController extends BaseController {
+    private final ProjectService projectService;
+    private final UserService userService;
 
     @Autowired
-    private TaskService taskService;
-    @Autowired
-    private ProjectService projectService;
-    @Autowired
-    private AimService aimService;
-    @Autowired
-    private UserService userService;
+    public TaskController(ProjectService projectService, UserService userService) {
+        this.projectService = projectService;
+        this.userService = userService;
+    }
 
     @RequestMapping("init")
     public String index(Model model, HttpServletRequest request) {
-        List<Project> projects = projectService.findByCompany(getCurrentCompany(request));
+        List<Project> projects = projectService.findByCompany(getCurrentCompany(request), new Status[]{Status.ACTIVE});
         Priority[] priorities = Priority.values();
         model.addAttribute("projects", projects);
         model.addAttribute("priorities", priorities);
@@ -56,8 +49,9 @@ public class TaskController extends BaseController {
             @RequestParam("priorities[]") Priority[] priorities, @RequestParam Integer idProject) {
         Company company = getCurrentCompany(request);
         Map<String, Object> response = new HashMap<>();
-        response.put("count", taskService.count(company, new Status[]{Status.PENDING}, query, priorities, idProject));
-        response.put("actives", taskService.findBy(company, new Status[]{Status.PENDING}, query, priorities, idProject));
+        List<Task> tasks = projectService.findBy(company, new Status[]{Status.PENDING}, query, priorities, idProject);
+        response.put("count", tasks.size());
+        response.put("actives", tasks);
         return response;
     }
 
@@ -67,8 +61,9 @@ public class TaskController extends BaseController {
             @RequestParam("priorities[]") Priority[] priorities, @RequestParam Integer idProject) {
         Company company = getCurrentCompany(request);
         Map<String, Object> response = new HashMap<>();
-        response.put("count", taskService.count(company, new Status[]{Status.PAUSED, Status.IN_PROCESS}, query, priorities, idProject));
-        response.put("inProcess", taskService.findBy(company, new Status[]{Status.PAUSED, Status.IN_PROCESS}, query, priorities, idProject));
+        List<Task> tasks = projectService.findBy(company, new Status[]{Status.PAUSED, Status.IN_PROCESS}, query, priorities, idProject);
+        response.put("count", tasks.size());
+        response.put("inProcess", tasks);
         return response;
     }
 
@@ -78,8 +73,9 @@ public class TaskController extends BaseController {
             @RequestParam("priorities[]") Priority[] priorities, @RequestParam Integer idProject) {
         Company company = getCurrentCompany(request);
         Map<String, Object> response = new HashMap<>();
-        response.put("count", taskService.count(company, new Status[]{Status.FINISHED}, query, priorities, idProject));
-        response.put("finished", taskService.findBy(company, new Status[]{Status.FINISHED}, query, priorities, idProject));
+        List<Task> tasks = projectService.findBy(company, new Status[]{Status.FINISHED}, query, priorities, idProject);
+        response.put("count", tasks.size());
+        response.put("finished", tasks);
         return response;
     }
 
@@ -88,7 +84,7 @@ public class TaskController extends BaseController {
     public String toStartTask(HttpServletRequest request, @RequestParam Integer idTask) {
         try {
             User user = getCurrentUser(request);
-            taskService.work(user, idTask, Status.IN_PROCESS);
+            projectService.work(user, idTask, Status.IN_PROCESS);
             return "OK";
         } catch (Exception e) {
             return e.getMessage();
@@ -100,7 +96,7 @@ public class TaskController extends BaseController {
     public String toFinishTask(HttpServletRequest request, @RequestParam Integer idTask) {
         try {
             User user = getCurrentUser(request);
-            taskService.work(user, idTask, Status.FINISHED);
+            projectService.work(user, idTask, Status.FINISHED);
             return "OK";
         } catch (Exception e) {
             return e.getMessage();
@@ -112,7 +108,7 @@ public class TaskController extends BaseController {
     public String toPauseTask(HttpServletRequest request, @RequestParam Integer idTask) {
         try {
             User user = getCurrentUser(request);
-            taskService.work(user, idTask, Status.PAUSED);
+            projectService.work(user, idTask, Status.PAUSED);
             return "OK";
         } catch (Exception e) {
             return e.getMessage();
@@ -124,7 +120,7 @@ public class TaskController extends BaseController {
     public String toRestarTask(HttpServletRequest request, @RequestParam Integer idTask) {
         try {
             User user = getCurrentUser(request);
-            taskService.work(user, idTask, Status.IN_PROCESS);
+            projectService.work(user, idTask, Status.IN_PROCESS);
             return "OK";
         } catch (Exception e) {
             return e.getMessage();
@@ -135,9 +131,9 @@ public class TaskController extends BaseController {
     @ResponseBody
     public String toAcceptedTask(HttpServletRequest request, @RequestParam Integer idTask) {
         try {
-            Task task = taskService.findBydId(idTask);
+            Task task = projectService.findTaskBydId(idTask);
             task.setStatus(Status.ACCEPTED);
-            taskService.saveOrUpdate(task);
+            projectService.saveOrUpdate(task);
             return "OK";
         } catch (Exception e) {
             return e.getMessage();
@@ -148,9 +144,9 @@ public class TaskController extends BaseController {
     @ResponseBody
     public String toCancelTask(HttpServletRequest request, @RequestParam Integer idTask) {
         try {
-            Task task = taskService.findBydId(idTask);
+            Task task = projectService.findTaskBydId(idTask);
             task.setStatus(Status.PAUSED);
-            taskService.saveOrUpdate(task);
+            projectService.saveOrUpdate(task);
             return "OK";
         } catch (Exception e) {
             return e.getMessage();
@@ -160,7 +156,7 @@ public class TaskController extends BaseController {
     @RequestMapping(value = "findAim", method = RequestMethod.POST)
     @ResponseBody
     public List<Aim> findAim(HttpServletRequest request, @RequestParam Integer idProject) {
-        return aimService.findBy(projectService.findBydId(idProject));
+        return projectService.findBy(projectService.findBydId(idProject));
     }
     
     @RequestMapping(value = "saveTask", method = RequestMethod.POST)
@@ -169,9 +165,9 @@ public class TaskController extends BaseController {
             @RequestParam String description, @RequestParam Priority priority,
             @RequestParam Integer estimated, @RequestParam String username, @RequestParam Integer idAim){
         try{
-            Aim aim = aimService.findBydId(idAim);
+            Aim aim = projectService.findAimBydId(idAim);
             User user = userService.findById(username);
-            Task task = taskService.findBydId(id);
+            Task task = projectService.findTaskBydId(id);
             if(task == null){
                 task = new Task(null, name, description, Status.PENDING, priority,
                     estimated, getCurrentUser(request), user, aim );
@@ -184,7 +180,7 @@ public class TaskController extends BaseController {
                 task.setUserRequester(getCurrentUser(request));
                 task.setFather(aim);
             }
-            this.taskService.saveOrUpdate(task);
+            this.projectService.saveOrUpdate(task);
             return "OK";
         }catch(Exception e){
             return e.getMessage();

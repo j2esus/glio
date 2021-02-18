@@ -18,8 +18,6 @@
         <!-- Bootstrap core JavaScript-->
         <script src="<c:url value="/resources/vendor/jquery/jquery.js"/>"></script>
         <script src="<c:url value="/resources/vendor/bootstrap/js/bootstrap.bundle.js"/>"></script>
-        <!-- Core plugin JavaScript-->
-        <script src="<c:url value="/resources/vendor/jquery-easing/jquery.easing.js"/>"></script>
 
         <!-- Bootstrap core CSS-->
         <link href="<c:url value="/resources/vendor/bootstrap/css/bootstrap.css"/>" rel="stylesheet">
@@ -31,16 +29,12 @@
         <link href="<c:url value="/resources/styles/sb-admin.css"/>" rel="stylesheet">
         <!-- tema msg -->
         <link rel="stylesheet" href="<c:url value="/resources/styles/jquery.msg.css"/>">
+        <!-- animate -->
+        <link rel="stylesheet" href="<c:url value="/resources/styles/animate.css"/>">
         <!-- end theme -->
 
-        <!-- notify -->
-        <script src="<c:url value="/resources/js/util/jquery.blockUI.js"/>"></script>
-        <script src="<c:url value="/resources/js/bootstrap/bootstrap-notify.min.js"/>"></script>
         <!-- validator -->
         <script src="<c:url value="/resources/js/util/validator.js"/>"></script>
-        <script src="<c:url value="/resources/js/util/util.js"/>"></script>
-
-        <script src="<c:url value="/resources/js/util/login.js"/>"></script>
 
         <!-- login css -->
         <link rel="stylesheet" href="<c:url value="/resources/styles/signin.css"/>">
@@ -56,41 +50,57 @@
 
             gtag('config', 'UA-136826711-2');
         </script>
-
     </head>
     <body class="bg-dark">
-        <div class="text-right" style="color:whitesmoke;padding-right: 5px;font-size: 13px">v.0.20.beta</div>
+        <div class="text-right" style="color:whitesmoke;padding-right: 5px;font-size: 13px">v.0.36</div>
         <div class="container">
-            <div class="card card-login mx-auto mt-5">
-                <div class="card-header">
-                    <img src="<c:url value="/resources/images/logo.png"/>" style="padding: 30px" class="imgcenter"/>
+            <c:if test="${message != ''}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="card-body">
-                    <form method="POST" id="loginForm">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Usuario</label>
-                            <input class="form-control" id="txtUser" type="email" aria-describedby="emailHelp" placeholder="Usuario" autocomplete="off" required autofocus/>
+            </c:if>
+            <div class="row justify-content-center">
+                <div class="col-xl-10 col-lg-12 col-md-9">
+                    <div class="card o-hidden border-0 shadow-lg my-5">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-6 d-none d-lg-block">
+                                        <img src="<c:url value="/resources/images/logo.png"/>" style="padding: 80px" class="imgcenter"/>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <br/>
+                                        <div class="text-center">
+                                            <h4 class="text-gray-900 mb-4">Bienvenidos</h4>
+                                        </div>
+                                        <form method="post" data-toggle="validator" action="<c:url value="login"/>">
+                                            <div class="form-group">
+                                                <input class="form-control" name="company" type="text" placeholder="Empresa" autocomplete="off" value="${company}" required autofocus/>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <input class="form-control" name="user" type="text" placeholder="Usuario" autocomplete="off" value="${user}" required/>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <input class="form-control" name="password" type="password" placeholder="Contraseña" required/>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <button class="btn btn-primary btn-block" style="padding: 15px" type="submit">Iniciar sesión</button>
+                                        </form>
+                                        <hr/>
+                                        <div class="text-center">
+                                            <a class="d-block small mt-3" href="<c:url value="/register"/>">Crear una cuenta</a>
+                                            <!--a class="d-block small" href="forgot-password.html">Forgot Password?</a-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Password</label>
-                            <input class="form-control" id="txtPassword" type="password" placeholder="Password" required/>
-                        </div>
-                        <!--
-                      <div class="form-group">
-                        <div class="form-check">
-                          <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox"> Remember Password</label>
-                        </div>
-                      </div>
-                        -->
-                        <button class="btn btn-primary btn-block" style="padding: 15px" type="submit">Login</button>
-                    </form>
-                    <!--
-                  <div class="text-center">
-                    <a class="d-block small mt-3" href="register.html">Register an Account</a>
-                    <a class="d-block small" href="forgot-password.html">Forgot Password?</a>
-                  </div>
-                    -->
+                    </div>
                 </div>
             </div>
         </div>

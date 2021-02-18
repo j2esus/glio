@@ -4,26 +4,26 @@
     Author     : j2esus
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<script src="<c:url value="/resources/js/company/crudCompany.js"/>"></script>
+<script src="<c:url value="/resources/js/admin/crudCompany.js"/>"></script>
 
 <h1>Empresas</h1>
 <hr/>
 <br/>
 <div class="text-right">
     <button type="button" class="btn btn-success fa fa-refresh" id="btnRefresh"></button>
+    <button type="button" class="btn btn-primary fa fa-pencil-square-o" id="btnEdit"></button>
+    <button type="button" class="btn btn-danger fa fa-trash-o" id="btnConfirmDelete"></button>
     <button type="button" class="btn btn-primary fa fa-plus" id="btnNew">Nuevo</button>
 </div>
 <br />
 <div class="table-responsive">
-    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+    <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
         <thead>
             <tr>
                 <th>Nombre</th>
                 <th>Descripción</th>
                 <th>Estatus</th>
                 <th>Total usuarios</th>
-                <th>Editar</th>
-                <th>Eliminar</th>
             </tr>
         </thead>
         <tbody></tbody>

@@ -9,30 +9,23 @@
 <h1>Proyectos</h1>
 <hr/>
 <div id="divProjects">
-    <br/>
     <form action="javascript:findProjectData()">
         <div class="card">
             <div class="card-header">
                 Filtros
             </div>
             <div class="card-body">
-                <div class="form-inline">
-                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                        <div class="input-group-addon">Nombre</div>
-                        <input type="text" class="form-control" id="txtFilterName" placeholder="Nombre" autocomplete="off">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <input type="text" class="form-control" id="txtFilterQuery" placeholder="Buscar..." autocomplete="off">
                     </div>
-                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                        <div class="input-group-addon">Estatus</div>
+                    <div class="col-lg-1">
                         <select class="custom-select" id="txtFilterStatus">
                             <option value="">--Todos</option>
                             <c:forEach items="${status}" var="statusItem">
                                 <option value="${statusItem}">${statusItem}</option>
                             </c:forEach>
                         </select>
-                    </div>
-                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                        <div class="input-group-addon">Descripción</div>
-                        <input type="text" class="form-control" id="txtFilterDescription" placeholder="Descripción" autocomplete="off">
                     </div>
                     <input type="submit" class="btn btn-success" value="Buscar"/>
                 </div>
@@ -73,7 +66,7 @@
     </ol>
     <h4><span id="divTitleTasks" class="badge badge-success"></span></h4>
     <br/>
-    
+
     <div class="row">
         <div class="col-lg-6">
             <div class="card">
@@ -124,6 +117,9 @@
                             </thead>
                             <tbody></tbody>
                         </table>
+                    </div>
+                    <div class="text-right">
+                        <span id="totalTask" class="badge badge-success"></span>
                     </div>
                 </div>
             </div>
@@ -389,18 +385,14 @@
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
                                 Usuario
                             </div>
                             <div class="col-9">
-                                <select id="userTask" class="form-control" required="required">
-                                    <option value="">--Seleccione</option>
-                                    <c:forEach items="${users}" var="user">
-                                        <option value="${user.username}">${user.username}</option>
-                                    </c:forEach>
-                                </select>
+                                <input type="hidden" id="userTask"/>
+                                <input type="text" class="form-control" id="userNameAuto" required="required">
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>

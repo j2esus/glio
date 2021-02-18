@@ -1,6 +1,7 @@
 var $sideNavToggler,
     $btnConfiguration,
-    $btnLogout;
+    $btnLogout,
+    $btnDash;
 
 $(document).ready(function () {
     initComponentsHeader();
@@ -11,12 +12,14 @@ function initComponentsHeader(){
     $sideNavToggler = $('#sidenavToggler');
     $btnConfiguration = $('#btnConfiguration');
     $btnLogout = $('#btnLogout');
+    $btnDash = $('#btnDash');
 }
 
 function initEventsHeader(){
     $sideNavToggler.click(onClickSideNavToggler);
     $btnConfiguration.click(onClickBtnConfiguration);
     $btnLogout.click(btnLogoutOnClick);
+    $btnDash.click(btnDashOnClick);
 }
 
 function onClickSideNavToggler(e){
@@ -31,7 +34,11 @@ function onClickBtnConfiguration(){
 }
 
 function btnLogoutOnClick(){
-    countInProcess();
+    countTasksInProcess();
+}
+
+function btnDashOnClick(){
+    _jsUtil.redirect("all/dash");
 }
 
 function logout(){
@@ -52,16 +59,15 @@ function logout(){
    });
 }
 
-function countInProcess(){
+function countTasksInProcess(){
     $.ajax({
         type: "POST",
-        url: $.PATH+"all/countInProcess",
+        url: $.PATH+"all/countTasksInProcess",
         beforeSend: function (xhr) {
             //_blockUI.block();
         },
         success:function(response){
             //_blockUI.unblock();
-            console.log(response);
             if(response === 0){
                 logout();
             }else{

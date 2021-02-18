@@ -15,6 +15,7 @@
 <!-- Bootstrap core JavaScript-->
 <script src="<c:url value="/resources/vendor/jquery/jquery.js"/>"></script>
 <script src="<c:url value="/resources/vendor/bootstrap/js/bootstrap.bundle.js"/>"></script>
+<script src="<c:url value="/resources/vendor/jquery/jquery-ui.js"/>"></script>
 <!-- Core plugin JavaScript-->
 <script src="<c:url value="/resources/vendor/jquery-easing/jquery.easing.js"/>"></script>
 <!-- Page level plugin JavaScript-->
@@ -36,6 +37,8 @@
 <!-- tema msg -->
 <link rel="stylesheet" href="<c:url value="/resources/styles/jquery.msg.css"/>">
 <!-- end theme -->
+<!-- animate -->
+<link rel="stylesheet" href="<c:url value="/resources/styles/animate.css"/>">
 
 
 <!-- notify -->

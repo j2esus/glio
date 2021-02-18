@@ -6,6 +6,7 @@ import com.jeegox.glio.dto.TaskDTO;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.admin.User;
 import com.jeegox.glio.entities.aim.Aim;
+import com.jeegox.glio.entities.aim.Project;
 import com.jeegox.glio.entities.aim.Task;
 import com.jeegox.glio.enumerators.Priority;
 import com.jeegox.glio.enumerators.Status;
@@ -14,186 +15,101 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
-/**
- *
- * @author j2esus
- */
 @Repository
 public class TaskDAOImpl extends GenericDAOImpl<Task,Integer> implements TaskDAO{
 
     @Override
-    public List<Task> findByCompany(Company company) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select t ");
-        sb.append(" from Task t ");
-        sb.append(" join t.father a ");
-        sb.append(" join a.father p ");
-        sb.append(" join p.father u ");
-        sb.append(" where u.father = :company ");
-        sb.append(" and a.status != :status  ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("company", company);
-        q.setParameter("status", Status.DELETED);
-        return q.list();
+    public List<Task> findByAim(Aim aim) {
+        String query = " select t "+
+                " from Task t "+
+                " where t.father = :aim "+
+                " and t.status <> :status ";
+        return sessionFactory.getCurrentSession().createQuery(query).
+                setParameter("aim", aim).
+                setParameter("status", Status.DELETED).getResultList();
     }
 
     @Override
-    public List<Task> findBy(Aim aim) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select t ");
-        sb.append(" from Task t ");
-        sb.append(" join t.father a ");
-        sb.append(" where t.father = :aim ");
-        sb.append(" and t.status != :status  ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("aim", aim);
-        q.setParameter("status", Status.DELETED);
-        return q.list();
+    public List<Task> findByProject(Project project) {
+        String query = " select t "+
+                " from Task t "+
+                " join t.father a "+
+                " where a.father = :project "+
+                " and t.status <> :status ";
+        return sessionFactory.getCurrentSession().createQuery(query).
+                setParameter("project", project).
+                setParameter("status", Status.DELETED).getResultList();
     }
 
     @Override
-    public List<Task> findBy(User user, Status[] status, String query, Priority[] priorities) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select t ");
-        sb.append(" from Task t ");
-        sb.append(" where t.userOwner = :user ");
-        sb.append(" and t.status in ( :status  ) ");
-        sb.append(" and ( upper(t.name) like :query or upper(t.description) like :query )");
-        sb.append(" and t.priority in ( :priorities )");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("user", user);
-        q.setParameterList("status", status);
-        q.setParameter("query","%"+ query.toUpperCase()+"%");
-        q.setParameterList("priorities", priorities);
-        return q.list();
+    public Long countInProcess(User user) {
+        String query = " select count(t) "+
+                " from Task t "+
+                " where t.userOwner = :user "+
+                " and t.status = :status ";
+
+        return (Long)sessionFactory.getCurrentSession().createQuery(query).
+                setParameter("user", user).
+                setParameter("status", Status.IN_PROCESS).
+                getResultList().stream().
+                findFirst().orElse(0);
     }
 
     @Override
-    public List<Task> findBy(Aim aim, Status[] status) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select t ");
-        sb.append(" from Task t ");
-        sb.append(" join t.father a ");
-        sb.append(" where a = :aim ");
-        sb.append(" and t.status not in ( :status  ) ");
-        
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("aim", aim);
-        q.setParameterList("status", status);
-        
-        return q.list();
+    public List<Task> findBy(Company company, Status[] status, String value, Priority[] priorities, Project project) {
+        String query = " select t "+
+                " from Task t "+
+                " join t.userOwner user "+
+                " join t.father aim "+
+                " join aim.father project "+
+                " where user.father = :company "+
+                " and t.status in ( :status ) "+
+                " and ( upper(t.name) like :value or upper(t.description) like :value or upper(user.username) like :value ) "+
+                " and t.priority in ( :priorities ) "+
+                " and aim.status = :activeStatus "+
+                " and project.status = :activeStatus "+
+                " and project = :project "+
+                " order by t.priority ";
+
+        return sessionFactory.getCurrentSession().createQuery(query).
+                setParameter("company", company).
+                setParameterList("status", status).
+                setParameter("value", "%"+ value.toUpperCase()+"%").
+                setParameterList("priorities", priorities).
+                setParameter("activeStatus", Status.ACTIVE).
+                setParameter("project", project).
+                getResultList();
     }
 
     @Override
-    public Long count(User user, Status[] status) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select count(t) ");
-        sb.append(" from Task t ");
-        sb.append(" where t.userOwner = :user ");
-        sb.append(" and t.status in ( :status  ) ");
-        
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("user", user);
-        q.setParameterList("status", status);
-        
-        List<Long> counts = q.list();
-        if(counts.isEmpty())
-            return 0L;
-        else
-            return counts.get(0);
+    public List<Task> findBy(Company company, Status[] status, String value, Priority[] priorities) {
+        String query = " select t "+
+                " from Task t "+
+                " join t.userOwner user "+
+                " join t.father aim "+
+                " join aim.father project "+
+                " where user.father = :company "+
+                " and t.status in ( :status ) "+
+                " and ( upper(t.name) like :value or upper(t.description) like :value or upper(user.username) like :value ) "+
+                " and t.priority in ( :priorities ) "+
+                " and aim.status = :activeStatus "+
+                " and project.status = :activeStatus "+
+                " order by t.priority ";
+
+        return sessionFactory.getCurrentSession().createQuery(query).
+                setParameter("company", company).
+                setParameterList("status", status).
+                setParameter("value", "%"+ value.toUpperCase()+"%").
+                setParameterList("priorities", priorities).
+                setParameter("activeStatus", Status.ACTIVE).
+                getResultList();
     }
 
+    //todo check this method because I think it could be refactored
     @Override
-    public Long count(User user, Status[] status, String query, Priority[] priorities) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select count(t) ");
-        sb.append(" from Task t ");
-        sb.append(" where t.userOwner = :user ");
-        sb.append(" and t.status in ( :status  ) ");
-        sb.append(" and ( upper(t.name) like :query or upper(t.description) like :query )");
-        sb.append(" and t.priority in ( :priorities )");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("user", user);
-        q.setParameterList("status", status);
-        q.setParameter("query","%"+ query.toUpperCase()+"%");
-        q.setParameterList("priorities", priorities);
-        List<Long> counts = q.list();
-        if(counts.isEmpty())
-            return 0L;
-        else
-            return counts.get(0);
-    }
-
-    @Override
-    public Long count(Company company, Status[] status, String query, Priority[] priorities, Integer idProject) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select count(t) ");
-        sb.append(" from Task t ");
-        sb.append(" join t.userOwner u ");
-        sb.append(" join t.father a ");
-        sb.append(" join a.father p ");
-        sb.append(" where u.father = :company ");
-        sb.append(" and t.status in ( :status  ) ");
-        sb.append(" and ( upper(t.name) like :query or upper(t.description) like :query or upper(u.username) like :query )");
-        sb.append(" and t.priority in ( :priorities ) ");
-        sb.append(" and a.status = :statusActive ");
-        sb.append(" and p.status = :statusActive ");
-        
-        if(!idProject.equals(0))
-            sb.append(" and p.id = :idProject ");
-        
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("company", company);
-        q.setParameterList("status", status);
-        q.setParameter("query","%"+ query.toUpperCase()+"%");
-        q.setParameterList("priorities", priorities);
-        q.setParameter("statusActive", Status.ACTIVE);
-        
-        if(!idProject.equals(0))
-            q.setParameter("idProject", idProject);
-        
-        List<Long> counts = q.list();
-        if(counts.isEmpty())
-            return 0L;
-        else
-            return counts.get(0);
-    }
-
-    @Override
-    public List<Task> findBy(Company company, Status[] status, String query, Priority[] priorities, Integer idProject) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select t ");
-        sb.append(" from Task t ");
-        sb.append(" join t.userOwner u ");
-        sb.append(" join t.father a ");
-        sb.append(" join a.father p ");
-        sb.append(" where u.father = :company ");
-        sb.append(" and t.status in ( :status  ) ");
-        sb.append(" and ( upper(t.name) like :query or upper(t.description) like :query or upper(u.username) like :query )");
-        sb.append(" and t.priority in ( :priorities ) ");
-        sb.append(" and a.status = :statusActive ");
-        sb.append(" and p.status = :statusActive ");
-        
-        if(!idProject.equals(0))
-            sb.append(" and p.id = :idProject ");
-        
-        sb.append(" order by t.priority ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("company", company);
-        q.setParameterList("status", status);
-        q.setParameter("query","%"+ query.toUpperCase()+"%");
-        q.setParameterList("priorities", priorities);
-        q.setParameter("statusActive", Status.ACTIVE);
-        if(!idProject.equals(0))
-            q.setParameter("idProject", idProject);
-        return q.list();
-    }
-
-    @Override
-    public List<TaskDTO> findBy(User userOwner, Status[] status, Date initDate, Date endDate, Integer idProject) {
+    public List<TaskDTO> findBy(User userOwner, Status[] status, Date initDate, Date endDate, Integer idProject, Integer idAim) {
         List<TaskDTO> result = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         sb.append(" select tk.id_task, tk.name, priority, tk.id_user_owner, tk.id_user_requester, tk.estimated_time,  ");
@@ -210,6 +126,9 @@ public class TaskDAOImpl extends GenericDAOImpl<Task,Integer> implements TaskDAO
         
         if(!idProject.equals(0))
             sb.append(" and p.id_project = ").append(idProject);
+        
+         if(!idAim.equals(0))
+            sb.append(" and a.id_aim = ").append(idAim);
             
         sb.append(" group by tk.id_task ");
         

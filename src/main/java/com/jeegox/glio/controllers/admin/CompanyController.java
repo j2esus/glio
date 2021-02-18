@@ -3,7 +3,7 @@ package com.jeegox.glio.controllers.admin;
 import com.jeegox.glio.controllers.BaseController;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.enumerators.Status;
-import com.jeegox.glio.services.admin.CompanyService;
+import com.jeegox.glio.services.CompanyService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-/**
- *
- * @author j2esus
- */
 @Controller
 @RequestMapping("/company/**")
 public class CompanyController extends BaseController{
+    private final CompanyService companyService;
+
     @Autowired
-    private CompanyService companyService;
+    public CompanyController(CompanyService companyService){
+        this.companyService = companyService;
+    }
     
     @RequestMapping("")
     public String index(Model model){

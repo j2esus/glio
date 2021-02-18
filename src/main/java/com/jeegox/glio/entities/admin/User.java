@@ -1,6 +1,8 @@
 package com.jeegox.glio.entities.admin;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.jeegox.glio.entities.util.JComplexEntity;
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -16,10 +18,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import com.jeegox.glio.enumerators.Status;
 
-/**
- *
- * @author j2esus
- */
 @Entity
 @Table(name = "user")
 @JsonIgnoreProperties({"father","hibernateLazyInitializer", "handler"})
@@ -131,5 +129,41 @@ public class User extends JComplexEntity<Integer, Company> implements Serializab
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equal(id, user.id) &&
+                Objects.equal(username, user.username) &&
+                Objects.equal(password, user.password) &&
+                Objects.equal(name, user.name) &&
+                status == user.status &&
+                Objects.equal(userType, user.userType) &&
+                Objects.equal(onlyOneAccess, user.onlyOneAccess) &&
+                Objects.equal(email, user.email) &&
+                Objects.equal(father, user.father);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, username, password, name, status, userType, onlyOneAccess, email, father);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("username", username)
+                .add("password", password)
+                .add("name", name)
+                .add("status", status)
+                .add("userType", userType)
+                .add("onlyOneAccess", onlyOneAccess)
+                .add("email", email)
+                .add("father", father)
+                .toString();
     }
 }

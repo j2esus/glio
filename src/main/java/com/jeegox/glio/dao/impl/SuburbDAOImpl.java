@@ -4,13 +4,11 @@ import com.jeegox.glio.dao.SuburbDAO;
 import com.jeegox.glio.dao.hibernate.GenericDAOImpl;
 import com.jeegox.glio.entities.Suburb;
 import java.util.List;
+import java.util.Optional;
+
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
-/**
- *
- * @author j2esus
- */
 @Repository
 public class SuburbDAOImpl extends GenericDAOImpl<Suburb, Integer> implements SuburbDAO{
 
@@ -35,5 +33,17 @@ public class SuburbDAOImpl extends GenericDAOImpl<Suburb, Integer> implements Su
         q.setParameter("cp", cp);
         return q.list();
     }
-    
+
+    @Override
+    public Optional<Suburb> findBy(String zipcode, String name) {
+        String qry = " select s "+
+                " from Suburb s "+
+                " where s.cp = :zipcode "+
+                " and s.name = :name ";
+        Query q = sessionFactory.getCurrentSession().createQuery(qry);
+        q.setParameter("zipcode", zipcode);
+        q.setParameter("name", name);
+        return q.setMaxResults(1).uniqueResultOptional();
+    }
+
 }

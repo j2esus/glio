@@ -7,72 +7,53 @@ import com.jeegox.glio.entities.admin.Token;
 import com.jeegox.glio.entities.admin.User;
 import com.jeegox.glio.enumerators.Status;
 import java.util.List;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
-/**
- *
- * @author j2esus
- */
 @Repository
 public class TokenDAOImpl extends GenericDAOImpl<Token,Integer> implements TokenDAO{
 
     @Override
-    public Token find(User user) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select t ");
-        sb.append(" from Token t ");
-        sb.append(" join t.father u ");
-        sb.append(" where u.username = :username ");
-        sb.append(" and t.status = :status  ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("username", user.getUsername());
-        q.setParameter("status", Status.ACTIVE);
-        List<Token> tokens = q.list();
-        if(tokens.isEmpty())
-            return null;
-        else
-            return tokens.get(0);
+    public Token getActive(User user) {
+        String query = " select t "+
+                " from Token t "+
+                " where t.father = :user "+
+                " and t.status = :status ";
+
+        return (Token)sessionFactory.getCurrentSession().createQuery(query).setParameter("user", user).
+                setParameter("status", Status.ACTIVE).getResultList().stream().findFirst().orElse(null);
     }
 
     @Override
     public List<Token> findByUser(User user) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select t ");
-        sb.append(" from Token t ");
-        sb.append(" where t.father = :user ");
-        sb.append(" and t.status != :status  ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("user", user);
-        q.setParameter("status", Status.DELETED);
-        return q.list();
+        String query = " select t "+
+                " from Token t "+
+                " where t.father = :user "+
+                " and t.status <> :status ";
+
+        return sessionFactory.getCurrentSession().createQuery(query).setParameter("user", user).
+                setParameter("status", Status.DELETED).getResultList();
     }
 
     @Override
     public Token find(Status status, String token) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select t ");
-        sb.append(" from Token t ");
-        sb.append(" where t.token = :token ");
-        sb.append(" and t.status = :status");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("token", token);
-        q.setParameter("status", status);
-        return (Token)q.uniqueResult();
+        String query = " select t "+
+                " from Token t "+
+                " where t.token = :token "+
+                " and t.status = :status ";
+        return (Token)sessionFactory.getCurrentSession().createQuery(query).setParameter("token", token).
+                setParameter("status", status).getResultList().stream().findFirst().orElse(null);
     }
 
     @Override
     public List<Token> findByCompany(Company company) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select t ");
-        sb.append(" from Token t ");
-        sb.append(" join t.father u ");
-        sb.append(" where u.father = :company ");
-        sb.append(" and t.status != :status  ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("company", company);
-        q.setParameter("status", Status.DELETED);
-        return q.list();
+        String query = " select t "+
+                " from Token t "+
+                " join t.father u "+
+                " where u.father = :company "+
+                " and t.status <> :status ";
+
+        return sessionFactory.getCurrentSession().createQuery(query).setParameter("company", company).
+                setParameter("status", Status.DELETED).getResultList();
     }
     
 }

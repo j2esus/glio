@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<script src="<c:url value="/resources/js/category/crudCategory.js"/>"></script>
+<script src="<c:url value="/resources/js/expenses/crudCategory.js"/>"></script>
 
 <h1>Categorías</h1>
 <hr/>
@@ -91,7 +91,6 @@
                             </div>
                             <div class="col-9">
                                 <select id="statusCategory" class="form-control" required="required">
-                                    <option value="">--Seleccione</option>
                                     <c:forEach items="${status}" var="status">
                                         <option value="${status}">${status}</option>
                                     </c:forEach>
@@ -162,7 +161,6 @@
                             </div>
                             <div class="col-9">
                                 <select id="statusSubcategory" class="form-control" required="required">
-                                    <option value="">--Seleccione</option>
                                     <c:forEach items="${status}" var="status">
                                         <option value="${status}">${status}</option>
                                     </c:forEach>

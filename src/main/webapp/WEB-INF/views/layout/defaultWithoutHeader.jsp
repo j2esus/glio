@@ -34,13 +34,20 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item dropdown">
                         <div class="btn-group">
+                            <button type="button" class="btn btn-danger" id="btnDash">
+                                <i class="fa fa-fw fa-th"></i>
+                            </button>
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-fw fa-user" style="padding-right: 15px"></i>${userSession.father.username}
                             </button>
                             <div class="dropdown-menu">
-                                <button class="dropdown-item" id="btnConfiguration">Configuración</button>
+                                <button class="dropdown-item" id="btnConfiguration">
+                                    <i class="fa fa-wrench" style="padding-right: 10px"></i>Configuración
+                                </button>
                                 <div class="dropdown-divider"></div>
-                                <button class="dropdown-item" id="btnLogout">Salir</button>
+                                <button class="dropdown-item" id="btnLogout">
+                                    <i class="fa fa-sign-out" style="padding-right: 10px"></i>Salir
+                                </button>
                             </div>
                         </div>
                     </li>

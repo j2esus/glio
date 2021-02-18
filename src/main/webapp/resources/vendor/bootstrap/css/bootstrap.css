@@ -8441,3 +8441,19 @@ a.text-dark:focus, a.text-dark:hover {
 .card-info + .list-group .list-group-item:first-child {
   border-top: 0;
 }
+
+.bg-purple {
+  background-color: #9B59B6 !important;
+}
+
+a.bg-purple:focus, a.bg-purple:hover {
+  background-color: #9B59B6 !important;
+}
+
+.bg-orange {
+  background-color: #fd7e14 !important;
+}
+
+a.bg-orange:focus, a.bg-purple:hover {
+  background-color: #fd7e14 !important;
+}

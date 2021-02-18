@@ -1,23 +1,26 @@
 package com.jeegox.glio.controllers;
 
 import com.jeegox.glio.dto.admin.CategoryMenuDTO;
+import com.jeegox.glio.entities.State;
+import com.jeegox.glio.entities.Suburb;
+import com.jeegox.glio.entities.Town;
 import com.jeegox.glio.entities.admin.CategoryMenu;
-import com.jeegox.glio.entities.admin.OptionMenu;
 import com.jeegox.glio.entities.admin.Token;
 import com.jeegox.glio.entities.admin.User;
 import com.jeegox.glio.enumerators.Status;
-import com.jeegox.glio.services.admin.CategoryMenuService;
-import com.jeegox.glio.services.admin.TokenService;
-import com.jeegox.glio.services.admin.UserService;
-import com.jeegox.glio.services.aim.TaskService;
+import com.jeegox.glio.services.AddressService;
+import com.jeegox.glio.services.CategoryMenuService;
+import com.jeegox.glio.services.UserService;
+import com.jeegox.glio.services.ProjectService;
 import com.jeegox.glio.util.Constants;
 import com.jeegox.glio.util.Util;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,27 +28,28 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-/**
- *
- * @author j2esus
- */
 @Controller
 @RequestMapping("/all/**")
 public class AllController extends BaseController {
+    private final CategoryMenuService categoryMenuService;
+    private final UserService userService;
+    private final ProjectService projectService;
+    private final AddressService addressService;
+
     @Autowired
-    private CategoryMenuService categoryMenuService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private TokenService tokenService;
-    @Autowired
-    private TaskService taskService;
+    public AllController(CategoryMenuService categoryMenuService, UserService userService, ProjectService projectService,
+                         AddressService addressService) {
+        this.categoryMenuService = categoryMenuService;
+        this.userService = userService;
+        this.projectService = projectService;
+        this.addressService = addressService;
+    }
 
     @RequestMapping("dash")
     public String dash(HttpServletRequest request, Model model){
         User user = getCurrentUser(request);
         List<CategoryMenuDTO> categoriesMenu = categoryMenuService.findByDTO(user.getUserType());
-        HttpSession httpSession = (HttpSession)request.getSession(false);
+        HttpSession httpSession = request.getSession(false);
         httpSession.setAttribute(Constants.Security.CATEGORY_LIST, categoriesMenu);
         return "all/dash";
     }
@@ -97,14 +101,14 @@ public class AllController extends BaseController {
     @RequestMapping("findTokensUser")
     @ResponseBody
     public List<Token> findTokensUser(HttpServletRequest request){
-        return tokenService.findByUser(getCurrentUser(request));
+        return userService.findByUser(getCurrentUser(request));
     }
     
     @RequestMapping("deleteToken")
     @ResponseBody
-    public String deleteToken(HttpServletRequest request,@RequestParam Integer id){
+    public String deleteToken(@RequestParam Integer id){
         try{
-            this.tokenService.changeStatus(tokenService.findById(id), Status.DELETED);
+            userService.changeStatus(userService.findTokenById(id), Status.DELETED);
             return "OK";
         }catch(Exception e){
             return e.getMessage();
@@ -114,25 +118,57 @@ public class AllController extends BaseController {
     @RequestMapping(name = "module", method = RequestMethod.GET)
     public String module(Model model, @RequestParam Integer id,HttpServletRequest request){
         CategoryMenu cm = this.categoryMenuService.findById(id);
-        HttpSession httpSession = (HttpSession)request.getSession(false);
+        HttpSession httpSession = request.getSession(false);
         List<CategoryMenuDTO> categoriesMenu = (List<CategoryMenuDTO>)httpSession.getAttribute(Constants.Security.CATEGORY_LIST);
-        
-        Set<OptionMenu> optionsMenus = new TreeSet<>();
-        for(CategoryMenuDTO item: categoriesMenu){
-            if(item.getId().equals(id)){
-                optionsMenus = item.getOptionsMenus();
-                break;
-            }
-        }
-        if(cm != null)
-            model.addAttribute("moduleName", cm.getName());
-        httpSession.setAttribute(Constants.Security.MENU, optionsMenus);
+
+        CategoryMenuDTO category = categoriesMenu.stream().filter(x -> Objects.equals(x.getId(), id)).
+                findFirst().orElse(null);
+
+        model.addAttribute("moduleName", cm != null ? cm.getName(): "");
+        httpSession.setAttribute(Constants.Security.MENU, category != null ? category.getOptionsMenus(): new HashSet<>());
         return "all/module";
     }
     
-    @RequestMapping(name = "countInProcess", method = RequestMethod.POST)
+    @RequestMapping(name = "countTasksInProcess", method = RequestMethod.POST)
     @ResponseBody
-    public Long countInProcess(HttpServletRequest request){
-        return taskService.count(getCurrentUser(request), new Status[]{Status.IN_PROCESS});
+    public Long countTasksInProcess(HttpServletRequest request){
+        return projectService.countTasksInProcess(getCurrentUser(request));
+    }
+    
+    @RequestMapping(value = "findUsers", method = RequestMethod.POST)
+    @ResponseBody
+    public List<User> findUsers(HttpServletRequest request, @RequestParam String name){
+        return userService.findByLike(getCurrentCompany(request), name);
+    }
+
+    @RequestMapping("findAllStates")
+    @ResponseBody
+    public List<State> findAllStates(){
+        return addressService.findAll();
+    }
+
+    @RequestMapping("findTowns")
+    @ResponseBody
+    public List<Town> findAllStates(@RequestParam Integer idState){
+        return addressService.findByState(idState);
+    }
+
+    @RequestMapping("findSuburbs")
+    @ResponseBody
+    public List<Suburb> findSuburbs(@RequestParam Integer idTown){
+        return addressService.findByTown(idTown);
+    }
+
+    @RequestMapping("findSuburbsByZipcode")
+    @ResponseBody
+    public List<Suburb> findSuburbsByZipcode(@RequestParam String cp){
+        return addressService.findByTown(cp);
+    }
+
+    @RequestMapping("findSuburbsByZipCodeAndName")
+    @ResponseBody
+    public ResponseEntity<Suburb> findSuburbsByZipCodeAndName(@RequestParam String zipcode, @RequestParam String name){
+        return Optional.ofNullable(addressService.findBy(zipcode, name).get()).map(suburb->ResponseEntity.ok().body(suburb))
+                .orElseGet(()->new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

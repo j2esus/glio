@@ -2,10 +2,6 @@ package com.jeegox.glio.dto.admin;
 
 import java.io.Serializable;
 
-/**
- *
- * @author j2esus
- */
 public class OptionMenuUserTypeDTO implements Serializable{
     private Integer idOptionMenu;
     private String optionMenuName;

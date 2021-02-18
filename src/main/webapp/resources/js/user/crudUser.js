@@ -1,6 +1,8 @@
 var $btnNew,
         $btnRefresh,
-        $btnDelete;
+        $btnDelete,
+        $btnEdit,
+        $btnConfirmDelete;
 
 var $saveModal,
         $dataForm;
@@ -77,7 +79,7 @@ function addRowToTable(item, table) {
     fila += "<td>" + item.status + "</td>";
     fila += "<td>" + item.userType.name + "</td>";
     fila += "<td>" + item.email + "</td>";
-    fila += "<td>" + item.onlyOneAccess + "</td>";
+    fila += "<td>" + _uiUtil.getBooleanValueLabel(item.onlyOneAccess) + "</td>";
     fila += "</tr>";
     table.append(fila);
 }
@@ -92,7 +94,7 @@ function confirmDialog(noRow) {
 
 function onClickBtnEdit() {
     if (_indexSelected === -1) {
-        _notify.show('Debes seleccionar un tipo de usuario', 'warning');
+        _notify.show('Debes seleccionar un usuario', 'warning');
         return;
     }
     var item = _data[_indexSelected];
@@ -105,7 +107,9 @@ function onClickBtnEdit() {
     $('#userType').val(item.userType.id);
     $('#status').val(item.status);
     $('#email').val(item.email);
-    $('#onlyOneAccess').val(item.onlyOneAccess);
+    $('#onlyOneAccess').removeAttr("checked");
+    if(item.onlyOneAccess)
+        $('#onlyOneAccess').attr("checked", "checked");
     $('#password').prop('disabled', true);
     $saveModal.modal();
 }
@@ -198,9 +202,7 @@ function onClickBtnConfirmDelete(){
         _notify.show('Debes seleccionar un usuario', 'warning');
         return;
     }
-    console.log(_indexSelected);
     var item = _data[_indexSelected];
-    console.log(item);
     $('#idDelete').val(item.id);
     $('#deleteLabel').html("¿Está seguro de eliminar <b>" + item.name + "</b>?");
     $('#confirmModal').modal();

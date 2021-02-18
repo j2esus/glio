@@ -64,7 +64,7 @@
 
 
 <div class="modal fade" id="detailsModal" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4><span id="titleModalDetail" class="badge badge-success"></span></h4>

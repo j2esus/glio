@@ -1,6 +1,5 @@
 package com.jeegox.glio.config.general;
 
-import com.jeegox.glio.entities.admin.OptionMenu;
 import com.jeegox.glio.entities.admin.Session;
 import com.jeegox.glio.util.Constants;
 import java.io.IOException;
@@ -15,10 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- *
- * @author j2esus
- */
 public class SessionFilter implements Filter{
     
     @Override
@@ -38,8 +33,8 @@ public class SessionFilter implements Filter{
                 Session session = (Session)httpSession.getAttribute(Constants.Security.USER_SESSION);
                 if(session != null){
                     path = path.substring(1).split("/")[0];
-                    Map<String, Integer> options = (Map)httpSession.getAttribute(Constants.Security.OPTIONS_MAP);
-                    Integer op = options.get(path);
+                    Map<String, String> options = (Map)httpSession.getAttribute(Constants.Security.OPTIONS_MAP);
+                    String op = options.get(path);
                     if(op == null){
                         res.sendRedirect(request.getServletContext().getContextPath()+"/forbidden");
                     }else{

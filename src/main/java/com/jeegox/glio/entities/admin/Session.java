@@ -1,6 +1,7 @@
 package com.jeegox.glio.entities.admin;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.jeegox.glio.entities.util.JComplexEntity;
 import com.jeegox.glio.enumerators.Status;
 import java.io.Serializable;
@@ -17,19 +18,26 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- *
- * @author j2esus
- */
 @Entity
 @Table(name = "session")
-@JsonIgnoreProperties({"father"})
 public class Session extends JComplexEntity<Integer, User> implements Serializable{
     private String session;
     private Status status;
     private Timestamp initDate;
     private Timestamp endDate;
-    
+
+    public Session() {
+    }
+
+    public Session(Integer id, String session, Status status, Timestamp initDate, Timestamp endDate, User father) {
+        this.id = id;
+        this.session = session;
+        this.status = status;
+        this.initDate = initDate;
+        this.endDate = endDate;
+        this.father = father;
+    }
+
     @Id
     @Column(name = "id_session")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -80,5 +88,35 @@ public class Session extends JComplexEntity<Integer, User> implements Serializab
 
     public void setEndDate(Timestamp endDate) {
         this.endDate = endDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Session)) return false;
+        Session session1 = (Session) o;
+        return Objects.equal(id, session1.id) &&
+                Objects.equal(session, session1.session) &&
+                status == session1.status &&
+                Objects.equal(initDate, session1.initDate) &&
+                Objects.equal(endDate, session1.endDate) &&
+                Objects.equal(father, session1.father);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, session, status, initDate, endDate, father);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("session", session)
+                .add("status", status)
+                .add("initDate", initDate)
+                .add("endDate", endDate)
+                .add("father", father)
+                .toString();
     }
 }
