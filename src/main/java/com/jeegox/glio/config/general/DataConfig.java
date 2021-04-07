@@ -27,7 +27,7 @@ public final class DataConfig {
         
         
         PAGES.add(new Page("user/init","/WEB-INF/views/admin/user/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("company/init","/WEB-INF/views/admin/company/init.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("company/init","/WEB-INF/views/admin/company.jsp", Layout.DEFAULT));
         PAGES.add(new Page("userType/init","/WEB-INF/views/admin/userType/init.jsp", Layout.DEFAULT));
         PAGES.add(new Page("token/init","/WEB-INF/views/admin/token/init.jsp", Layout.DEFAULT));
         PAGES.add(new Page("session/init","/WEB-INF/views/admin/session/init.jsp", Layout.DEFAULT));
