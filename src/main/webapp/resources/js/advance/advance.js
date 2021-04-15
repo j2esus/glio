@@ -246,29 +246,12 @@ function showDetails(index){
 
 
 function addRowToTableTask(item, table) {
-    var color = writeColor(item.priority);
     var fila = "";
     fila += "<tr>";
     fila += "<td>" + item.name + "</td>";
     fila += "<td>" + item.status + "</td>";
-    fila += "<td bgcolor='"+color+"'>" + item.priority + "</td>";
+    fila += "<td>" + _uiUtil.getPriorityClass(item.priority) + "</td>";
     fila += "<td>" + item.userOwner.username + "</td>";
     fila += "</tr>";
     table.append(fila);
-}
-
-function writeColor(priority){
-    var type = '';
-    switch(priority){
-        case 'ALTA':
-            type = '#f2dede';
-            break;
-        case 'MEDIA':
-            type = '#fcf8e3';
-            break;
-        case 'BAJA':
-            type = '#d9edf7';
-            break;
-    }
-    return type;
 }

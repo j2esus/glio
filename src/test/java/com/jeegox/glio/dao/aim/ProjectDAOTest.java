@@ -73,11 +73,47 @@ public class ProjectDAOTest {
     public void findAll_notRequired_listWithFourElements(){
         assertThat(projectDAO.findAll()).isEqualTo(allExpectedProjectList());
     }
+    
+    private List<Project> allExpectedProjectList() {
+        List<Project> projectList = new ArrayList<>();
+
+        User userMcdonals = new User(1, "admin@mcdonals", "password", "admin", Status.ACTIVE,
+                new UserType(1, "Admin", Status.ACTIVE, new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3)),
+                false, new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3), "admin@mcdonals.com");
+
+        projectList.add(new Project(1, "Glio", "Glio ERP", Status.ACTIVE,
+                java.sql.Date.valueOf("2020-06-12"), java.sql.Date.valueOf("2020-12-23"), userMcdonals));
+        projectList.add(new Project(2, "Then", "Then excuse me", Status.ACTIVE,
+                java.sql.Date.valueOf("2016-11-15"), java.sql.Date.valueOf("2020-12-31"), userMcdonals));
+        projectList.add(new Project(3, "Other", "another failure", Status.DELETED,
+                java.sql.Date.valueOf("2020-01-01"), java.sql.Date.valueOf("2020-12-31"), userMcdonals));
+
+        User userBurgerking = new User(2, "admin@burgerking", "password", "admin", Status.ACTIVE,
+                new UserType(2, "Admin", Status.ACTIVE, new Company(2, "BurgerKing", "hamburguesas", Status.ACTIVE, 3)),
+                false, new Company(2, "BurgerKing", "hamburguesas", Status.ACTIVE, 3), "admin@burgerking.com");
+
+        projectList.add(new Project(4, "Aquacorp", "full of quality", Status.ACTIVE,
+                java.sql.Date.valueOf("2010-06-01"), java.sql.Date.valueOf("2020-12-31"), userBurgerking));
+
+        return projectList;
+    }
 
     @Test
     public void findByCompany_companyExists_listWithTwoElements(){
         Company company = new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3);
         assertThat(projectDAO.findByCompany(company)).isEqualTo(companyExpectedProjectList());
+    }
+    
+    private List<Project> companyExpectedProjectList() {
+        List<Project> projectList = new ArrayList<>();
+        User userMcdonals = new User(1, "admin@mcdonals", "password", "admin", Status.ACTIVE,
+                new UserType(1, "Admin", Status.ACTIVE, new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3)),
+                false, new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3), "admin@mcdonals.com");
+        projectList.add(new Project(1, "Glio", "Glio ERP", Status.ACTIVE,
+                java.sql.Date.valueOf("2020-06-12"), java.sql.Date.valueOf("2020-12-23"), userMcdonals));
+        projectList.add(new Project(2, "Then", "Then excuse me", Status.ACTIVE,
+                java.sql.Date.valueOf("2016-11-15"), java.sql.Date.valueOf("2020-12-31"), userMcdonals));
+        return projectList;
     }
 
     @Test
@@ -123,11 +159,54 @@ public class ProjectDAOTest {
         Company company = new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3);
         assertThat(projectDAO.findByCompany(company, "th", new Status[]{Status.DELETED, Status.ACTIVE})).isEqualTo(companyWithCoincidenceExpectedProjectList());
     }
+    
+    private List<Project> companyWithCoincidenceExpectedProjectList() {
+        List<Project> projectList = new ArrayList<>();
+        User userMcdonals = new User(1, "admin@mcdonals", "password", "admin", Status.ACTIVE,
+                new UserType(1, "Admin", Status.ACTIVE, new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3)),
+                false, new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3), "admin@mcdonals.com");
+        projectList.add(new Project(2, "Then", "Then excuse me", Status.ACTIVE,
+                java.sql.Date.valueOf("2016-11-15"), java.sql.Date.valueOf("2020-12-31"), userMcdonals));
+        projectList.add(new Project(3, "Other", "another failure", Status.DELETED,
+                java.sql.Date.valueOf("2020-01-01"), java.sql.Date.valueOf("2020-12-31"), userMcdonals));
+        return projectList;
+    }
 
     @Test
     public void findByCompany_companyExistsAndActiveDeletedStatus_listWithThreeElements(){
         Company company = new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3);
         assertThat(projectDAO.findByCompany(company, new Status[]{Status.DELETED, Status.ACTIVE})).isEqualTo(companyAllExpectedProjectList());
+    }
+    
+    private List<Project> companyAllExpectedProjectList() {
+        List<Project> projectList = new ArrayList<>();
+        User userMcdonals = new User(1, "admin@mcdonals", "password", "admin", Status.ACTIVE,
+                new UserType(1, "Admin", Status.ACTIVE, new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3)),
+                false, new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3), "admin@mcdonals.com");
+
+        projectList.add(new Project(1, "Glio", "Glio ERP", Status.ACTIVE,
+                java.sql.Date.valueOf("2020-06-12"), java.sql.Date.valueOf("2020-12-23"), userMcdonals));
+        projectList.add(new Project(2, "Then", "Then excuse me", Status.ACTIVE,
+                java.sql.Date.valueOf("2016-11-15"), java.sql.Date.valueOf("2020-12-31"), userMcdonals));
+        projectList.add(new Project(3, "Other", "another failure", Status.DELETED,
+                java.sql.Date.valueOf("2020-01-01"), java.sql.Date.valueOf("2020-12-31"), userMcdonals));
+        return projectList;
+    }
+    
+    @Test
+    public void countTasksActiveByUserOwner_userNotExists_zero() {
+        User user = new User(100, "unnexists@burgerking", "password", "unnexists", Status.ACTIVE,
+                new UserType(2, "Admin", Status.ACTIVE, new Company(2, "BurgerKing", "burgers", Status.ACTIVE, 3)),
+                false, new Company(2, "BurgerKing", "burgers", Status.ACTIVE, 3), "admin@burgerking.com");
+        assertThat(projectDAO.countActiveByUserOwner(user)).isEqualTo(0);
+    }
+    
+    @Test
+    public void countTasksActiveByUserOwner_userExists_two() {
+        User user = new User(1, "admin@mcdonals", "password", "admin", Status.ACTIVE,
+                new UserType(1, "Admin", Status.ACTIVE, new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3)),
+                false, new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3), "admin@mcdonals.com");
+        assertThat(projectDAO.countActiveByUserOwner(user)).isEqualTo(2);
     }
 
     private void insertInitialData() throws SQLException{
@@ -168,68 +247,33 @@ public class ProjectDAOTest {
 
         connection.createStatement().execute("insert into project(id_project, name, description, init_date, end_date, status, id_user) "+
                 " values (4, 'Aquacorp', 'full of quality', '2010-06-01', '2020-12-31', 'ACTIVE', 2)");
+        
+        insertAimData(connection);
+        insertTaskData(connection);
     }
+    
+    private void insertAimData(Connection connection) throws SQLException {
+        connection.createStatement().execute("insert into aim(id_aim, name, description, init_date, end_date, status, id_project, id_user)"
+                + " values (2, 'OneToOne', 'One aim, one success', '2015-01-01', '2015-07-05', 'ACTIVE', 1, 1)");
 
-    private List<Project> allExpectedProjectList() {
-        List<Project> projectList = new ArrayList<>();
+        connection.createStatement().execute("insert into aim(id_aim, name, description, init_date, end_date, status, id_project, id_user)"
+                + " values (3, 'ManyToOne', 'Many aim, one success', '2017-07-01', '2017-12-05', 'ACTIVE', 2, 1)");
 
-        User userMcdonals = new User(1, "admin@mcdonals", "password", "admin", Status.ACTIVE,
-                new UserType(1, "Admin", Status.ACTIVE, new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3)),
-                false, new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3), "admin@mcdonals.com");
-
-        projectList.add(new Project(1, "Glio", "Glio ERP", Status.ACTIVE,
-                java.sql.Date.valueOf("2020-06-12"), java.sql.Date.valueOf("2020-12-23"), userMcdonals));
-        projectList.add(new Project(2, "Then", "Then excuse me", Status.ACTIVE,
-                java.sql.Date.valueOf("2016-11-15"), java.sql.Date.valueOf("2020-12-31"), userMcdonals));
-        projectList.add(new Project(3, "Other", "another failure", Status.DELETED,
-                java.sql.Date.valueOf("2020-01-01"), java.sql.Date.valueOf("2020-12-31"), userMcdonals));
-
-        User userBurgerking = new User(2, "admin@burgerking", "password", "admin",Status.ACTIVE,
-                new UserType(2, "Admin",Status.ACTIVE, new Company(2, "BurgerKing", "hamburguesas",Status.ACTIVE, 3)),
-                false, new Company(2, "BurgerKing", "hamburguesas", Status.ACTIVE, 3), "admin@burgerking.com");
-
-        projectList.add(new Project(4, "Aquacorp", "full of quality", Status.ACTIVE,
-                java.sql.Date.valueOf("2010-06-01"), java.sql.Date.valueOf("2020-12-31"), userBurgerking));
-
-        return projectList;
+        connection.createStatement().execute("insert into aim(id_aim, name, description, init_date, end_date, status, id_project, id_user)"
+                + " values (4, 'ManyToOne', 'Many aim, one success', '2017-07-01', '2017-12-05', 'INACTIVE', 3, 1)");
     }
+    
+    private void insertTaskData(Connection connection) throws SQLException {
+        connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"
+                + " values(1, 'screen', 'create screen', 'IN_PROCESS', 1, 8, 2, 1, 1)");
 
-    private List<Project> companyExpectedProjectList() {
-        List<Project> projectList = new ArrayList<>();
-        User userMcdonals = new User(1, "admin@mcdonals", "password", "admin", Status.ACTIVE,
-                new UserType(1, "Admin", Status.ACTIVE, new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3)),
-                false, new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3), "admin@mcdonals.com");
-        projectList.add(new Project(1, "Glio", "Glio ERP", Status.ACTIVE,
-                java.sql.Date.valueOf("2020-06-12"), java.sql.Date.valueOf("2020-12-23"), userMcdonals));
-        projectList.add(new Project(2, "Then", "Then excuse me", Status.ACTIVE,
-                java.sql.Date.valueOf("2016-11-15"), java.sql.Date.valueOf("2020-12-31"), userMcdonals));
-        return projectList;
-    }
+        connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"
+                + " values(2, 'screen', 'create screen', 'DELETED', 1, 8, 2, 2, 1)");
 
-    private List<Project> companyWithCoincidenceExpectedProjectList() {
-        List<Project> projectList = new ArrayList<>();
-        User userMcdonals = new User(1, "admin@mcdonals", "password", "admin", Status.ACTIVE,
-                new UserType(1, "Admin", Status.ACTIVE, new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3)),
-                false, new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3), "admin@mcdonals.com");
-        projectList.add(new Project(2, "Then", "Then excuse me", Status.ACTIVE,
-                java.sql.Date.valueOf("2016-11-15"), java.sql.Date.valueOf("2020-12-31"), userMcdonals));
-        projectList.add(new Project(3, "Other", "another failure", Status.DELETED,
-                java.sql.Date.valueOf("2020-01-01"), java.sql.Date.valueOf("2020-12-31"), userMcdonals));
-        return projectList;
-    }
+        connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"
+                + " values(3, 'service', 'create service', 'PENDING', 2, 8, 3, 1, 1)");
 
-    private List<Project> companyAllExpectedProjectList() {
-        List<Project> projectList = new ArrayList<>();
-        User userMcdonals = new User(1, "admin@mcdonals", "password", "admin", Status.ACTIVE,
-                new UserType(1, "Admin", Status.ACTIVE, new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3)),
-                false, new Company(1, "Mcdonals", "hamburguesas", Status.ACTIVE, 3), "admin@mcdonals.com");
-
-        projectList.add(new Project(1, "Glio", "Glio ERP", Status.ACTIVE,
-                java.sql.Date.valueOf("2020-06-12"), java.sql.Date.valueOf("2020-12-23"), userMcdonals));
-        projectList.add(new Project(2, "Then", "Then excuse me", Status.ACTIVE,
-                java.sql.Date.valueOf("2016-11-15"), java.sql.Date.valueOf("2020-12-31"), userMcdonals));
-        projectList.add(new Project(3, "Other", "another failure", Status.DELETED,
-                java.sql.Date.valueOf("2020-01-01"), java.sql.Date.valueOf("2020-12-31"), userMcdonals));
-        return projectList;
+        connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"
+                + " values(4, 'dao', 'create dao', 'ACCEPTED', 0, 8, 4, 1, 1)");
     }
 }

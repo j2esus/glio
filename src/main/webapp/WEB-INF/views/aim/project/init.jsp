@@ -381,7 +381,14 @@
                                 Estimado
                             </div>
                             <div class="col-9">
-                                <input type="number" id="estimatedTask" name="estimatedTask" class="form-control" required="required" min="1"/>
+                                <select id="estimatedTask" class="form-control" required="required">
+                                    <option value="900">00:15</option>
+                                    <option value="1800">00:30</option>
+                                    <option value="2700">00:45</option>
+                                    <option value="3600">01:00</option>
+                                    <option value="5400">01:30</option>
+                                    <option value="7200">02:00</option>
+                                </select>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>

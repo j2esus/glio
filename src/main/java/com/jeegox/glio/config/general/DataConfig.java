@@ -33,7 +33,7 @@ public final class DataConfig {
         PAGES.add(new Page("session/init","/WEB-INF/views/admin/session/init.jsp", Layout.DEFAULT));
         
         PAGES.add(new Page("project/init","/WEB-INF/views/aim/project/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("task/init","/WEB-INF/views/aim/task/init.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("task/init","/WEB-INF/views/aim/taskBoard.jsp", Layout.DEFAULT));
         PAGES.add(new Page("advance/init","/WEB-INF/views/aim/advance/init.jsp", Layout.DEFAULT));
         PAGES.add(new Page("productivity/init","/WEB-INF/views/aim/productivity/init.jsp", Layout.DEFAULT));
         PAGES.add(new Page("activity/init","/WEB-INF/views/aim/activity/init.jsp", Layout.DEFAULT));
