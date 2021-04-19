@@ -2,7 +2,6 @@ var $txtQueryProjects,
     $dataTableProject,
     _indexProjectSelected = -1,
     _projectData = [],
-    $divProjectChart,
     _aimData = [];
     
  var $divAims;
@@ -19,7 +18,6 @@ $(document).ready(function () {
 function initComponents() {
     $txtQueryProjects = $('#txtQueryProjects');
     $dataTableProject = $('#dataTableProject');
-    $divProjectChart = $('#divProjectChart');
     $divAims = $('#divAims');
     $detailsModal = $('#detailsModal');
 }
@@ -80,11 +78,7 @@ function addRowToTable(item, table) {
 
 function toBuildGraphProject() {
     var item = _projectData[_indexProjectSelected];
-    $divProjectChart.html('<canvas id="projectsChart" width="100%"></canvas>');
-
-    var ctxPie = $("#projectsChart");
-    var labels = [];
-    var dataGraph = [];
+    let data = [];
     $.ajax({
         type: "POST",
         url: $.PATH + "advance/countTasksGroupedByStatus_project",
@@ -94,25 +88,17 @@ function toBuildGraphProject() {
             labels = [];
             dataGraph = [];
         },
-        success: function (data) {
-            let total = 0;
-            $.each(data, function(key, value){
-                total += value;
-            });
-            $.each(data, function(key, value){
-                labels.push(key);
-                dataGraph.push(_jsUtil.round((value / total) * 100));
+        success: function (response) {
+            $.each(response, function(key, value){
+                data.push([key, value]);
             });
         }, complete: function () {
             _blockUI.unblock();
-            new Chart(ctxPie, {
-                type: 'pie',
+            c3.generate({
+                bindto: '#divProjectChart',
                 data: {
-                    labels: labels,
-                    datasets: [{
-                            data: dataGraph,
-                            backgroundColor: ['#007bff', '#dc3545', '#ffc107', '#28a745']
-                        }]
+                    columns: data,
+                    type: 'pie'
                 }
             });
             toBuildDivForAims(item.id);
@@ -148,6 +134,7 @@ function toBuildDivForAims(idProject) {
 }
 
 function toBuildAimChart(idAim) {
+    let data = [];
     $.ajax({
         type: "POST",
         url: $.PATH + "advance/countTasksGroupedByStatus_aim",
@@ -157,27 +144,15 @@ function toBuildAimChart(idAim) {
         beforeSend: function (xhr) {
             _blockUI.block();
         },
-        success: function (data) {
-            let labelsAim = [];
-            let dataGraphAim = [];
-            let total = 0;
-            $.each(data, function(key,value) {
-                total += value;
+        success: function (response) {
+            $.each(response, function(key,value) {
+                data.push([key, value]);
             });
-
-            $.each(data, function(key,value) {
-                labelsAim.push(key);
-                dataGraphAim.push(_jsUtil.round((value / total ) * 100));
-            });
-
-            new Chart($('#'+idAim), {
-                type: 'pie',
+            c3.generate({
+                bindto: '#aim'+idAim,
                 data: {
-                    labels: labelsAim,
-                    datasets: [{
-                            data: dataGraphAim,
-                            backgroundColor: ['#007bff', '#dc3545', '#ffc107', '#28a745']
-                        }]
+                    columns: data,
+                    type: 'pie'
                 }
             });
         }, complete: function () {
@@ -199,7 +174,7 @@ function writeAimGraphHtml(index, item){
     html += '<div class="text-left" style="float:left">'+item.name +'</div><div class="text-right"><button type="button" class="btn btn-success fa fa-bars" onclick="showDetails('+index+')"></button></div>';
     html += '</div>';
     html += '<div class="card-body">';
-    html += '<canvas id="'+item.id+'" width="100%"></canvas>'; 
+    html += '<div id="aim'+item.id+'" width="100%"></div>'; 
     html += '</div>';
     html += '</div>';
 

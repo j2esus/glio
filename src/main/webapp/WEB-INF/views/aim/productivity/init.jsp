@@ -49,6 +49,7 @@
 <div class="card mb-3">
     <div class="card-header">
         <i class="fa fa-bar-chart"></i>Datos</div>
-    <div class="card-body" id = "divChart">
+    <div class="card-body">
+        <div id = "divChart"></div>
     </div>
 </div>
