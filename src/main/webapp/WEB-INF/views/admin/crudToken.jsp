@@ -1,8 +1,4 @@
-<%-- 
-    Document   : init
-    Created on : 5/11/2017, 05:49:33 PM
-    Author     : j2esus
---%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="<c:url value="/resources/js/token/crudToken.js"/>"></script>
 
@@ -33,7 +29,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Confirmación</h4>
+                <h4 class="modal-title">ConfirmaciÃ³n</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">

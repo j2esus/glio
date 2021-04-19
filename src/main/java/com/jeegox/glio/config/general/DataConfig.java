@@ -25,18 +25,17 @@ public final class DataConfig {
         PAGES.add(new Page("helloworld2","/WEB-INF/views/helloworld2.jsp", Layout.DEFAULT));
         PAGES.add(new Page("helloworld","/WEB-INF/views/helloworld.jsp", Layout.DEFAULT));
         
+        PAGES.add(new Page("user/init","/WEB-INF/views/admin/crudUser.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("company/init","/WEB-INF/views/admin/crudCompany.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("userType/init","/WEB-INF/views/admin/crudUserType.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("token/init","/WEB-INF/views/admin/crudToken.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("session/init","/WEB-INF/views/admin/crudSession.jsp", Layout.DEFAULT));
         
-        PAGES.add(new Page("user/init","/WEB-INF/views/admin/user/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("company/init","/WEB-INF/views/admin/company.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("userType/init","/WEB-INF/views/admin/userType/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("token/init","/WEB-INF/views/admin/token/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("session/init","/WEB-INF/views/admin/session/init.jsp", Layout.DEFAULT));
-        
-        PAGES.add(new Page("project/init","/WEB-INF/views/aim/project/init.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("project/init","/WEB-INF/views/aim/crudProject.jsp", Layout.DEFAULT));
         PAGES.add(new Page("task/init","/WEB-INF/views/aim/taskBoard.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("advance/init","/WEB-INF/views/aim/advance/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("productivity/init","/WEB-INF/views/aim/productivity/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("activity/init","/WEB-INF/views/aim/activity/init.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("advance/init","/WEB-INF/views/aim/projectAdvance.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("productivity/init","/WEB-INF/views/aim/taskProductivityPerUser.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("activity/init","/WEB-INF/views/aim/taskActivityPerDate.jsp", Layout.DEFAULT));
 
         PAGES.add(new Page("category/init","/WEB-INF/views/expenses/category/init.jsp", Layout.DEFAULT));
         PAGES.add(new Page("expense/init","/WEB-INF/views/expenses/expense/init.jsp", Layout.DEFAULT));

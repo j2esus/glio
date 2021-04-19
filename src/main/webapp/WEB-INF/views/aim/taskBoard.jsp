@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="<c:url value="/resources/js/aim/taskBoard.js"/>"></script>
 
@@ -144,7 +145,7 @@
                     <div class="col-lg-4 mb-2" id="divStatus"></div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-2 mb-2"><b>Descripción</b></div>
+                    <div class="col-lg-2 mb-2"><b>DescripciÃ³n</b></div>
                     <div class="col-lg-10 mb-2" id="divDescription"></div>
                 </div>
                 <div class="row">
@@ -205,7 +206,7 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Descripción
+                                DescripciÃ³n
                             </div>
                             <div class="col-9">
                                 <textarea id="descriptionTask" name="descriptionTask" class="form-control" required="required" maxlength="500" rows="3"></textarea>
