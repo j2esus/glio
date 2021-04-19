@@ -13,6 +13,7 @@ import com.jeegox.glio.services.ProjectService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -81,19 +82,6 @@ public class TaskController extends BaseController {
             return e.getMessage();
         }
     }
-
-    @RequestMapping(value = "toAcceptedTask", method = RequestMethod.POST)
-    @ResponseBody
-    public String toAcceptedTask(HttpServletRequest request, @RequestParam Integer idTask) {
-        try {
-            Task task = projectService.findTaskBydId(idTask);
-            task.setStatus(Status.ACCEPTED);
-            projectService.saveOrUpdate(task);
-            return "OK";
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
     
     @RequestMapping(value = "toCancelTask", method = RequestMethod.POST)
     @ResponseBody
@@ -116,30 +104,26 @@ public class TaskController extends BaseController {
     
     @RequestMapping(value = "saveTask", method = RequestMethod.POST)
     @ResponseBody
-    public String saveTask(HttpServletRequest request, @RequestParam Integer id, @RequestParam String name,
+    public ResponseEntity<Task> saveTask(HttpServletRequest request, @RequestParam Integer id, @RequestParam String name,
             @RequestParam String description, @RequestParam Priority priority,
             @RequestParam Integer estimated, @RequestParam String username, @RequestParam Integer idAim){
-        try{
-            Aim aim = projectService.findAimBydId(idAim);
-            User user = userService.findById(username);
-            Task task = projectService.findTaskBydId(id);
-            if(task == null){
-                task = new Task(null, name, description, Status.PENDING, priority,
-                    estimated, getCurrentUser(request), user, aim );
-            }else{
-                task.setName(name);
-                task.setDescription(description);
-                task.setPriority(priority);
-                task.setEstimatedTime(estimated);
-                task.setUserOwner(user);
-                task.setUserRequester(getCurrentUser(request));
-                task.setFather(aim);
-            }
-            this.projectService.saveOrUpdate(task);
-            return "OK";
-        }catch(Exception e){
-            return e.getMessage();
+        Aim aim = projectService.findAimBydId(idAim);
+        User user = userService.findById(username);
+        Task task = projectService.findTaskBydId(id);
+        if(task == null){
+            task = new Task(null, name, description, Status.PENDING, priority,
+                estimated, getCurrentUser(request), user, aim );
+        }else{
+            task.setName(name);
+            task.setDescription(description);
+            task.setPriority(priority);
+            task.setEstimatedTime(estimated);
+            task.setUserOwner(user);
+            task.setUserRequester(getCurrentUser(request));
+            task.setFather(aim);
         }
+        projectService.saveOrUpdate(task);
+        return ResponseEntity.ok(task);
     }
     
     @RequestMapping(value = "countActiveTasksByUserOwner", method = RequestMethod.POST)

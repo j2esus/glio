@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -181,20 +182,13 @@ public class TaskDAOImpl extends GenericDAOImpl<Task,Integer> implements TaskDAO
                 +" where tk.id_task = :idTask "
                 +" group by tk.id_task ";
         
-        List<Object[]> data = sessionFactory.getCurrentSession().createNativeQuery(query).setParameter("idTask", idTask).list();
-        TaskDTO object = null;
-        for (Object[] objects : data) {
-            object = new TaskDTO();
-            BigDecimal realTime = (BigDecimal)objects[6];
-            object.setIdTask((Integer) objects[0]);
-            object.setName((String) objects[1]);
-            object.setPriority((Integer) objects[2]);
-            object.setIdUserOwner((Integer) objects[3]);
-            object.setIdUserRequester((Integer) objects[4]);
-            object.setEstimatedTime((Integer) objects[5]);
-            object.setRealTime(realTime == null ? BigDecimal.ZERO : realTime);
-        }
-        return object;
+        List<Object[]> objects = sessionFactory.getCurrentSession().createNativeQuery(query).setParameter("idTask", idTask).list();
+        
+        return objects.stream().map(item -> new TaskDTO(
+                (Integer)item[0], (String)item[1], (Integer)item[2], 
+                (Integer) item[3], (Integer)item[4], (Integer) item[5], 
+                item[6] == null ? BigDecimal.ZERO : (BigDecimal)item[6]))
+                .collect(Collectors.toList()).stream().findFirst().orElse(null);
     }
     
 }

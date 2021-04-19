@@ -204,7 +204,7 @@ _uiUtil = (function () {
                 (minutes < 10 ? "0"+minutes:minutes) + ":"+
                 (seconds < 10 ? "0"+seconds:seconds);
     }
-
+    
     return {
         cleanControls: cleanControls,
         clearDataTable: clearDataTable,
@@ -660,11 +660,42 @@ _timersPerTasks = (function () {
     function remove(key){
         timers.delete(key);
     }
+    
+    function stop(idTask){
+        let timer = timers.get(idTask);
+        if(timer != undefined)
+            timer.timer.stop();
+    }
+    
+    function start(idTask){
+        let timer = timers.get(idTask);
+        if (timer != undefined){
+            timer.timer.start();
+            timer.timer.addEventListener('secondsUpdated', timer.listener);
+        }
+            
+    }
+    
+    function pause(idTask) {
+        let timer = timers.get(idTask);
+        if (timer != undefined)
+            timer.timer.pause();
+    }
+    
+    function removeAllEventListeners(){
+        for (let timerItem of timers.values()) {
+            timerItem.timer.removeEventListener('secondsUpdated', timerItem.listener);
+        }
+    }
 
     return {
         set: set,
         get: get,
         values: values,
-        remove: remove
+        remove: remove,
+        stop: stop,
+        start: start,
+        pause: pause,
+        removeAllEventListeners: removeAllEventListeners
     };
 })();

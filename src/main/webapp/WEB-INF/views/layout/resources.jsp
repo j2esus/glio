@@ -72,7 +72,6 @@
 <script>
     jQuery.PATH = '<c:url value="/"/>';
     jQuery.IMAGES = '<c:url value="/resources/images/"/>';
-    jQuery.timersPerTasks = new Map();
 
     window.chartColors = {
         red: 'rgb(255, 99, 132)',

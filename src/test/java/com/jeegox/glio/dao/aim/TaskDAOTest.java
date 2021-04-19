@@ -303,6 +303,11 @@ public class TaskDAOTest {
     private TaskDTO getExpectedTaskDTO_id1_fourRealTime() throws SQLException{
         return new TaskDTO(1, "screen", 1, 2, 1, 8, BigDecimal.valueOf(240));
     }
+    
+    @Test
+    public void findSummaryTime_taskNotExists_null() {
+        assertThat(taskDAO.findSummaryTime(100)).isNull();
+    }
 
     private void insertInitialData() throws SQLException {
         Session session = sessionFactory.getCurrentSession();

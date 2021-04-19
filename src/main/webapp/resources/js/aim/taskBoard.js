@@ -105,9 +105,7 @@ function toStartTask() {
         success: function (response) {
             if (response === "OK") {
                 refreshCurrentTaskData(_task, 'IN_PROCESS');
-                let timerData = _timersPerTasks.get(_task.id);
-                timerData.timer.start();
-                timerData.timer.addEventListener('secondsUpdated', timerData.listener);
+                _timersPerTasks.start(_task.id);
             } else {
                 _notify.show(response, 'danger');
             }
@@ -128,8 +126,7 @@ function toPause() {
         success: function (response) {
             if (response === "OK") {
                 refreshCurrentTaskData(_task, 'PAUSED');
-                let timerData = _timersPerTasks.get(_task.id);
-                timerData.timer.pause();
+                _timersPerTasks.pause(_task.id);
             } else {
                 _notify.show(response, 'danger');
             }
@@ -150,28 +147,7 @@ function toFinished() {
         success: function (response) {
             if (response === "OK") {
                 refreshCurrentTaskData(_task, 'FINISHED');
-                let timerData = _timersPerTasks.get(_task.id);
-                timerData.timer.stop();
-            } else {
-                _notify.show(response, 'danger');
-            }
-        }, complete: function () {
-            _blockUI.unblock();
-        }
-    });
-}
-
-function toAccepted(id) {
-    $.ajax({
-        type: "POST",
-        url: $.PATH + "task/toAcceptedTask",
-        data: {idTask: id},
-        beforeSend: function (xhr) {
-            _blockUI.block();
-        },
-        success: function (response) {
-            if (response === "OK") {
-                findTasksFinished();
+                _timersPerTasks.stop(_task.id);
             } else {
                 _notify.show(response, 'danger');
             }
@@ -249,14 +225,10 @@ function saveTask() {
         beforeSend: function (xhr) {
             _blockUI.block();
         },
-        success: function (response) {
-            if (response === "OK") {
-                _notify.show("Tarea guardado con éxito", 'success');
-                $saveModalTask.modal('hide');
-                findTasks();
-            } else {
-                _notify.show(response, 'danger');
-            }
+        success: function (task) {
+            _notify.show("Tarea guardado con éxito", 'success');
+            $saveModalTask.modal('hide');
+            addRowToTable(task, $dataTable);
         }, complete: function () {
             _blockUI.unblock();
             _uiUtil.cleanControls($saveModalTask);
@@ -342,7 +314,6 @@ function findTasks() {
             if (items.length > 0) {
                 $.each(items, function (i, item) {
                     addRowToTable(item, $dataTable);
-                    _tasks.push(item);
                 });
                 $dataTable.tablePagination(_uiUtil.getOptionsPaginator(10));
             } else {
@@ -355,6 +326,7 @@ function findTasks() {
 }
 
 function addRowToTable(item, table) {
+    _tasks.push(item);
     var noFila = parseInt(table.find("tbody").eq(0).find("tr").length);
     var fila = "";
     fila += "<tr data-meta-row='" + noFila + "'>";
@@ -434,10 +406,10 @@ function setSummaryTimePerTask(idTask) {
         },
         success: function (taskDTO) {
             let currentTimePerTask = _jsUtil.round(taskDTO.estimatedTime - taskDTO.realTime);
-            checkIfTimerExists(taskDTO.idTask, currentTimePerTask);
-            setTimerLabel(_uiUtil.secondsToHHmmss(currentTimePerTask));
-            createOrUpdateChart(calculatePercent(taskDTO.estimatedTime, taskDTO.realTime));
-            
+            let chart = createOrUpdateChart(calculatePercent(taskDTO.estimatedTime, taskDTO.realTime));
+            if(currentTimePerTask > 0)
+                createTimerPerTask(taskDTO.idTask, currentTimePerTask, chart, taskDTO.estimatedTime, taskDTO.realTime);
+            setTimerLabel(currentTimePerTask <= 0 ? "AGOTADO" : _uiUtil.secondsToHHmmss(currentTimePerTask));
         }, complete: function () {
             _blockUI.unblock();
         }
@@ -445,7 +417,7 @@ function setSummaryTimePerTask(idTask) {
 }
 
 function createOrUpdateChart(value){
-    var chart = c3.generate({
+    return c3.generate({
         bindto: '#chart',
         data: {
             type: 'gauge',
@@ -471,34 +443,31 @@ function setTimerLabel(value){
     $('#divCurrentTimePerTask').html(value);
 }
 
-function checkIfTimerExists(idTask, currentTimePerTask){
-    removeAllEventListeners();
+function createTimerPerTask(idTask, currentTimePerTask, chart, estimatedTime, realTime){
+    _timersPerTasks.removeAllEventListeners();
     let timer = _timersPerTasks.get(idTask);
     if(timer == undefined){
-        _timersPerTasks.set(idTask, createNewTimer(currentTimePerTask));
+        _timersPerTasks.set(idTask, createNewTimer(currentTimePerTask, chart, estimatedTime, realTime));
     }else{
         if (timer.timer.isRunning()) {
             timer.timer.addEventListener('secondsUpdated', timer.listener);
         } else {
             _timersPerTasks.remove(idTask);
-            _timersPerTasks.set(idTask, createNewTimer(currentTimePerTask));
+            _timersPerTasks.set(idTask, createNewTimer(currentTimePerTask, chart, estimatedTime, realTime));
         }
     }
 }
 
-function createNewTimer(currentTimePerTask){
+function createNewTimer(currentTimePerTask, chart, estimatedTime, realTime){
     let easyTimer = new easytimer.Timer({countdown: true, startValues: {seconds: currentTimePerTask}});
     let timer = {
         timer: easyTimer,
         listener: function (e) {
+            chart.load({
+                columns: [['Tiempo consumido',  calculatePercent(estimatedTime, realTime++)]]
+            });
             setTimerLabel(easyTimer.getTimeValues().toString());
         }
     };
     return timer;
-}
-
-function removeAllEventListeners(){
-    for (let timerItem of _timersPerTasks.values()) {
-        timerItem.timer.removeEventListener('secondsUpdated', timerItem.listener);
-    }
 }
