@@ -85,7 +85,7 @@
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
                                 Estatus
@@ -155,7 +155,7 @@
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
                                 Estatus

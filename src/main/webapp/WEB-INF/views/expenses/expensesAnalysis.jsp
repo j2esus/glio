@@ -9,7 +9,7 @@
         <a class="nav-link active" id="month-tab" data-toggle="tab" href="#month" role="tab" aria-controls="month" aria-selected="false">Mes</a>
     </li>
     <li class="nav-item">
-    <a class="nav-link" id="comparator-tab" data-toggle="tab" href="#comparator" role="tab" aria-controls="comparator" aria-selected="true">Comparador</a>
+        <a class="nav-link" id="comparator-tab" data-toggle="tab" href="#comparator" role="tab" aria-controls="comparator" aria-selected="true">Comparador</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">General</a>
@@ -52,7 +52,7 @@
         <hr/>
         <br/>
         <div id="divCategoryDetail">
-            
+
             <div class="row">
                 <div class="col-lg-4">
                     <button type="button" class="btn btn-primary fa fa-arrow-left" id="btnYearBack"></button>
