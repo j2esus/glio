@@ -1,12 +1,8 @@
-<%-- 
-    Document   : init
-    Created on : 5/11/2017, 05:49:33 PM
-    Author     : j2esus
---%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="<c:url value="/resources/js/supply/crudArticle.js"/>"></script>
 
-<h1>Artículos</h1>
+<h1>ArtÃ­culos</h1>
 <hr/>
 <br/>
 <div class="text-right">
@@ -22,9 +18,9 @@
             <tr>
                 <th>Nombre</th>
                 <th>Sku</th>
-                <th>Descripción</th>
+                <th>DescripciÃ³n</th>
                 <th>Categoria</th>
-                <th>Tamaño</th>
+                <th>TamaÃ±o</th>
                 <th>Costo</th>
                 <th>Precio</th>
                 <th>Estatus</th>
@@ -42,7 +38,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Confirmación</h4>
+                <h4 class="modal-title">ConfirmaciÃ³n</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -92,7 +88,7 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Descripción
+                                DescripciÃ³n
                             </div>
                             <div class="col-9">
                                 <textarea id="description" name="description" class="form-control" required="required" maxlength="100" rows="3"></textarea>
@@ -151,7 +147,7 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Categoría
+                                CategorÃ­a
                             </div>
                             <div class="col-9">
                                 <input type="hidden" id="idCategoryArticle"/>
@@ -161,7 +157,7 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Tamaño
+                                TamaÃ±o
                             </div>
                             <div class="col-9">
                                 <input type="hidden" id="idSize"/>

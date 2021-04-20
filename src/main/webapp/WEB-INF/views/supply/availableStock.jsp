@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="<c:url value="/resources/js/supply/availableStock.js"/>"></script>
 <h1>Existencia</h1>
@@ -36,7 +37,7 @@
             <th>Sku</th>
             <th>Unidad</th>
             <th>Categoria</th>
-            <th>Tamaño</th>
+            <th>TamaÃ±o</th>
             <th>Existencia</th>
         </tr>
         </thead>
@@ -79,7 +80,7 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Teléfono
+                                TelÃ©fono
                             </div>
                             <div class="col-9">
                                 <input type="text" id="phone" name="phone" class="form-control"

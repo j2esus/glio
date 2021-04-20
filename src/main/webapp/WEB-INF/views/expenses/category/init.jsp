@@ -1,7 +1,8 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="<c:url value="/resources/js/expenses/crudCategory.js"/>"></script>
 
-<h1>Categorías</h1>
+<h1>CategorÃ­as</h1>
 <hr/>
 <br/>
 <div class="row">
@@ -12,7 +13,7 @@
         <br/>
         <div class="card">
             <div class="card-header">
-                Categoría
+                CategorÃ­a
                 <button type="button" class="btn btn-primary fa fa-plus" id="btnNewCa" style="float: right;"></button>
                 <button type="button" class="btn btn-danger fa fa-trash-o" id="btnConfirmDeleteCa" style="float: right;"></button>
                 <button type="button" class="btn btn-primary fa fa-pencil-square-o" id="btnEditCa" style="float: right;"></button>
@@ -40,7 +41,7 @@
         <br/>
         <div class="card">
             <div class="card-header">
-                Subcategoría
+                SubcategorÃ­a
                 <button type="button" class="btn btn-primary fa fa-plus" id="btnNewSu" style="float: right;"></button>
                 <button type="button" class="btn btn-danger fa fa-trash-o" id="btnConfirmDeleteSu" style="float: right;"></button>
                 <button type="button" class="btn btn-primary fa fa-pencil-square-o" id="btnEditSu" style="float: right;"></button>
@@ -115,7 +116,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Confirmación</h4>
+                <h4 class="modal-title">ConfirmaciÃ³n</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -184,7 +185,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Confirmación</h4>
+                <h4 class="modal-title">ConfirmaciÃ³n</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">

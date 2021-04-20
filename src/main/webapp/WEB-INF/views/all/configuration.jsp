@@ -1,11 +1,7 @@
-<%-- 
-    Document   : init
-    Created on : 5/11/2017, 05:49:33 PM
-    Author     : j2esus
---%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="<c:url value="/resources/js/user/configuration.js"/>"></script>
-<h1>Configuración</h1>
+<h1>ConfiguraciÃ³n</h1>
 <hr/>
 <div class="row">
     <div class="col-12 col-md-9">
@@ -53,7 +49,7 @@
         <div id="divChangePassword">
             <div class="card">
                 <div class="card-header">
-                    Cambiar contraseña
+                    Cambiar contraseÃ±a
                 </div>
                 <div class="card-block">
                     <form id="changePasswordForm" method="post" data-toggle="validator">
@@ -120,7 +116,7 @@
         <div class="list-group">
             <button type="button" class="list-group-item active">Acciones</button>
             <button type="button" class="list-group-item list-group-item-action" id="btnDataUser">Datos personales</button>
-            <button type="button" class="list-group-item list-group-item-action" id="btnChangePassword">Cambiar contraseña</button>
+            <button type="button" class="list-group-item list-group-item-action" id="btnChangePassword">Cambiar contraseÃ±a</button>
             <button type="button" class="list-group-item list-group-item-action" id="btnToken">Tokens</button>
         </div>    
     </div>
@@ -132,7 +128,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Confirmación</h4>
+                <h4 class="modal-title">ConfirmaciÃ³n</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">

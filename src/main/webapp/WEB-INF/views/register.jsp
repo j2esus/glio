@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="<c:url value="/resources/js/util/register.js"/>"></script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -32,19 +33,19 @@
                         Gestiona y lleva el control del tiempo invertido en cada tarea.</li>
                     <li>
                         <i class="fa-li fa fa-check"></i>
-                        Identifica a los miembros m·s productivos del equipo.</li>
+                        Identifica a los miembros m√°s productivos del equipo.</li>
                     <li>
                         <i class="fa-li fa fa-check"></i>
                         Monitorea en cualquier momento el avance de los proyectos.</li>
                     <li>
                         <i class="fa-li fa fa-check"></i>
-                        Recibe un correo diario de las actividades realizadas en el dÌa y el tiempo invertido en ellas.</li>
+                        Recibe un correo diario de las actividades realizadas en el d√≠a y el tiempo invertido en ellas.</li>
                     <li>
                         <i class="fa-li fa fa-check"></i>
                         Evalua los proyectos respecto al tiempo estimado vs. tiempo real.</li>
                     <li>
                         <i class="fa-li fa fa-check"></i>
-                        Adicional, lleva un control de gastos, pantalla de monitoreo y evaluaciÛn.</li>
+                        Adicional, lleva un control de gastos, pantalla de monitoreo y evaluaci√≥n.</li>
                 </ul>
             </div>
         </div>

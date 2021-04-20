@@ -1,10 +1,6 @@
-<%-- 
-    Document   : init
-    Created on : 5/11/2017, 05:49:33 PM
-    Author     : j2esus
---%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<h1>Módulos</h1>
+<h1>MÃ³dulos</h1>
 <hr/>
 <!-- Icon Cards-->
 <c:forEach items="${categoryList}" var="categoryItem">

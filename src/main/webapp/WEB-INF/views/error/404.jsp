@@ -1,13 +1,9 @@
-<%-- 
-    Document   : 404
-    Created on : 20/11/2017, 02:27:21 PM
-    Author     : j2esus
---%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <div class="container" style="text-align: center">
     <h1 class="page-header">Error 404</h1>
     <br/>
-    <h4>No se puede encontrar la p·gina web (HTTP 404).</h4>
+    <h4>No se puede encontrar la p√°gina web (HTTP 404).</h4>
     <br/><br/>
     <center><a class="btn btn-primary" href="<c:url value="/"/>">Regresar</a></center>
 </div>
