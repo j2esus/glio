@@ -9,7 +9,7 @@ let $btnNew,
         $saveModalTask,
         $idProjectTask,
         $dataFormTask;
-let _tasks = [], _indexSelected = -1, _task = null;
+let _tasks = [], _indexSelected = -1, _task = null, _inProcessTasks = new Map();
 
 $(document).ready(function () {
     initComponents();
@@ -348,7 +348,7 @@ function showTaskDetails() {
     $('#divAssignedTo').html(_task.userOwner.username);
     
     configButtonsByStatus(_task.status);
-    setSummaryTimePerTask(_task.id);
+    setSummaryTimePerTask();
 }
 
 function configButtonsByStatus(status){
@@ -394,12 +394,13 @@ function refreshCurrentTaskData(task, status){
     $('#tableStatusIdTask'+task.id).html('<span class="badge badge-success">' + task.status + "<span>");
 }
 
-function setSummaryTimePerTask(idTask) {
+function setSummaryTimePerTask() {
+    forceToPauseBecauseTaskWithoutTimer();
     $.ajax({
         type: "POST",
         url: $.PATH + "task/findSummaryTime",
         data: {
-            idTask: idTask
+            idTask: _task.id
         },
         beforeSend: function (xhr) {
             _blockUI.block();
@@ -412,8 +413,25 @@ function setSummaryTimePerTask(idTask) {
             setTimerLabel(currentTimePerTask <= 0 ? "AGOTADO" : _uiUtil.secondsToHHmmss(currentTimePerTask));
         }, complete: function () {
             _blockUI.unblock();
+            forceToStartBecauseTaskWithoutTimer();
         }
     });
+}
+
+function forceToPauseBecauseTaskWithoutTimer(){
+    let timer = _timersPerTasks.get(_task.id);
+    if (timer == undefined && _task.status == 'IN_PROCESS') {
+        _inProcessTasks.set(_task.id, _task);
+        toPause();
+    }
+}
+
+function forceToStartBecauseTaskWithoutTimer() {
+    let currentTask = _inProcessTasks.get(_task.id);
+    if (currentTask != undefined) {
+        toStartTask();
+        _inProcessTasks.delete(_task.id);
+    }
 }
 
 function createOrUpdateChart(value){
