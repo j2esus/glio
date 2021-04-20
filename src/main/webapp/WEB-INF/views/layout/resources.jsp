@@ -57,6 +57,15 @@
 
 <!-- login css -->
 <link rel="stylesheet" href="<c:url value="/resources/styles/signin.css"/>">
+<!-- select multiple -->
+<link rel="stylesheet" href="<c:url value="/resources/vendor/bootstrap/css/bootstrap-select.min.css"/>">
+<script src="<c:url value="/resources/vendor/bootstrap/js/bootstrap-select.min.js"/>"></script>
+<!-- c3js -->
+<link rel="stylesheet" href="<c:url value="/resources/vendor/c3js/c3.css"/>">
+<script src="<c:url value="/resources/vendor/c3js/d3.v5.min.js"/>"></script>
+<script src="<c:url value="/resources/vendor/c3js/c3.min.js"/>"></script>
+<!-- easytimer -->
+<script src="<c:url value="/resources/js/util/easytimer.js"/>"></script>
 
 <input type="hidden" value="${userSession.father.username}" id = "sessionUsername"/>
 

@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="<c:url value="/resources/js/commerce/crudPerson.js"/>"></script>
 <input type="hidden" id="personType" value="${personType}"/>
@@ -20,7 +21,7 @@
                         <input type="text" class="form-control" id="emailF"/>
                     </div>
                     <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                        <div class="input-group-addon">Tel閒ono</div>
+                        <div class="input-group-addon">Tel茅fono</div>
                         <input type="text" class="form-control" id="phoneF"/>
                     </div>
                     <div class="input-group mb-2 mr-sm-2 mb-sm-0">
@@ -55,7 +56,7 @@
             <tr>
                 <th>Nombre</th>
                 <th>Email</th>
-                <th>Tel閒ono</th>
+                <th>Tel茅fono</th>
                 <th>RFC</th>
                 <th>Estatus</th>
             </tr>
@@ -70,7 +71,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Confirmaci髇</h4>
+                <h4 class="modal-title">Confirmaci贸n</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -122,7 +123,7 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Tel閒ono
+                                Tel茅fono
                             </div>
                             <div class="col-9">
                                 <input type="text" id="phone" name="phone" class="form-control"
@@ -211,11 +212,11 @@
                 <table class="table table-bordered table-hover" id="addressTable" width="100%" cellspacing="0">
                     <thead>
                     <tr>
-                        <th>Direcci髇</th>
+                        <th>Direcci贸n</th>
                         <th>Estado</th>
                         <th>Municipio</th>
                         <th>Colonia</th>
-                        <th>C骴igo postal</th>
+                        <th>C贸digo postal</th>
                         <th>Estatus</th>
                         <th>Predeterminada</th>
                     </tr>
@@ -232,7 +233,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Confirmaci髇</h4>
+                <h4 class="modal-title">Confirmaci贸n</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -262,7 +263,7 @@
                         <input type="hidden" id="defaultt"/>
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Direcci髇
+                                Direcci贸n
                             </div>
                             <div class="col-9">
                                 <textarea id="address" name="address" class="form-control"
@@ -284,7 +285,7 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                C骴igo postal
+                                C贸digo postal
                             </div>
                             <div class="col-9">
                                 <input type="text" id="zipcode" name="zipcode" class="form-control"
@@ -355,7 +356,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Confirmaci髇</h4>
+                <h4 class="modal-title">Confirmaci贸n</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">

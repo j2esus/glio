@@ -1,8 +1,4 @@
-<%-- 
-    Document   : init
-    Created on : 5/11/2017, 05:49:33 PM
-    Author     : j2esus
---%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <h1 class="page-header">Prohibido</h1>
 <br/>
-<h4>No tienes acceso a esta p·gina.</h4>
+<h4>No tienes acceso a esta p√°gina.</h4>

@@ -1,9 +1,3 @@
-<%-- 
-    Document   : index
-    Created on : 5/11/2017, 06:00:02 PM
-    Author     : j2esus
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>

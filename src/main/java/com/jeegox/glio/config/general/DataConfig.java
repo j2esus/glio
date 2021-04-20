@@ -25,26 +25,25 @@ public final class DataConfig {
         PAGES.add(new Page("helloworld2","/WEB-INF/views/helloworld2.jsp", Layout.DEFAULT));
         PAGES.add(new Page("helloworld","/WEB-INF/views/helloworld.jsp", Layout.DEFAULT));
         
+        PAGES.add(new Page("user/init","/WEB-INF/views/admin/crudUser.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("company/init","/WEB-INF/views/admin/crudCompany.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("userType/init","/WEB-INF/views/admin/crudUserType.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("token/init","/WEB-INF/views/admin/crudToken.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("session/init","/WEB-INF/views/admin/crudSession.jsp", Layout.DEFAULT));
         
-        PAGES.add(new Page("user/init","/WEB-INF/views/admin/user/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("company/init","/WEB-INF/views/admin/company/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("userType/init","/WEB-INF/views/admin/userType/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("token/init","/WEB-INF/views/admin/token/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("session/init","/WEB-INF/views/admin/session/init.jsp", Layout.DEFAULT));
-        
-        PAGES.add(new Page("project/init","/WEB-INF/views/aim/project/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("task/init","/WEB-INF/views/aim/task/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("advance/init","/WEB-INF/views/aim/advance/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("productivity/init","/WEB-INF/views/aim/productivity/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("activity/init","/WEB-INF/views/aim/activity/init.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("project/init","/WEB-INF/views/aim/crudProject.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("task/init","/WEB-INF/views/aim/taskBoard.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("advance/init","/WEB-INF/views/aim/projectAdvance.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("productivity/init","/WEB-INF/views/aim/taskProductivityPerUser.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("activity/init","/WEB-INF/views/aim/taskActivityPerDate.jsp", Layout.DEFAULT));
 
-        PAGES.add(new Page("category/init","/WEB-INF/views/expenses/category/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("expense/init","/WEB-INF/views/expenses/expense/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("analytic/init","/WEB-INF/views/expenses/analytic/init.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("category/init","/WEB-INF/views/expenses/crudCategoryAndSubcategory.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("expense/init","/WEB-INF/views/expenses/crudExpense.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("analytic/init","/WEB-INF/views/expenses/expensesAnalysis.jsp", Layout.DEFAULT));
 
-        PAGES.add(new Page("article/init","/WEB-INF/views/supply/article/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("categoryArticle/init","/WEB-INF/views/supply/categoryArticle/init.jsp", Layout.DEFAULT));
-        PAGES.add(new Page("size/init","/WEB-INF/views/supply/size/init.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("article/init","/WEB-INF/views/supply/crudArticle.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("categoryArticle/init","/WEB-INF/views/supply/crudCategoryArticle.jsp", Layout.DEFAULT));
+        PAGES.add(new Page("size/init","/WEB-INF/views/supply/crudSize.jsp", Layout.DEFAULT));
         PAGES.add(new Page("depot/init","/WEB-INF/views/supply/depot.jsp", Layout.DEFAULT));
         PAGES.add(new Page("stockIn/init","/WEB-INF/views/supply/stockInOut.jsp", Layout.DEFAULT));
         PAGES.add(new Page("stockOut/init","/WEB-INF/views/supply/stockInOut.jsp", Layout.DEFAULT));

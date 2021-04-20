@@ -1,7 +1,8 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<script src="<c:url value="/resources/js/supply/crudCategoryArticle.js"/>"></script>
+<script src="<c:url value="/resources/js/admin/crudCompany.js"/>"></script>
 
-<h1>Categoría de artículo</h1>
+<h1>Empresas</h1>
 <hr/>
 <br/>
 <div class="text-right">
@@ -12,11 +13,13 @@
 </div>
 <br />
 <div class="table-responsive">
-    <table class="table table-bordered table-hover" id="table" width="100%" cellspacing="0">
+    <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
         <thead>
             <tr>
                 <th>Nombre</th>
+                <th>DescripciÃ³n</th>
                 <th>Estatus</th>
+                <th>Total usuarios</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -29,7 +32,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Confirmación</h4>
+                <h4 class="modal-title">ConfirmaciÃ³n</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -69,10 +72,21 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
+                                DescripciÃ³n
+                            </div>
+                            <div class="col-9">
+                                <textarea id="description" name="description" class="form-control" required="required" maxlength="100" rows="3"></textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-3 col-form-label">
                                 Estatus
                             </div>
                             <div class="col-9">
                                 <select id="status" class="form-control" required="required">
+                                    <option value="">--Seleccione</option>
                                     <c:forEach items="${status}" var="status">
                                         <option value="${status}">${status}</option>
                                     </c:forEach>
@@ -81,6 +95,15 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <div class="col-3 col-form-label">
+                                Total usuarios
+                            </div>
+                            <div class="col-9">
+                                <input type="number" id="totalUser" name="totalUser" class="form-control" required="required" maxlength="10"/>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

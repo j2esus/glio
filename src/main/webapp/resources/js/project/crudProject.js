@@ -399,7 +399,7 @@ function findAimData() {
             _blockUI.block();
             _uiUtil.clearDataTable($tableAim);
             _indexAimSelected = -1;
-            $totalTask.html("0 horas ");
+            $totalTask.html("0");
         },
         success: function (items) {
             if (items.length > 0) {
@@ -579,7 +579,7 @@ function findTaskData() {
             _blockUI.block();
             _uiUtil.clearDataTable($tableTask);
             _indexTaskSelected = -1;
-            $totalTask.html(total + " horas ");
+            $totalTask.html(_uiUtil.secondsToHHmmss(total));
         },
         success: function (items) {
             if (items.length > 0) {
@@ -590,7 +590,7 @@ function findTaskData() {
                     total += item.estimatedTime;
                 });
                 $tableTask.tablePagination(_uiUtil.getOptionsPaginator(10));
-                $totalTask.html(total + " horas ");
+                $totalTask.html(_uiUtil.secondsToHHmmss(total));
             } else {
                 _notify.show("La consulta no produjo resultados.", "danger");
             }
@@ -608,7 +608,7 @@ function addRowToTableTask(item, table) {
     fila += "<td>" + item.name + "</td>";
     fila += "<td>" + item.status + "</td>";
     fila += "<td>" + item.priority + "</td>";
-    fila += "<td>" + item.estimatedTime + "</td>";
+    fila += "<td>" + _uiUtil.secondsToHHmmss(item.estimatedTime) + "</td>";
     fila += "<td>" + item.userOwner.username + "</td>";
     fila += "</tr>";
     table.append(fila);

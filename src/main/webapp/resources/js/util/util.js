@@ -126,28 +126,6 @@ _uiUtil = (function () {
         return today;
     }
 
-    function describeEntity(entity) {
-        var descriptores = [];
-        $.ajax({
-            method: "POST",
-            url: $.PATH + "global/describe?clazz=" + entity,
-            async: false,
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (response) {
-                descriptores = response;
-            },
-            error: function (request, error) {
-                $.notify({
-                    message: request.statusText
-                }, {
-                    type: 'danger'
-                });
-            }
-        });
-        return descriptores;
-    }
-
     function getOptionsPaginator(noRegistros) {
         var options = {
             currPage: 1,
@@ -169,28 +147,28 @@ _uiUtil = (function () {
     function getStringPriority(priority) {
         switch (priority) {
             case 0:
-                return 'Alta';
+                return 'ALTA';
                 break;
             case 1:
-                return 'Media';
+                return 'MEDIA';
                 break;
             default:
-                return 'Baja';
+                return 'BAJA';
                 break;
         }
     }
-
-    function writePriorityColorInt(priority) {
+    
+    function getPriorityClass(priority) {
         var type = '';
         switch (priority) {
-            case 0:
-                type = '#f2dede';
+            case 'ALTA':
+                type = "<div class='badge badge-danger'>"+priority+"</div>";
                 break;
-            case 1:
-                type = '#fcf8e3';
+            case 'MEDIA':
+                type = "<div class='badge badge-warning'>" + priority + "</div>";
                 break;
-            case 2:
-                type = '#d9edf7';
+            case 'BAJA':
+                type = "<div class='badge badge-primary'>" + priority + "</div>";
                 break;
         }
         return type;
@@ -212,10 +190,23 @@ _uiUtil = (function () {
             return "<span class='badge badge-success'>Si<span>";
         return "<span class='badge badge-warning'>No<span>";
     }
+    
+    function secondsToHHmmss(secs){
+        let hours = Math.floor(secs / (60 * 60));
 
+        let divisor_for_minutes = secs % (60 * 60);
+        let minutes = Math.floor(divisor_for_minutes / 60);
+
+        let divisor_for_seconds = divisor_for_minutes % 60;
+        let seconds = Math.ceil(divisor_for_seconds);
+        
+        return (hours < 10 ? "0"+hours:hours) + ":"+
+                (minutes < 10 ? "0"+minutes:minutes) + ":"+
+                (seconds < 10 ? "0"+seconds:seconds);
+    }
+    
     return {
         cleanControls: cleanControls,
-        describeEntity: describeEntity,
         clearDataTable: clearDataTable,
         getFormattedDateTime: getFormattedDateTime,
         getOptionsPaginator: getOptionsPaginator,
@@ -223,10 +214,11 @@ _uiUtil = (function () {
         getFormattedDateUS: getFormattedDateUS,
         getUsername: getUsername,
         getStringPriority: getStringPriority,
-        writePriorityColorInt: writePriorityColorInt,
+        getPriorityClass: getPriorityClass,
         today: today,
         randomArrayColorGenerator: randomArrayColorGenerator,
-        getBooleanValueLabel: getBooleanValueLabel
+        getBooleanValueLabel: getBooleanValueLabel,
+        secondsToHHmmss: secondsToHHmmss
     };
 })();
 
@@ -649,3 +641,61 @@ _jsUtil = (function () {
     }
     $.extend(true, window, {mx: {jeegox: {Address: Address}}});
 })(jQuery);
+
+_timersPerTasks = (function () {
+    let timers = new Map();
+
+    function set(key, value) {
+        timers.set(key, value);
+    }
+
+    function get(key) {
+        return timers.get(key);
+    }
+    
+    function values(){
+        return timers.values();
+    }
+    
+    function remove(key){
+        timers.delete(key);
+    }
+    
+    function stop(idTask){
+        let timer = timers.get(idTask);
+        if(timer != undefined)
+            timer.timer.stop();
+    }
+    
+    function start(idTask){
+        let timer = timers.get(idTask);
+        if (timer != undefined){
+            timer.timer.start();
+            timer.timer.addEventListener('secondsUpdated', timer.listener);
+        }
+            
+    }
+    
+    function pause(idTask) {
+        let timer = timers.get(idTask);
+        if (timer != undefined)
+            timer.timer.pause();
+    }
+    
+    function removeAllEventListeners(){
+        for (let timerItem of timers.values()) {
+            timerItem.timer.removeEventListener('secondsUpdated', timerItem.listener);
+        }
+    }
+
+    return {
+        set: set,
+        get: get,
+        values: values,
+        remove: remove,
+        stop: stop,
+        start: start,
+        pause: pause,
+        removeAllEventListeners: removeAllEventListeners
+    };
+})();

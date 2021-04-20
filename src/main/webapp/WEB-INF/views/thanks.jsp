@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <style>
@@ -7,7 +8,7 @@
 </style>
 
 <div class="container">
-    <center><h1>¡Gracias!</h1></center>
+    <center><h1>Â¡Gracias!</h1></center>
     <hr/>
     <br/>
     <div class="row">

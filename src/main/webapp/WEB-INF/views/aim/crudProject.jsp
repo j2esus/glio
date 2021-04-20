@@ -1,8 +1,4 @@
-<%-- 
-    Document   : init
-    Created on : 5/11/2017, 05:49:33 PM
-    Author     : j2esus
---%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="<c:url value="/resources/js/project/crudProject.js"/>"></script>
 
@@ -45,7 +41,7 @@
             <thead>
                 <tr>
                     <th>Nombre</th>
-                    <th>Descripci髇</th>
+                    <th>Descripci贸n</th>
                     <th>Estatus</th>
                     <th>Fecha inicio</th>
                     <th>Fecha fin</th>
@@ -151,7 +147,7 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Descripci髇
+                                Descripci贸n
                             </div>
                             <div class="col-9">
                                 <textarea id="descriptionProject" name="descriptionProject" class="form-control" required="required" maxlength="100" rows="3"></textarea>
@@ -210,7 +206,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Confirmaci髇</h4>
+                <h4 class="modal-title">Confirmaci贸n</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -229,7 +225,7 @@
 
 <!-- edit/add element-->
 <div class="modal fade" id="saveModalAim" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <form id="dataFormAim" method="post" data-toggle="validator">
             <div class="modal-content">
                 <div class="modal-header">
@@ -241,19 +237,42 @@
                         <input type="hidden" id="idNewAim"/>
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Nombre:
+                                Nombre
                             </div>
                             <div class="col-9">
                                 <input type="text" id="nameAim" name="nameAim" class="form-control" required="required" maxlength="50" autocomplete="off"/>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="text-right">
+                                    <a href="#aimCollapse" data-toggle="collapse" class="alert-link" aria-controls="aimCollapse">
+                                        驴Como formular un objetivo?
+                                    </a>
+                                </div>
+                                <div class="collapse" id="aimCollapse">
+                                    <div class="alert alert-secondary">
+                                        Sintaxis
+                                        <b>
+                                            <div>1. Verbo + Objeto + Indicador + Condici贸n + Tiempo</div>
+                                            <div>2. Verbo + Indicador + Objeto + Condici贸n + Tiempo</div>
+                                        </b>
+                                        <hr/>
+                                        Ejemplos
+                                        <div>1. Realizar + ventas + por 3 mil pesos + a nuevos clientes + en 6 meses.</div>
+                                        <div>2. Leer + 3 + libros + sobre cocina + en un mes.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Descripci髇
+                                Objetivo
                             </div>
                             <div class="col-9">
+
                                 <textarea id="descriptionAim" name="descriptionAim" class="form-control" required="required" maxlength="100" rows="3"></textarea>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -310,7 +329,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Confirmaci髇</h4>
+                <h4 class="modal-title">Confirmaci贸n</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -353,7 +372,7 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Descripci髇
+                                Descripci贸n
                             </div>
                             <div class="col-9">
                                 <textarea id="descriptionTask" name="descriptionTask" class="form-control" required="required" maxlength="500" rows="3"></textarea>
@@ -381,7 +400,14 @@
                                 Estimado
                             </div>
                             <div class="col-9">
-                                <input type="number" id="estimatedTask" name="estimatedTask" class="form-control" required="required" min="1"/>
+                                <select id="estimatedTask" class="form-control" required="required">
+                                    <option value="900">00:15</option>
+                                    <option value="1800">00:30</option>
+                                    <option value="2700">00:45</option>
+                                    <option value="3600">01:00</option>
+                                    <option value="5400">01:30</option>
+                                    <option value="7200">02:00</option>
+                                </select>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
@@ -412,7 +438,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Confirmaci髇</h4>
+                <h4 class="modal-title">Confirmaci贸n</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">

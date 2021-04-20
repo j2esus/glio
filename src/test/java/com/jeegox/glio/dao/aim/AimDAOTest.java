@@ -75,6 +75,12 @@ public class AimDAOTest {
         Company company = new Company(1, "Mcdonals", "burgers", Status.ACTIVE, 3);
         assertThat(aimDAO.findByCompany(company)).isEqualTo(expectedListByCompany());
     }
+    
+    private List<Aim> expectedListByCompany() {
+        List<Aim> aimList = new ArrayList<>();
+        aimList.add(expectedAim);
+        return aimList;
+    }
 
     @Test
     public void findByCompany_companyNotExists_emptyList(){
@@ -105,13 +111,45 @@ public class AimDAOTest {
     }
 
     @Test
-    public void count_notRequired_three(){
-        assertThat(aimDAO.count()).isEqualTo(3);
+    public void count_notRequired_four(){
+        assertThat(aimDAO.count()).isEqualTo(4);
     }
 
     @Test
     public void findAll_noRequired_listWithThreeElements(){
         assertThat(aimDAO.findAll()).isEqualTo(allExpectedAimList());
+    }
+    
+    private List<Aim> allExpectedAimList() {
+        User user = new User(2, "admin@burgerking", "password", "admin", Status.ACTIVE,
+                new UserType(2, "Admin", Status.ACTIVE, new Company(2, "BurgerKing", "burgers", Status.ACTIVE, 3)),
+                false, new Company(2, "BurgerKing", "burgers", Status.ACTIVE, 3), "admin@burgerking.com");
+
+        Project project = new Project(2, "Aquacorp", "full of quality", Status.ACTIVE,
+                java.sql.Date.valueOf("2010-06-01"), java.sql.Date.valueOf("2020-12-31"), user);
+
+        List<Aim> aimList = new ArrayList<>();
+        aimList.add(expectedAim);
+        aimList.add(new Aim(2, "OneToOne", "One aim, one success",
+                Status.ACTIVE, java.sql.Date.valueOf("2015-01-01"), java.sql.Date.valueOf("2015-07-05"), user, project));
+        aimList.add(new Aim(3, "ManyToOne", "Many aim, one success",
+                Status.ACTIVE, java.sql.Date.valueOf("2017-07-01"), java.sql.Date.valueOf("2017-12-05"), user, project));
+        aimList.add(new Aim(4, "ManyToOne", "Many aim, one success",
+                Status.INACTIVE, java.sql.Date.valueOf("2017-07-01"), java.sql.Date.valueOf("2017-12-05"), user, project));
+        return aimList;
+    }
+    
+    @Test
+    public void countTasksActiveByUserOwner_userNotExists_zero(){
+        User user = new User(100, "unnexists@burgerking", "password", "unnexists", Status.ACTIVE,
+                new UserType(2, "Admin", Status.ACTIVE, new Company(2, "BurgerKing", "burgers", Status.ACTIVE, 3)),
+                false, new Company(2, "BurgerKing", "burgers", Status.ACTIVE, 3), "admin@burgerking.com");
+        assertThat(aimDAO.countActiveByUserOwner(user)).isEqualTo(0);
+    }
+    
+    @Test
+    public void countTasksActiveByUserOwner_userExists_two(){
+        assertThat(aimDAO.countActiveByUserOwner(user)).isEqualTo(2);
     }
 
     private void insertInitialData() throws SQLException {
@@ -154,30 +192,24 @@ public class AimDAOTest {
 
         connection.createStatement().execute("insert into aim(id_aim, name, description, init_date, end_date, status, id_project, id_user)"+
                 " values (3, 'ManyToOne', 'Many aim, one success', '2017-07-01', '2017-12-05', 'ACTIVE', 2, 2)");
-
-
+        
+        connection.createStatement().execute("insert into aim(id_aim, name, description, init_date, end_date, status, id_project, id_user)"
+                + " values (4, 'ManyToOne', 'Many aim, one success', '2017-07-01', '2017-12-05', 'INACTIVE', 2, 2)");
+        
+        insertTaskData(connection);
     }
+    
+    private void insertTaskData(Connection connection) throws SQLException{
+        connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"
+                + " values(1, 'screen', 'create screen', 'IN_PROCESS', 1, 8, 1, 1, 1)");
 
-    private List<Aim> expectedListByCompany(){
-        List<Aim> aimList = new ArrayList<>();
-        aimList.add(expectedAim);
-        return aimList;
-    }
+        connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"
+                + " values(2, 'screen', 'create screen', 'DELETED', 1, 8, 2, 1, 1)");
 
-    private List<Aim> allExpectedAimList(){
-        User user = new User(2, "admin@burgerking", "password", "admin", Status.ACTIVE,
-                new UserType(2, "Admin",Status.ACTIVE, new Company(2, "BurgerKing", "burgers",Status.ACTIVE, 3)),
-                false, new Company(2, "BurgerKing", "burgers", Status.ACTIVE, 3), "admin@burgerking.com");
+        connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"
+                + " values(3, 'service', 'create service', 'PENDING', 2, 8, 3, 1, 1)");
 
-        Project project = new Project(2, "Aquacorp", "full of quality", Status.ACTIVE,
-                java.sql.Date.valueOf("2010-06-01"), java.sql.Date.valueOf("2020-12-31"), user);
-
-        List<Aim> aimList = new ArrayList<>();
-        aimList.add(expectedAim);
-        aimList.add(new Aim(2, "OneToOne", "One aim, one success",
-                Status.ACTIVE, java.sql.Date.valueOf("2015-01-01"), java.sql.Date.valueOf("2015-07-05"), user, project));
-        aimList.add(new Aim(3, "ManyToOne", "Many aim, one success",
-                Status.ACTIVE, java.sql.Date.valueOf("2017-07-01"), java.sql.Date.valueOf("2017-12-05"), user, project));
-        return aimList;
+        connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"
+                + " values(4, 'dao', 'create dao', 'ACCEPTED', 0, 8, 4, 1, 1)");
     }
 }

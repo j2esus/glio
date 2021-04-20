@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.truth.Truth.assertThat;
+import com.jeegox.glio.dto.TaskDTO;
+import java.math.BigDecimal;
 
 @WebAppConfiguration
 @ContextConfiguration(classes = ApplicationContextConfigTest.class)
@@ -58,6 +60,9 @@ public class TaskDAOTest {
     private final static Aim smallAim = new Aim(3, "Do workout", "Go outside and do exercise.",
             Status.ACTIVE, java.sql.Date.valueOf("2010-01-01"), java.sql.Date.valueOf("2010-01-05"), admin, smallProject);
     private static Task openDoorTask = new Task(6, "Open the door", "wake up and open the door", Status.ACTIVE, Priority.MEDIA, 8, admin, worker, smallAim);
+    
+    private final static Aim welcomeScreenDeleted = new Aim(4, "Welcome deleted", "Create a welcome screen",
+            Status.DELETED, java.sql.Date.valueOf("2010-01-01"), java.sql.Date.valueOf("2010-01-05"), admin, project);
 
     @Before
     public void setUp() throws SQLException {
@@ -66,7 +71,8 @@ public class TaskDAOTest {
 
     @Test
     public void findById_idExists_task(){
-        assertThat(taskDAO.findById(1)).isEqualTo(screenTask);
+        Task task = new Task(1, "screen", "create screen", Status.IN_PROCESS, Priority.MEDIA, 8, admin, worker, loginScreen);
+        assertThat(taskDAO.findById(1)).isEqualTo(task);
     }
 
     @Test
@@ -85,13 +91,23 @@ public class TaskDAOTest {
     }
 
     @Test
-    public void count_notRequired_six(){
-        assertThat(taskDAO.count()).isEqualTo(6);
+    public void count_notRequired_seven(){
+        assertThat(taskDAO.count()).isEqualTo(7);
     }
 
     @Test
     public void findByProject_projectExists_listWithFourElements(){
         assertThat(taskDAO.findByProject(project)).isEqualTo(getExpectedTasksByProject());
+    }
+    
+    private List<Task> getExpectedTasksByProject() {
+        List<Task> tasks = new ArrayList<>();
+        tasks.add(new Task(1, "screen", "create screen", Status.IN_PROCESS, Priority.MEDIA, 8, admin, worker, loginScreen));
+        tasks.add(new Task(3, "service", "create service", Status.ACTIVE, Priority.BAJA, 8, admin, worker, loginScreen));
+        tasks.add(new Task(4, "dao", "create dao", Status.ACTIVE, Priority.ALTA, 8, admin, worker, loginScreen));
+        tasks.add(new Task(5, "screen", "create screen for welcome", Status.ACTIVE, Priority.ALTA, 8, admin, worker, welcomeScreen));
+        tasks.add(new Task(7, "Open the door", "wake up and open the door", Status.ACTIVE, Priority.MEDIA, 8, admin, worker, welcomeScreenDeleted));
+        return tasks;
     }
 
     @Test
@@ -105,6 +121,14 @@ public class TaskDAOTest {
     public void findByAim_aimExists_listWithThreeElements(){
         assertThat(taskDAO.findByAim(loginScreen)).isEqualTo(getExpectedTasksByAim());
     }
+    
+    private List<Task> getExpectedTasksByAim() {
+        List<Task> tasks = new ArrayList<>();
+        tasks.add(new Task(1, "screen", "create screen", Status.IN_PROCESS, Priority.MEDIA, 8, admin, worker, loginScreen));
+        tasks.add(new Task(3, "service", "create service", Status.ACTIVE, Priority.BAJA, 8, admin, worker, loginScreen));
+        tasks.add(new Task(4, "dao", "create dao", Status.ACTIVE, Priority.ALTA, 8, admin, worker, loginScreen));
+        return tasks;
+    }
 
     @Test
     public void findByAim_aimNotExists_emptyList(){
@@ -114,151 +138,175 @@ public class TaskDAOTest {
     }
 
     @Test
-    public void countInProcessByUser_userExists_one(){
+    public void countTasksInProcessByUser_userExists_one(){
         assertThat(taskDAO.countInProcess(worker)).isEqualTo(1);
     }
 
     @Test
-    public void countInProcessByUser_userWithoutTasks_zero(){
+    public void countTasksInProcessByUser_userWithoutTasks_zero(){
         assertThat(taskDAO.countInProcess(admin)).isEqualTo(0);
     }
 
     @Test
-    public void findBy_finishedStatus_emptyList(){
-        List<Task> tasks = taskDAO.findBy(company, new Status[]{Status.FINISHED}, "screen", Priority.values());
+    public void findTasksByUser_finishedStatus_emptyList(){
+        List<Task> tasks = taskDAO.findByUser(worker, new Status[]{Status.FINISHED}, "screen", Priority.values());
         assertThat(tasks).isEmpty();
     }
 
     @Test
-    public void findBy_inProcessStatus_listWithOnlyOneElement(){
-        List<Task> tasks = taskDAO.findBy(company, new Status[]{Status.IN_PROCESS}, "screen", Priority.values());
+    public void findTasksByUser_inProcessStatus_listWithOnlyOneElement(){
+        List<Task> tasks = taskDAO.findByUser(worker, new Status[]{Status.IN_PROCESS}, "screen", Priority.values());
         assertThat(tasks).containsExactly(screenTask);
     }
 
     @Test
-    public void findBy_wrongValue_emptyList(){
-        List<Task> tasks = taskDAO.findBy(company, Status.values(), "unnecessary task", Priority.values());
+    public void findTasksByUser_unnexistsValue_emptyList(){
+        List<Task> tasks = taskDAO.findByUser(worker, Status.values(), "unnecessary task", Priority.values());
         assertThat(tasks).isEmpty();
     }
 
     @Test
-    public void findBy_commonValue_listWithThreeElements(){
-        List<Task> tasks = taskDAO.findBy(company, Status.values(), "screen", Priority.values());
+    public void findTasksByUser_commonValue_listWithThreeElements(){
+        List<Task> tasks = taskDAO.findByUser(worker, Status.values(), "screen", Priority.values());
         assertThat(tasks).isEqualTo(getExpectedTasksByCommonName());
     }
+    
+    @Test
+    public void findTasksByUser_overloadMethodWithProjectParam_commonValue_listWithThreeElements() {
+        List<Task> tasks = taskDAO.findByUser(worker, Status.values(), "screen", Priority.values(), project);
+        assertThat(tasks).isEqualTo(getExpectedTasksByCommonName());
+    }
+    
+    private List<Task> getExpectedTasksByCommonName() {
+        List<Task> tasks = new ArrayList<>();
+        tasks.add(new Task(5, "screen", "create screen for welcome", Status.ACTIVE, Priority.ALTA, 8, admin, worker, welcomeScreen));
+        tasks.add(new Task(1, "screen", "create screen", Status.IN_PROCESS, Priority.MEDIA, 8, admin, worker, loginScreen));
+        tasks.add(new Task(2, "screen", "create screen", Status.DELETED, Priority.MEDIA, 8, admin, worker, loginScreen));
+        return tasks;
+    }
 
     @Test
-    public void findBy_bajaPriority_emptyList(){
-        List<Task> tasks = taskDAO.findBy(company, Status.values(), "screen", new Priority[]{Priority.BAJA});
+    public void findTasksByUser_bajaPriority_emptyList(){
+        List<Task> tasks = taskDAO.findByUser(worker, Status.values(), "screen", new Priority[]{Priority.BAJA});
         assertThat(tasks).isEmpty();
     }
 
     @Test
-    public void findBy_mediaPriority_listWithTwoElements(){
-        List<Task> tasks = taskDAO.findBy(company, Status.values(), "screen", new Priority[]{Priority.MEDIA});
-        assertThat(tasks).isEqualTo(getExpectedBajaPriorityTasks());
+    public void findTasksByUser_mediaPriority_listWithTwoElements(){
+        List<Task> tasks = taskDAO.findByUser(worker, Status.values(), "screen", new Priority[]{Priority.MEDIA});
+        assertThat(tasks).isEqualTo(getExpectedMediaPriorityTasks());
+    }
+    
+    @Test
+    public void findByUser_overloadMethodWithProjectParam_mediaPriority_listWithTwoElements() {
+        List<Task> tasks = taskDAO.findByUser(worker, Status.values(), "screen", new Priority[]{Priority.MEDIA}, project);
+        assertThat(tasks).isEqualTo(getExpectedMediaPriorityTasks());
+    }
+
+    private List<Task> getExpectedMediaPriorityTasks() {
+        List<Task> tasks = new ArrayList<>();
+        tasks.add(new Task(1, "screen", "create screen", Status.IN_PROCESS, Priority.MEDIA, 8, admin, worker, loginScreen));
+        tasks.add(new Task(2, "screen", "create screen", Status.DELETED, Priority.MEDIA, 8, admin, worker, loginScreen));
+        return tasks;
     }
 
     @Test
-    public void findBy_companyNotExists_emptyList(){
-        Company company = new Company(100, "company", "description", Status.ACTIVE, 3);
-        List<Task> tasks = taskDAO.findBy(company, Status.values(), "", Priority.values());
+    public void findTasksByUser_companyNotExists_emptyList(){
+        User unnexistUser = new User(100, "unnexists@none", "none", "none", Status.ACTIVE,
+                new UserType(2, "None", Status.ACTIVE, new Company(1, "company", "description", Status.ACTIVE, 3)),
+                false, company, "unnexists@none.com");
+        List<Task> tasks = taskDAO.findByUser(unnexistUser, Status.values(), "", Priority.values());
         assertThat(tasks).isEmpty();
     }
 
     @Test
-    public void findBy_onlyCompanyParameter_listWithSixElements(){
-        List<Task> tasks = taskDAO.findBy(company, Status.values(), "", Priority.values());
+    public void findByUser_onlyCompanyParameter_listWithSixElements(){
+        List<Task> tasks = taskDAO.findByUser(worker, Status.values(), "", Priority.values());
         assertThat(tasks).isEqualTo(getAllTasksByCompany());
     }
-
-    @Test
-    public void findBy_overloadMethodWithProjectParam_finishedStatus_emptyList(){
-        List<Task> tasks = taskDAO.findBy(company, new Status[]{Status.FINISHED}, "screen", Priority.values(), project);
-        assertThat(tasks).isEmpty();
-    }
-
-    @Test
-    public void findBy_overloadMethodWithProjectParam_inProcessStatus_listWithOnlyOneElement(){
-        List<Task> tasks = taskDAO.findBy(company, new Status[]{Status.IN_PROCESS}, "screen", Priority.values(), project);
-        assertThat(tasks).containsExactly(screenTask);
-    }
-
-    @Test
-    public void findBy_overloadMethodWithProjectParam_wrongValue_emptyList(){
-        List<Task> tasks = taskDAO.findBy(company, Status.values(), "unnecessary task", Priority.values(), project);
-        assertThat(tasks).isEmpty();
-    }
-
-    @Test
-    public void findBy_overloadMethodWithProjectParam_commonValue_listWithThreeElements(){
-        List<Task> tasks = taskDAO.findBy(company, Status.values(), "screen", Priority.values(), project);
-        assertThat(tasks).isEqualTo(getExpectedTasksByCommonName());
-    }
-
-    @Test
-    public void findBy_overloadMethodWithProjectParam_bajaPriority_emptyList(){
-        List<Task> tasks = taskDAO.findBy(company, Status.values(), "screen", new Priority[]{Priority.BAJA}, project);
-        assertThat(tasks).isEmpty();
-    }
-
-    @Test
-    public void findBy_overloadMethodWithProjectParam_mediaPriority_listWithTwoElements(){
-        List<Task> tasks = taskDAO.findBy(company, Status.values(), "screen", new Priority[]{Priority.MEDIA}, project);
-        assertThat(tasks).isEqualTo(getExpectedBajaPriorityTasks());
-    }
-
-    @Test
-    public void findBy_overloadMethodWithProjectParam_companyNotExists_emptyList(){
-        Company company = new Company(100, "company", "description", Status.ACTIVE, 3);
-        List<Task> tasks = taskDAO.findBy(company, Status.values(), "", Priority.values(), project);
-        assertThat(tasks).isEmpty();
-    }
-
-    @Test
-    public void findBy_overloadMethodWithProjectParam_projectWithOneTask_listWithOnlyOneElement(){
-        List<Task> tasks = taskDAO.findBy(company, Status.values(), "", Priority.values(), smallProject);
-        assertThat(tasks).containsExactly(openDoorTask);
-    }
-
-    private List<Task> getAllTasksByCompany(){
+    
+    private List<Task> getAllTasksByCompany() {
         List<Task> tasks = new ArrayList<>();
         tasks.add(new Task(4, "dao", "create dao", Status.ACTIVE, Priority.ALTA, 8, admin, worker, loginScreen));
         tasks.add(new Task(5, "screen", "create screen for welcome", Status.ACTIVE, Priority.ALTA, 8, admin, worker, welcomeScreen));
-        tasks.add(screenTask);
+        tasks.add(new Task(1, "screen", "create screen", Status.IN_PROCESS, Priority.MEDIA, 8, admin, worker, loginScreen));
         tasks.add(new Task(2, "screen", "create screen", Status.DELETED, Priority.MEDIA, 8, admin, worker, loginScreen));
         tasks.add(openDoorTask);
         tasks.add(new Task(3, "service", "create service", Status.ACTIVE, Priority.BAJA, 8, admin, worker, loginScreen));
         return tasks;
     }
 
-    private List<Task> getExpectedTasksByAim(){
-        List<Task> tasks = new ArrayList<>();
-        tasks.add(screenTask);
-        tasks.add(new Task(3, "service", "create service", Status.ACTIVE, Priority.BAJA, 8, admin, worker, loginScreen));
-        tasks.add(new Task(4, "dao", "create dao", Status.ACTIVE, Priority.ALTA, 8, admin, worker, loginScreen));
-        return tasks;
+    @Test
+    public void findTasksByUser_overloadMethodWithProjectParam_finishedStatus_emptyList(){
+        List<Task> tasks = taskDAO.findByUser(worker, new Status[]{Status.FINISHED}, "screen", Priority.values(), project);
+        assertThat(tasks).isEmpty();
     }
 
-    private List<Task> getExpectedTasksByProject(){
-        List<Task> tasks = getExpectedTasksByAim();
-        tasks.add(new Task(5, "screen", "create screen for welcome", Status.ACTIVE, Priority.ALTA, 8, admin, worker, welcomeScreen));
-        return tasks;
+    @Test
+    public void findTasksByUser_overloadMethodWithProjectParam_inProcessStatus_listWithOnlyOneElement(){
+        List<Task> tasks = taskDAO.findByUser(worker, new Status[]{Status.IN_PROCESS}, "screen", Priority.values(), project);
+        assertThat(tasks).containsExactly(screenTask);
     }
 
-    private List<Task> getExpectedTasksByCommonName(){
-        List<Task> tasks = new ArrayList<>();
-        tasks.add(new Task(5, "screen", "create screen for welcome", Status.ACTIVE, Priority.ALTA, 8, admin, worker, welcomeScreen));
-        tasks.add(screenTask);
-        tasks.add(new Task(2, "screen", "create screen", Status.DELETED, Priority.MEDIA, 8, admin, worker, loginScreen));
-        return tasks;
+    @Test
+    public void findTasksByUser_overloadMethodWithProjectParam_unnexistsValue_emptyList(){
+        List<Task> tasks = taskDAO.findByUser(worker, Status.values(), "unnecessary task", Priority.values(), project);
+        assertThat(tasks).isEmpty();
     }
 
-    private List<Task> getExpectedBajaPriorityTasks(){
-        List<Task> tasks = new ArrayList<>();
-        tasks.add(screenTask);
-        tasks.add(new Task(2, "screen", "create screen", Status.DELETED, Priority.MEDIA, 8, admin, worker, loginScreen));
-        return tasks;
+    @Test
+    public void findByUser_overloadMethodWithProjectParam_bajaPriority_emptyList(){
+        List<Task> tasks = taskDAO.findByUser(worker, Status.values(), "screen", new Priority[]{Priority.BAJA}, project);
+        assertThat(tasks).isEmpty();
+    }
+
+    @Test
+    public void findBy_overloadMethodWithProjectParam_companyNotExists_emptyList(){
+        User unnexistUser = new User(100, "unnexists@none", "none", "none", Status.ACTIVE,
+                new UserType(2, "None", Status.ACTIVE, new Company(1, "company", "description", Status.ACTIVE, 3)),
+                false, company, "unnexists@none.com");
+        List<Task> tasks = taskDAO.findByUser(unnexistUser, Status.values(), "", Priority.values(), project);
+        assertThat(tasks).isEmpty();
+    }
+
+    @Test
+    public void findByUser_overloadMethodWithProjectParam_projectWithOneTask_listWithOnlyOneElement(){
+        List<Task> tasks = taskDAO.findByUser(worker, Status.values(), "", Priority.values(), smallProject);
+        assertThat(tasks).containsExactly(openDoorTask);
+    }
+    
+    @Test
+    public void countActiveByUserOwner_userExists_one() {
+        assertThat(taskDAO.countActiveByUserOwner(worker)).isEqualTo(1);
+    }
+    
+    @Test
+    public void countActiveByUserOwner_userNotExists_zero() {
+        assertThat(taskDAO.countActiveByUserOwner(admin)).isEqualTo(0);
+    }
+    
+    @Test
+    public void findSummaryTime_taskExists_taskDtoId1WithZeroRealTime(){
+        assertThat(taskDAO.findSummaryTime(1)).isEqualTo(getExpectedTaskDTO_id1_zeroRealTime());
+    }
+    
+    private TaskDTO getExpectedTaskDTO_id1_zeroRealTime(){
+        return new TaskDTO(1, "screen", 1, 2, 1, 8, BigDecimal.valueOf(0));
+    }
+    
+    @Test
+    public void findSummaryTime_taskExists_taskDtoId1WithFourRealTime() throws SQLException {
+        insert4secondsTimeForTask1();
+        assertThat(taskDAO.findSummaryTime(1)).isEqualTo(getExpectedTaskDTO_id1_fourRealTime());
+    }
+
+    private TaskDTO getExpectedTaskDTO_id1_fourRealTime() throws SQLException{
+        return new TaskDTO(1, "screen", 1, 2, 1, 8, BigDecimal.valueOf(240));
+    }
+    
+    @Test
+    public void findSummaryTime_taskNotExists_null() {
+        assertThat(taskDAO.findSummaryTime(100)).isNull();
     }
 
     private void insertInitialData() throws SQLException {
@@ -315,5 +363,18 @@ public class TaskDAOTest {
 
         connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"+
                 " values(6, 'Open the door', 'wake up and open the door', 'ACTIVE', 1, 8, 3, 1, 2)");
+        
+        connection.createStatement().execute("insert into aim(id_aim, name, description, init_date, end_date, status, id_project, id_user)"
+                + " values (4, 'Welcome deleted', 'Create a welcome screen', '2010-01-01', '2010-01-05', 'DELETED', 1, 1)");
+        
+        connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"
+                + " values(7, 'Open the door', 'wake up and open the door', 'ACTIVE', 1, 8, 4, 1, 2)");
+    }
+    
+    private void insert4secondsTimeForTask1() throws SQLException{
+        Session session = sessionFactory.getCurrentSession();
+        Connection connection = ((SessionImpl) session.getSession()).connection();
+        connection.createStatement().execute("insert into time(id_time, init_date, end_date, id_task)"+
+                " values(1, '2020-06-24 20:53:00', '2020-06-24 20:57:00', 1)");
     }
 }

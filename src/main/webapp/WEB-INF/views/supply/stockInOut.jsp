@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="<c:url value="/resources/js/supply/stockInOut.js"/>"></script>
 <input type="hidden" id="stockType" value="${stockType}"/>
@@ -25,7 +26,7 @@
             <div class="form-horizontal">
                 <div class="form-group row">
                     <div class="col-3 col-form-label">
-                        Nombre artículo
+                        Nombre artÃ­culo
                     </div>
                     <div class="col-7">
                         <input type="text" id="name" name="name" class="form-control" required="required" maxlength="100" readonly="readonly"/>
@@ -35,7 +36,7 @@
 
                 <div class="form-group row">
                     <div class="col-3 col-form-label">
-                        Descripción artículo
+                        DescripciÃ³n artÃ­culo
                     </div>
                     <div class="col-7">
                         <textarea maxlength="150" id="descriptionArticle" readonly="readonly" class="form-control"></textarea>
@@ -44,7 +45,7 @@
 
                 <div class="form-group row">
                     <div class="col-3 col-form-label">
-                        Unidad artículo
+                        Unidad artÃ­culo
                     </div>
                     <div class="col-7">
                         <input type="text" id="unity" name="unity" class="form-control" required="required" maxlength="30" readonly="readonly"/>
@@ -54,7 +55,7 @@
 
                 <div class="form-group row">
                     <div class="col-3 col-form-label">
-                        Almacén
+                        AlmacÃ©n
                     </div>
                     <div class="col-7">
                         <select class="form-control" id="depot" required="required">
@@ -79,7 +80,7 @@
 
                 <div class="form-group row">
                     <div class="col-3 col-form-label">
-                        Descripción
+                        DescripciÃ³n
                     </div>
                     <div class="col-7">
                         <textarea id="description" name="description" maxlength="300" class="form-control"></textarea>
