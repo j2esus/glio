@@ -74,14 +74,13 @@ public class UserDAOImpl extends GenericDAOImpl<User, Integer> implements UserDA
     }
 
     @Override
-    public List<User> findByCompany(Company company, String nameLike) {
-        String query = " select u "+
-                " from User u "+
-                " where u.father = :father "+
-                " and u.status = :status "+
-                " and upper(u.name) like :name ";
-        return sessionFactory.getCurrentSession().createQuery(query).setParameter("father", company)
-                .setParameter("status", Status.ACTIVE).setParameter("name", "%"+nameLike.toUpperCase()+"%").setMaxResults(10).getResultList();
+    public List<User> findActivesByCompany(Company company) {
+        String query = "select u "
+                + " from User u "
+                + " where u.father = :father "
+                + " and u.status = :status ";
+
+        return sessionFactory.getCurrentSession().createQuery(query).setParameter("father", company).
+                setParameter("status", Status.ACTIVE).getResultList();
     }
-    
 }
