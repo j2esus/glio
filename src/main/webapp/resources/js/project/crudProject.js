@@ -167,31 +167,6 @@ function initEvents() {
         $(this).addClass('row-selected').siblings().removeClass('row-selected');
         _indexTaskSelected = $(this).data('meta-row');
     });
-    
-    $('#userNameAuto').autocomplete({
-        source: function (request, response) {
-            $.ajax({
-                type: "POST",
-                url: $.PATH + "all/findUsers",
-                data: {
-                    name: request.term
-                },
-                success: function (data) {
-                    response($.map(data, function (user) {
-                        return {
-                            label: user.name,
-                            value: user.name,
-                            username: user.username
-                        };
-                    }));
-                }
-            });
-        },
-        minLength: 2,
-        select: function (event, ui) {
-            $('#userTask').val(ui.item.username);
-        }
-    });
 }
 
 function initPanels() {
@@ -279,7 +254,7 @@ function addRowToTable(item, table) {
     fila += "<td>" + item.status + "</td>";
     fila += "<td>" + _uiUtil.getFormattedDate(item.initDate) + "</td>";
     fila += "<td>" + _uiUtil.getFormattedDate(item.endDate) + "</td>";
-    fila += "<td align='center'>" + "<a class='btn btn-info fa fa-tasks' onclick='showDivTasks(" + noFila + ");'></a>" + "</td>";
+    fila += "<td align='center'>" + "<button class='btn btn-primary' onclick='showDivTasks(" + noFila + ");'>Crear</button>" + "</td>";
     fila += "</tr>";
     table.append(fila);
 }
@@ -530,6 +505,7 @@ function onClickBtnNewTask() {
     $('#titleModalNewTask').html("Agregar tarea");
     $('#idNewTask').val(0);
     $('#divTitleAim').html(item.name);
+    $("#estimatedTask").val($("#estimatedTask option:first").val());
     $saveModalTask.modal();
 }
 
@@ -677,6 +653,5 @@ function onClickBtnEditTask() {
     $('#priorityTask').val(item.priority);
     $('#estimatedTask').val(item.estimatedTime);
     $('#userTask').val(item.userOwner.username);
-    $('#userNameAuto').val(item.userOwner.name);
     $saveModalTask.modal();
 }

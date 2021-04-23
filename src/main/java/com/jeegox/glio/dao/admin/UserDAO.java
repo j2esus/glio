@@ -17,5 +17,5 @@ public interface UserDAO extends GenericDAO<User, Integer>{
     
     User findByUsername(String username);
     
-    List<User> findByCompany(Company company, String nameLike);
+    List<User> findActivesByCompany(Company company);
 }

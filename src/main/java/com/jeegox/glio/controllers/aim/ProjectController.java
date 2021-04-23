@@ -37,9 +37,11 @@ public class ProjectController extends BaseController{
         Status[] status = {Status.ACTIVE, Status.INACTIVE};
         Status[] statusAim = {Status.ACTIVE, Status.INACTIVE, Status.FINISHED};
         Priority[] priorities = Priority.values();
+        List<User> users = userService.findActivesByCompany(getCurrentCompany(request));
         model.addAttribute("status", status);
         model.addAttribute("statusAim", statusAim);
         model.addAttribute("priorities", priorities);
+        model.addAttribute("users", users);
         return "project/init";
     }
     

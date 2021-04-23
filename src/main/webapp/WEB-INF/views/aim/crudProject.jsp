@@ -45,7 +45,7 @@
                     <th>Estatus</th>
                     <th>Fecha inicio</th>
                     <th>Fecha fin</th>
-                    <th>Tareas</th>
+                    <th>Objetivos</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -67,11 +67,15 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <i class="fa fa-bar-chart"></i> Objetivos
-                    <button type="button" class="btn btn-primary fa fa-plus" id="btnNewAim" style="float: right;"></button>
-                    <button type="button" class="btn btn-danger fa fa-trash-o" id="btnConfirmDeleteAim" style="float: right;"></button>
-                    <button type="button" class="btn btn-primary fa fa-pencil-square-o" id="btnEditAim" style="float: right;"></button>
-                    <button type="button" class="btn btn-success fa fa-refresh" id="btnRefreshAim" style="float: right;"></button>
+                    <div class="row">
+                        <div class="col-lg-6"><h5><i class="fa fa-bar-chart"></i> Objetivos</h5></div>
+                        <div class="col-lg-6">
+                            <button type="button" class="btn btn-primary fa fa-plus" id="btnNewAim" style="float: right;"></button>
+                            <button type="button" class="btn btn-danger fa fa-trash-o" id="btnConfirmDeleteAim" style="float: right;"></button>
+                            <button type="button" class="btn btn-primary fa fa-pencil-square-o" id="btnEditAim" style="float: right;"></button>
+                            <button type="button" class="btn btn-success fa fa-refresh" id="btnRefreshAim" style="float: right;"></button>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -93,11 +97,15 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <i class="fa fa-tasks"></i> Tareas
-                    <button type="button" class="btn btn-primary fa fa-plus" id="btnNewTask" style="float: right;"></button>
-                    <button type="button" class="btn btn-danger fa fa-trash-o" id="btnConfirmDeleteTask" style="float: right;"></button>
-                    <button type="button" class="btn btn-primary fa fa-pencil-square-o" id="btnEditTask" style="float: right;"></button>
-                    <button type="button" class="btn btn-success fa fa-refresh" id="btnRefreshTask" style="float: right;"></button>
+                    <div class="row">
+                        <div class="col-lg-6"><h5><i class="fa fa-tasks"></i> Tareas</h5></div>
+                        <div class="col-lg-6">
+                            <button type="button" class="btn btn-primary fa fa-plus" id="btnNewTask" style="float: right;"></button>
+                            <button type="button" class="btn btn-danger fa fa-trash-o" id="btnConfirmDeleteTask" style="float: right;"></button>
+                            <button type="button" class="btn btn-primary fa fa-pencil-square-o" id="btnEditTask" style="float: right;"></button>
+                            <button type="button" class="btn btn-success fa fa-refresh" id="btnRefreshTask" style="float: right;"></button>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -417,8 +425,12 @@
                                 Usuario
                             </div>
                             <div class="col-9">
-                                <input type="hidden" id="userTask"/>
-                                <input type="text" class="form-control" id="userNameAuto" required="required">
+                                <select id="userTask" class="form-control" required="required">
+                                    <option value="">--Seleccione</option>
+                                    <c:forEach items="${users}" var="user">
+                                        <option value="${user.username}">${user.username}</option>
+                                    </c:forEach>
+                                </select>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
