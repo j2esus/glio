@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="<c:url value="/resources/js/admin/crudCompany.js"/>"></script>
 
@@ -16,7 +17,7 @@
         <thead>
             <tr>
                 <th>Nombre</th>
-                <th>Descripción</th>
+                <th>DescripciÃ³n</th>
                 <th>Estatus</th>
                 <th>Total usuarios</th>
             </tr>
@@ -31,7 +32,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Confirmación</h4>
+                <h4 class="modal-title">ConfirmaciÃ³n</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -71,7 +72,7 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Descripción
+                                DescripciÃ³n
                             </div>
                             <div class="col-9">
                                 <textarea id="description" name="description" class="form-control" required="required" maxlength="100" rows="3"></textarea>

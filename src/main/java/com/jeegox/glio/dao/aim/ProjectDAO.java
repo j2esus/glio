@@ -18,4 +18,6 @@ public interface ProjectDAO extends GenericDAO<Project, Integer>{
     List<Project> findByCompany(Company company, String value, Status[] status);
 
     List<Project> findByCompany(Company company, Status[] status);
+    
+    Long countActiveByUserOwner(User user);
 }

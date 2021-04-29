@@ -1,9 +1,3 @@
-<%-- 
-    Document   : index
-    Created on : 5/11/2017, 06:00:02 PM
-    Author     : j2esus
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
@@ -52,7 +46,7 @@
         </script>
     </head>
     <body class="bg-dark">
-        <div class="text-right" style="color:whitesmoke;padding-right: 5px;font-size: 13px">v.0.36</div>
+        <div class="text-right" style="color:whitesmoke;padding-right: 5px;font-size: 13px">v.0.37</div>
         <div class="container">
             <c:if test="${message != ''}">
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">

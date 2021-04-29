@@ -73,4 +73,27 @@ public class ProjectDAOImpl extends GenericDAOImpl<Project,Integer> implements P
         return sessionFactory.getCurrentSession().createQuery(query).setParameter("company", company).
                 setParameterList("status", status).getResultList();
     }
+
+    @Override
+    public Long countActiveByUserOwner(User user) {
+        String query = " select count( distinct p) "
+                + " from Task t "
+                + " join t.father a "
+                + " join a.father p "
+                + " where t.userOwner = :user "
+                + " and t.status in ( :status )"
+                + " and a.status = :activeStatus "
+                + " and p.status = :activeStatus";
+
+        return (Long) sessionFactory.getCurrentSession().createQuery(query).
+                setParameter("user", user).
+                setParameterList("status", new Status[]{
+                    Status.PENDING,
+                    Status.IN_PROCESS,
+                    Status.PAUSED,
+                    Status.FINISHED}).
+                setParameter("activeStatus", Status.ACTIVE).
+                getResultList().stream().
+                findFirst().orElse(0);
+    }
 }

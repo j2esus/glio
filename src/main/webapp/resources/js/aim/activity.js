@@ -61,7 +61,6 @@ function findData() {
             if (items.length > 0) {
                 var html = '';
                 $.each(items, function (i, item) {
-                    console.log(item);
                     html += writeUserData(item);
                 });
                 $divData.html(html);
@@ -112,12 +111,12 @@ function writeUserData(item) {
     } else {
         for (var i = 0; i < tasks.length; i++) {
             var item = tasks[i];
-            var color = _uiUtil.writePriorityColorInt(item.priority);
+            var priority = _uiUtil.getStringPriority(item.priority);
             node += '<tr>';
             node += '<td>' + item.name + '</td>';
-            node += '<td bgcolor="' + color + '">' + _uiUtil.getStringPriority(item.priority) + '</td>';
-            node += '<td>' + item.estimatedTime + '</td>';
-            node += '<td>' + item.realTime + '</td>';
+            node += '<td>' + _uiUtil.getPriorityClass(priority) + '</td>';
+            node += '<td>' + _uiUtil.secondsToHHmmss(item.estimatedTime) + '</td>';
+            node += '<td>' + _uiUtil.secondsToHHmmss(item.realTime) + '</td>';
             node += '<td align="center">' + getEstatusLabelActivity(item.estimatedTime, item.realTime) + '</td>';
             node += '<tr>';
             estimated += item.estimatedTime;
@@ -128,7 +127,8 @@ function writeUserData(item) {
 
     node += '</table></div>';
     //resumen
-    node += '<p><span class="badge badge-success">Estimado:</span> <b>' + estimated + '</b> <span class="badge badge-success">Real:</span> <b>' + Math.round(real * 100) / 100 + '</b> </p>';
+    node += '<p><span class="badge badge-success">Estimado:</span> <b>' + _uiUtil.secondsToHHmmss(estimated) + 
+            '</b> <span class="badge badge-success">Real:</span> <b>' + _uiUtil.secondsToHHmmss(_jsUtil.round(real)) + '</b> </p>';
     node += '</div>';
 
     node += '</div>';

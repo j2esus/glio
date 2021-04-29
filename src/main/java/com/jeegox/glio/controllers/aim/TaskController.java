@@ -1,7 +1,7 @@
 package com.jeegox.glio.controllers.aim;
 
 import com.jeegox.glio.controllers.BaseController;
-import com.jeegox.glio.entities.admin.Company;
+import com.jeegox.glio.dto.TaskDTO;
 import com.jeegox.glio.entities.admin.User;
 import com.jeegox.glio.entities.aim.Aim;
 import com.jeegox.glio.entities.aim.Project;
@@ -10,11 +10,10 @@ import com.jeegox.glio.enumerators.Priority;
 import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.services.UserService;
 import com.jeegox.glio.services.ProjectService;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,43 +39,12 @@ public class TaskController extends BaseController {
         Priority[] priorities = Priority.values();
         model.addAttribute("projects", projects);
         model.addAttribute("priorities", priorities);
+        model.addAttribute("status", new Status[]{
+            Status.PENDING,
+            Status.IN_PROCESS,
+            Status.PAUSED,
+            Status.FINISHED});
         return "task/init";
-    }
-
-    @RequestMapping(value = "findTasksPending", method = RequestMethod.POST)
-    @ResponseBody
-    public Map findTasksPending(HttpServletRequest request, @RequestParam String query,
-            @RequestParam("priorities[]") Priority[] priorities, @RequestParam Integer idProject) {
-        Company company = getCurrentCompany(request);
-        Map<String, Object> response = new HashMap<>();
-        List<Task> tasks = projectService.findBy(company, new Status[]{Status.PENDING}, query, priorities, idProject);
-        response.put("count", tasks.size());
-        response.put("actives", tasks);
-        return response;
-    }
-
-    @RequestMapping(value = "findTasksInProcess", method = RequestMethod.POST)
-    @ResponseBody
-    public Map findTasksInProcess(HttpServletRequest request, @RequestParam String query,
-            @RequestParam("priorities[]") Priority[] priorities, @RequestParam Integer idProject) {
-        Company company = getCurrentCompany(request);
-        Map<String, Object> response = new HashMap<>();
-        List<Task> tasks = projectService.findBy(company, new Status[]{Status.PAUSED, Status.IN_PROCESS}, query, priorities, idProject);
-        response.put("count", tasks.size());
-        response.put("inProcess", tasks);
-        return response;
-    }
-
-    @RequestMapping(value = "findTasksFinished", method = RequestMethod.POST)
-    @ResponseBody
-    public Map findTasksFinished(HttpServletRequest request, @RequestParam String query,
-            @RequestParam("priorities[]") Priority[] priorities, @RequestParam Integer idProject) {
-        Company company = getCurrentCompany(request);
-        Map<String, Object> response = new HashMap<>();
-        List<Task> tasks = projectService.findBy(company, new Status[]{Status.FINISHED}, query, priorities, idProject);
-        response.put("count", tasks.size());
-        response.put("finished", tasks);
-        return response;
     }
 
     @RequestMapping(value = "toStartTask", method = RequestMethod.POST)
@@ -114,31 +82,6 @@ public class TaskController extends BaseController {
             return e.getMessage();
         }
     }
-
-    @RequestMapping(value = "toRestarTask", method = RequestMethod.POST)
-    @ResponseBody
-    public String toRestarTask(HttpServletRequest request, @RequestParam Integer idTask) {
-        try {
-            User user = getCurrentUser(request);
-            projectService.work(user, idTask, Status.IN_PROCESS);
-            return "OK";
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
-
-    @RequestMapping(value = "toAcceptedTask", method = RequestMethod.POST)
-    @ResponseBody
-    public String toAcceptedTask(HttpServletRequest request, @RequestParam Integer idTask) {
-        try {
-            Task task = projectService.findTaskBydId(idTask);
-            task.setStatus(Status.ACCEPTED);
-            projectService.saveOrUpdate(task);
-            return "OK";
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
     
     @RequestMapping(value = "toCancelTask", method = RequestMethod.POST)
     @ResponseBody
@@ -161,29 +104,57 @@ public class TaskController extends BaseController {
     
     @RequestMapping(value = "saveTask", method = RequestMethod.POST)
     @ResponseBody
-    public String saveTask(HttpServletRequest request, @RequestParam Integer id, @RequestParam String name,
+    public ResponseEntity<Task> saveTask(HttpServletRequest request, @RequestParam Integer id, @RequestParam String name,
             @RequestParam String description, @RequestParam Priority priority,
             @RequestParam Integer estimated, @RequestParam String username, @RequestParam Integer idAim){
-        try{
-            Aim aim = projectService.findAimBydId(idAim);
-            User user = userService.findById(username);
-            Task task = projectService.findTaskBydId(id);
-            if(task == null){
-                task = new Task(null, name, description, Status.PENDING, priority,
-                    estimated, getCurrentUser(request), user, aim );
-            }else{
-                task.setName(name);
-                task.setDescription(description);
-                task.setPriority(priority);
-                task.setEstimatedTime(estimated);
-                task.setUserOwner(user);
-                task.setUserRequester(getCurrentUser(request));
-                task.setFather(aim);
-            }
-            this.projectService.saveOrUpdate(task);
-            return "OK";
-        }catch(Exception e){
-            return e.getMessage();
+        Aim aim = projectService.findAimBydId(idAim);
+        User user = userService.findById(username);
+        Task task = projectService.findTaskBydId(id);
+        if(task == null){
+            task = new Task(null, name, description, Status.PENDING, priority,
+                estimated, getCurrentUser(request), user, aim );
+        }else{
+            task.setName(name);
+            task.setDescription(description);
+            task.setPriority(priority);
+            task.setEstimatedTime(estimated);
+            task.setUserOwner(user);
+            task.setUserRequester(getCurrentUser(request));
+            task.setFather(aim);
         }
+        projectService.saveOrUpdate(task);
+        return ResponseEntity.ok(task);
+    }
+    
+    @RequestMapping(value = "countActiveTasksByUserOwner", method = RequestMethod.POST)
+    @ResponseBody
+    public Long countActiveTasksByUserOwner(HttpServletRequest request) {
+        return projectService.countActiveTasksByUserOwner(getCurrentUser(request));
+    }
+    
+    @RequestMapping(value = "countActiveAimsByUserOwner", method = RequestMethod.POST)
+    @ResponseBody
+    public Long countActiveAimsByUserOwner(HttpServletRequest request) {
+        return projectService.countActiveAimsByUserOwner(getCurrentUser(request));
+    }
+    
+    @RequestMapping(value = "countActiveProjectsByUserOwner", method = RequestMethod.POST)
+    @ResponseBody
+    public Long countActiveProjectsByUserOwner(HttpServletRequest request) {
+        return projectService.countActiveProjectsByUserOwner(getCurrentUser(request));
+    }
+    
+    @RequestMapping(value = "findTasks", method = RequestMethod.POST)
+    @ResponseBody
+    public List<Task> findTasks(HttpServletRequest request, @RequestParam String query,
+            @RequestParam("priorities[]") Priority[] priorities, @RequestParam Integer idProject,
+            @RequestParam("status[]") Status[] status) {
+        return projectService.findByUser(getCurrentUser(request), status, query, priorities, idProject);
+    }
+    
+    @RequestMapping(value = "findSummaryTime", method = RequestMethod.POST)
+    @ResponseBody
+    public TaskDTO findSummaryTime(@RequestParam Integer idTask) {
+        return projectService.findSummaryTime(idTask);
     }
 }

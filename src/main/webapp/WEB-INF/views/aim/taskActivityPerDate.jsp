@@ -1,14 +1,10 @@
-<%-- 
-    Document   : init
-    Created on : 5/11/2017, 05:49:33 PM
-    Author     : j2esus
---%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<script src="<c:url value="/resources/js/aim/productivity.js"/>"></script>
+<script src="<c:url value="/resources/js/aim/activity.js"/>"></script>
 
-<h1>Productividad</h1>
+<h1>Actividad</h1>
 <hr/>
-<form id="productivityForm">
+<form id="activityForm">
     <div class="card">
         <div class="card-header">
             Filtros
@@ -46,9 +42,9 @@
     </div>
 </form>
 <br/>
-<div class="card mb-3">
-    <div class="card-header">
-        <i class="fa fa-bar-chart"></i>Datos</div>
-    <div class="card-body" id = "divChart">
-    </div>
+<div id="divData">
 </div>
+
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fa fa-angle-up"></i>
+</a>

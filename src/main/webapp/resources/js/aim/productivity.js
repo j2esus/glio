@@ -49,64 +49,42 @@ function onFocusOutEnd() {
 }
 
 function buildChart() {
-    var users = [];
-    var data = [];
+    let productivityData = [];
     $.ajax({
         type: "POST",
         url: $.PATH + "productivity/findDataGraphProductivity",
         data: {initDate: $initDate.val(), endDate: $endDate.val(), idProject: $idProject.val(), idAim: $idAim.val()},
         beforeSend: function (xhr) {
             _blockUI.block();
-            users = [];
-            data = [];
         },
         success: function (items) {
             if (items.length > 0) {
                 $.each(items, function (i, item) {
-                    users.push(item.username);
-                    data.push(item.quantity);
+                    productivityData.push([item.username, item.quantity]);
                 });
             } else {
                 _notify.show("La consulta no produjo resultados.", "danger");
             }
         }, complete: function () {
+            console.log(productivityData);
             _blockUI.unblock();
-            writeGraph(users, data);
+            createBarChart(productivityData);
         }
     });
 }
 
-function writeGraph(users, data){
-    $divChart.html('<canvas id="myBarChart" width="100" height="50"></canvas>');
-    var ctxLine = $("#myBarChart");
-    new Chart(ctxLine, {
-        type: 'bar',
+function createBarChart(productivityData){
+    c3.generate({
+        bindto: '#divChart',
         data: {
-            labels: users,
-            datasets: [{
-                    label: "Productividad",
-                    backgroundColor: "rgba(2,117,216,1)",
-                    borderColor: "rgba(2,117,216,1)",
-                    data: data
-                }]
+            columns: productivityData,
+            type: 'bar'
         },
-        options: {
-            responsive: true,
-            scales: {
-                xAxes: [{
-                        gridLines: {
-                            display: false
-                        }
-                    }],
-                yAxes: [{
-                        gridLines: {
-                            display: true
-                        }
-                    }]
-            },
-            legend: {
-                display: false
-            }
+        bar: {
+            ratio: 0.2
+        },
+        size: {
+            height: 400
         }
     });
 }

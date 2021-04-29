@@ -1,8 +1,4 @@
-<%-- 
-    Document   : init
-    Created on : 5/11/2017, 05:49:33 PM
-    Author     : j2esus
---%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="<c:url value="/resources/js/advance/advance.js"/>"></script>
 
@@ -27,7 +23,7 @@
                         <thead>
                             <tr>
                                 <th>Nombre</th>
-                                <th>DescripciÛn</th>
+                                <th>Descripci√≥n</th>
                                 <th>Fecha inicio</th>
                                 <th>Fecha fin</th>
                             </tr>
@@ -42,7 +38,7 @@
     <div class="col-lg-5">
         <div class="card">
             <div class="card-header">
-                Gr·fico
+                Gr√°fico
             </div>
             <div>
                 <div class="text-center" id="divProjectChart">
@@ -76,7 +72,7 @@
                         <b>Fecha inicio</b>
                     </div>
                     <div class="col-9" id = "initDateModal">
-                        
+
                     </div>
                 </div>
                 <div class="form-group row">
@@ -84,18 +80,18 @@
                         <b>Fecha fin</b>
                     </div>
                     <div class="col-9" id = "endDateModal">
-                        
+
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-3">
-                        <b>DescrpciÛn</b>
+                        <b>Descrpci√≥n</b>
                     </div>
                     <div class="col-9" id = "descriptionModal">
-                        
+
                     </div>
                 </div>
-                
+
                 <br/>
                 <div class="row">
                     <div class="col-12">

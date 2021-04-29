@@ -1,11 +1,15 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="<c:url value="/resources/js/supply/inventoryAnalysis.js"/>"></script>
-<h1>Analisis</h1>
-<hr/>
-<div class="text-right">
-    <button type="button" class="btn btn-success fa fa-refresh" id="btnRefresh"></button>
+<div class="row">
+    <div class="col-8">
+        <h1>Análisis</h1>
+    </div>
+    <div class="col-4 text-right">
+        <button type="button" class="btn btn-success fa fa-refresh" id="btnRefresh"></button>
+    </div>
 </div>
-<br />
+<hr/>
 <div class="row">
     <div class="col-xl-3 col-sm-6 mb-3">
         <div class="card border border-primary">

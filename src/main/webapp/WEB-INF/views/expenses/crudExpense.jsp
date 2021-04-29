@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="<c:url value="/resources/js/expenses/crudExpense.js"/>"></script>
 
@@ -21,7 +22,7 @@
                     <div class="help-block with-errors"></div>
                 </div>
                 <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                    <div class="input-group-addon">Categoría</div>
+                    <div class="input-group-addon">CategorÃ­a</div>
                     <select class="custom-select" id = "idCategoryF">
                         <option value="0">--Todos</option>
                         <c:forEach items="${categories}" var="category">
@@ -30,13 +31,13 @@
                     </select>
                 </div>
                 <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                    <div class="input-group-addon">Subcategoría</div>
+                    <div class="input-group-addon">SubcategorÃ­a</div>
                     <select class="custom-select" id = "idSubcategoryF">
                         <option value="0">--Todos</option>
                     </select>
                 </div>
                 <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                    <div class="input-group-addon">Descripción</div>
+                    <div class="input-group-addon">DescripciÃ³n</div>
                     <input type="text" class="form-control" id="descriptionF"/>
                 </div>
                 <input type="submit" class="btn btn-success" value="Buscar"/>
@@ -58,8 +59,8 @@
             <tr>
                 <th>Fecha</th>
                 <th>Importe</th>
-                <th>Categoría</th>
-                <th>Subcategoría</th>
+                <th>CategorÃ­a</th>
+                <th>SubcategorÃ­a</th>
                 <th>Anotaciones</th>
             </tr>
         </thead>
@@ -105,7 +106,7 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Categoría
+                                CategorÃ­a
                             </div>
                             <div class="col-9">
                                 <select class="form-control" required="required" id = "idCategory">
@@ -120,7 +121,7 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Subcategoría
+                                SubcategorÃ­a
                             </div>
                             <div class="col-9">
                                 <select class="form-control" required="required" id = "idSubcategory">
@@ -132,7 +133,7 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Subcategoría
+                                SubcategorÃ­a
                             </div>
                             <div class="col-9">
                                 <input type="date" class="form-control" id="dateE" required="required"/>
@@ -158,7 +159,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Confirmación</h4>
+                <h4 class="modal-title">ConfirmaciÃ³n</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">

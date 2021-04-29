@@ -1,9 +1,10 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<script src="<c:url value="/resources/js/aim/activity.js"/>"></script>
+<script src="<c:url value="/resources/js/aim/productivity.js"/>"></script>
 
-<h1>Actividad</h1>
+<h1>Productividad</h1>
 <hr/>
-<form id="activityForm">
+<form id="productivityForm">
     <div class="card">
         <div class="card-header">
             Filtros
@@ -41,9 +42,10 @@
     </div>
 </form>
 <br/>
-<div id="divData">
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fa fa-bar-chart"></i>Datos</div>
+    <div class="card-body">
+        <div id = "divChart"></div>
+    </div>
 </div>
-
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fa fa-angle-up"></i>
-</a>

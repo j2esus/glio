@@ -1,14 +1,15 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="<c:url value="/resources/js/expenses/analytic.js"/>"></script>
 
-<h1>An·lisis de gastos</h1>
+<h1>An√°lisis de gastos</h1>
 <hr/>
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item">
         <a class="nav-link active" id="month-tab" data-toggle="tab" href="#month" role="tab" aria-controls="month" aria-selected="false">Mes</a>
     </li>
     <li class="nav-item">
-    <a class="nav-link" id="comparator-tab" data-toggle="tab" href="#comparator" role="tab" aria-controls="comparator" aria-selected="true">Comparador</a>
+        <a class="nav-link" id="comparator-tab" data-toggle="tab" href="#comparator" role="tab" aria-controls="comparator" aria-selected="true">Comparador</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">General</a>
@@ -51,7 +52,7 @@
         <hr/>
         <br/>
         <div id="divCategoryDetail">
-            
+
             <div class="row">
                 <div class="col-lg-4">
                     <button type="button" class="btn btn-primary fa fa-arrow-left" id="btnYearBack"></button>
@@ -70,7 +71,7 @@
                         <table class="table table-bordered table-hover" id="dataTableCatMonth" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>CategorÌa</th>
+                                    <th>Categor√≠a</th>
                                     <th>Monto</th>
                                     <th>Porcentaje</th>
                                 </tr>
@@ -107,7 +108,7 @@
                         <table class="table table-bordered" id="dataTableSubMonth" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>SubcategorÌa</th>
+                                    <th>Subcategor√≠a</th>
                                     <th>Monto</th>
                                     <th>Porcentaje</th>
                                 </tr>
@@ -131,7 +132,7 @@
         <div class="row">
             <div class="col-lg-11 form-inline">
                 <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                    <div class="input-group-addon">CategorÌa</div>
+                    <div class="input-group-addon">Categor√≠a</div>
                     <select class="custom-select" id = "idCategoryF">
                         <option value="-1">--Todos</option>
                         <c:forEach items="${categories}" var="category">
@@ -140,7 +141,7 @@
                     </select>
                 </div>
                 <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                    <div class="input-group-addon">SubcategorÌa</div>
+                    <div class="input-group-addon">Subcategor√≠a</div>
                     <select class="custom-select" id = "idSubcategoryF">
                         <option value="0">--Todos</option>
                     </select>
@@ -171,7 +172,7 @@
                         <table class="table table-bordered table-hover" id="dataTableGral" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>CategorÌa</th>
+                                    <th>Categor√≠a</th>
                                     <th>Monto</th>
                                     <th>Porcentaje</th>
                                 </tr>
@@ -209,7 +210,7 @@
                         <table class="table table-bordered" id="dataTableSub" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>SubcategorÌa</th>
+                                    <th>Subcategor√≠a</th>
                                     <th>Monto</th>
                                     <th>Porcentaje</th>
                                 </tr>

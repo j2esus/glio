@@ -4,6 +4,7 @@ import com.jeegox.glio.dao.aim.AimDAO;
 import com.jeegox.glio.dao.aim.ProjectDAO;
 import com.jeegox.glio.dao.aim.TaskDAO;
 import com.jeegox.glio.dao.aim.TimeDAO;
+import com.jeegox.glio.dto.TaskDTO;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.admin.User;
 import com.jeegox.glio.entities.aim.Aim;
@@ -158,9 +159,29 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public List<Task> findBy(Company company, Status[] status, String query, Priority[] priorities, Integer idProject) {
+    public List<Task> findByUser(User userOwner, Status[] status, String query, Priority[] priorities, Integer idProject) {
         if(idProject != 0)
-            return taskDAO.findBy(company, status, query, priorities, projectDAO.findById(idProject));
-        return taskDAO.findBy(company, status, query, priorities);
+            return taskDAO.findByUser(userOwner, status, query, priorities, projectDAO.findById(idProject));
+        return taskDAO.findByUser(userOwner, status, query, priorities);
+    }
+    
+    @Transactional(readOnly = true)
+    public Long countActiveTasksByUserOwner(User user) {
+        return taskDAO.countActiveByUserOwner(user);
+    }
+    
+    @Transactional(readOnly = true)
+    public Long countActiveAimsByUserOwner(User user) {
+        return aimDAO.countActiveByUserOwner(user);
+    }
+    
+    @Transactional(readOnly = true)
+    public Long countActiveProjectsByUserOwner(User user) {
+        return projectDAO.countActiveByUserOwner(user);
+    }
+    
+    @Transactional(readOnly = true)
+    public TaskDTO findSummaryTime(Integer idTask){
+        return taskDAO.findSummaryTime(idTask);
     }
 }

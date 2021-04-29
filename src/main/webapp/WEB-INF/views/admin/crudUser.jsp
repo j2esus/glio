@@ -1,12 +1,8 @@
-<%-- 
-    Document   : init
-    Created on : 5/11/2017, 05:49:33 PM
-    Author     : j2esus
---%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<script src="<c:url value="/resources/js/supply/crudArticle.js"/>"></script>
+<script src="<c:url value="/resources/js/user/crudUser.js"/>"></script>
 
-<h1>Artículos</h1>
+<h1>Usuarios</h1>
 <hr/>
 <br/>
 <div class="text-right">
@@ -17,19 +13,15 @@
 </div>
 <br />
 <div class="table-responsive">
-    <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+    <table class="table table-bordered table-hover" id="dataTableUser" width="100%" cellspacing="0">
         <thead>
             <tr>
+                <th>Nombre usuario</th>
                 <th>Nombre</th>
-                <th>Sku</th>
-                <th>Descripción</th>
-                <th>Categoria</th>
-                <th>Tamaño</th>
-                <th>Costo</th>
-                <th>Precio</th>
                 <th>Estatus</th>
-                <th>Unidad</th>
-                <th>Requiere existencia</th>
+                <th>Tipo usuario</th>
+                <th>Email</th>
+                <th>Un solo acceso</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -42,7 +34,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Confirmación</h4>
+                <h4 class="modal-title">ConfirmaciÃ³n</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -59,7 +51,7 @@
 
 <!-- edit/add element-->
 <div class="modal fade" id="saveModal" role="dialog">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <form id="dataForm" method="post" data-toggle="validator">
             <!-- Modal content-->
             <div class="modal-content">
@@ -72,50 +64,32 @@
                         <input type="hidden" id="idNew"/>
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Nombre
+                                Usuario:
                             </div>
                             <div class="col-9">
-                                <input type="text" id="name" name="name" class="form-control" required="required" maxlength="100" autocomplete="off"/>
+                                <div class="input-group">
+                                    <input type="text" id="username" name="username" class="form-control" required="required" maxlength="50" pattern="^[_A-z0-9]{1,}$" autocomplete="off"/>
+                                    <span class="input-group-addon" id="company">@${company}</span>
+                                </div>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3 col-form-label">
+                                Nombre:
+                            </div>
+                            <div class="col-9">
+                                <input type="text" id="name" name="name" class="form-control" required="required" maxlength="80" autocomplete="off"/>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Sku
+                                Password:
                             </div>
                             <div class="col-9">
-                                <input type="text" id="sku" name="sku" class="form-control" required="required" maxlength="50" pattern="^[_A-z0-9]{1,}$" autocomplete="off"/>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-3 col-form-label">
-                                Descripción
-                            </div>
-                            <div class="col-9">
-                                <textarea id="description" name="description" class="form-control" required="required" maxlength="100" rows="3"></textarea>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-3 col-form-label">
-                                Costo
-                            </div>
-                            <div class="col-9">
-                                <input type="number" id="cost" class="form-control" min="0" step=".01" required="required" autocomplete="off"/>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-3 col-form-label">
-                                Precio
-                            </div>
-                            <div class="col-9">
-                                <input type="number" id="price" class="form-control" min="0" step=".01" required="required" autocomplete="off"/>
+                                <input type="password" id="password" name="password" class="form-control" required="required" maxlength="100" autocomplete="off"/>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
@@ -126,6 +100,7 @@
                             </div>
                             <div class="col-9">
                                 <select id="status" class="form-control" required="required">
+                                    <option value="">--Seleccione</option>
                                     <c:forEach items="${status}" var="status">
                                         <option value="${status}">${status}</option>
                                     </c:forEach>
@@ -136,13 +111,13 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Unidad
+                                Tipo usuario
                             </div>
                             <div class="col-9">
-                                <select id="unity" class="form-control" required="required">
+                                <select id="userType" class="form-control" required="required">
                                     <option value="">--Seleccione</option>
-                                    <c:forEach items="${unities}" var="unity">
-                                        <option value="${unity}">${unity}</option>
+                                    <c:forEach items="${userTypes}" var="userType">
+                                        <option value="${userType.id}">${userType.name}</option>
                                     </c:forEach>
                                 </select>
                                 <div class="help-block with-errors"></div>
@@ -151,31 +126,20 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Categoría
+                                Email
                             </div>
                             <div class="col-9">
-                                <input type="hidden" id="idCategoryArticle"/>
-                                <input type="text" class="form-control" id="categoryArticle" required="required">
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-3 col-form-label">
-                                Tamaño
-                            </div>
-                            <div class="col-9">
-                                <input type="hidden" id="idSize"/>
-                                <input type="text" class="form-control" id="size" required="required">
+                                <input type="email" id="email" name="email" class="form-control" required="required" autocomplete="off"/>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Requiere existencia
+                                Un acceso
                             </div>
                             <div class="col-9">
-                                <input type="checkbox" id="requiredStock"/>
+                                <input type="checkbox" id="onlyOneAccess"/>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>

@@ -405,7 +405,7 @@ public class UserService {
     }
     
     @Transactional(readOnly = true)
-    public List<User> findByLike(Company company, String nameLike) {
-        return userDAO.findByCompany(company, nameLike);
+    public List<User> findActivesByCompany(Company company) {
+        return userDAO.findActivesByCompany(company);
     }
 }

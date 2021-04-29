@@ -1,8 +1,4 @@
-<%-- 
-    Document   : helloworld
-    Created on : 5/11/2017, 05:49:33 PM
-    Author     : j2esus
---%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="<c:url value="/resources/js/sb-admin-charts.js"/>"></script>
 <script src="<c:url value="/resources/js/sb-admin-datatables.js"/>"></script>
@@ -150,7 +146,7 @@
                                 <li class="list-inline-item">
                                     <a href="#">Like</a>
                                 </li>
-                                <li class="list-inline-item">·</li>
+                                <li class="list-inline-item">Â·</li>
                                 <li class="list-inline-item">
                                     <a href="#">Reply</a>
                                 </li>
@@ -165,7 +161,7 @@
                                         <li class="list-inline-item">
                                             <a href="#">Like</a>
                                         </li>
-                                        <li class="list-inline-item">·</li>
+                                        <li class="list-inline-item">Â·</li>
                                         <li class="list-inline-item">
                                             <a href="#">Reply</a>
                                         </li>
@@ -207,7 +203,7 @@
                                 <li class="list-inline-item">
                                     <a href="#">Like</a>
                                 </li>
-                                <li class="list-inline-item">·</li>
+                                <li class="list-inline-item">Â·</li>
                                 <li class="list-inline-item">
                                     <a href="#">Reply</a>
                                 </li>
@@ -276,7 +272,7 @@
                                 <li class="list-inline-item">
                                     <a href="#">Like</a>
                                 </li>
-                                <li class="list-inline-item">·</li>
+                                <li class="list-inline-item">Â·</li>
                                 <li class="list-inline-item">
                                     <a href="#">Reply</a>
                                 </li>
@@ -292,7 +288,7 @@
                                         <li class="list-inline-item">
                                             <a href="#">Like</a>
                                         </li>
-                                        <li class="list-inline-item">·</li>
+                                        <li class="list-inline-item">Â·</li>
                                         <li class="list-inline-item">
                                             <a href="#">Reply</a>
                                         </li>
@@ -865,7 +861,7 @@
 <footer class="sticky-footer">
     <div class="container">
         <div class="text-center">
-            <small>Copyright © Your Website 2017</small>
+            <small>Copyright Â© Your Website 2017</small>
         </div>
     </div>
 </footer>
@@ -880,7 +876,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
+                    <span aria-hidden="true">Ã—</span>
                 </button>
             </div>
             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
