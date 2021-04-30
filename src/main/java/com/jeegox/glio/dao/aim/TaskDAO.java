@@ -20,6 +20,8 @@ public interface TaskDAO extends GenericDAO<Task,Integer>{
     Long countInProcess(User user);
 
     List<Task> findByUser(User userOwner, Status[] status, String name, Priority[] priorities, Project project);
+    
+    List<Task> findByUser(User userOwner, Status[] status, String name, Priority[] priorities, Aim aim);
 
     List<Task> findByUser(User userOwner, Status[] status, String name, Priority[] priorities);
     
@@ -28,4 +30,6 @@ public interface TaskDAO extends GenericDAO<Task,Integer>{
     Long countActiveByUserOwner(User user);
     
     TaskDTO findSummaryTime(Integer idTask);
+    
+    Long countFinishedByUserOwner(User user);
 }

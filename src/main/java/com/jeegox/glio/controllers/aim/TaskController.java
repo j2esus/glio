@@ -96,12 +96,6 @@ public class TaskController extends BaseController {
         }
     }
     
-    @RequestMapping(value = "findAim", method = RequestMethod.POST)
-    @ResponseBody
-    public List<Aim> findAim(HttpServletRequest request, @RequestParam Integer idProject) {
-        return projectService.findBy(projectService.findBydId(idProject));
-    }
-    
     @RequestMapping(value = "saveTask", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Task> saveTask(HttpServletRequest request, @RequestParam Integer id, @RequestParam String name,
@@ -148,13 +142,21 @@ public class TaskController extends BaseController {
     @ResponseBody
     public List<Task> findTasks(HttpServletRequest request, @RequestParam String query,
             @RequestParam("priorities[]") Priority[] priorities, @RequestParam Integer idProject,
+            @RequestParam Integer idAim,
             @RequestParam("status[]") Status[] status) {
-        return projectService.findByUser(getCurrentUser(request), status, query, priorities, idProject);
+        return projectService.findByUser(getCurrentUser(request), status, query, 
+                priorities, idProject, idAim);
     }
     
     @RequestMapping(value = "findSummaryTime", method = RequestMethod.POST)
     @ResponseBody
     public TaskDTO findSummaryTime(@RequestParam Integer idTask) {
         return projectService.findSummaryTime(idTask);
+    }
+    
+    @RequestMapping(value = "countFinishedByUserOwner", method = RequestMethod.POST)
+    @ResponseBody
+    public Long countFinishedByUserOwner(HttpServletRequest request) {
+        return projectService.countFinishedByUserOwner(getCurrentUser(request));
     }
 }

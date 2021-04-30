@@ -178,6 +178,7 @@ function onClickNewProject() {
     _uiUtil.cleanControls($saveModalProject);
     $('#titleModalNewProject').html("Agregar proyecto");
     $('#idNewProject').val(0);
+    $("#statusProject").val($("#statusProject option:first").val());
     $saveModalProject.modal();
 }
 
@@ -329,6 +330,7 @@ function onClickNewAim() {
     _uiUtil.cleanControls($saveModalAim);
     $('#titleModalNewAim').html("Agregar objetivo");
     $('#idNewAim').val(0);
+    $("#statusAim").val($("#statusAim option:first").val());
     $saveModalAim.modal();
 }
 
