@@ -161,7 +161,7 @@ public class ProjectService {
     @Transactional(readOnly = true)
     public List<Task> findByUser(User userOwner, Status[] status, String query, 
             Priority[] priorities, Integer idProject, Integer idAim) {
-        if(idAim != 0)
+        if(idAim != 0 && idProject != 0)
             return taskDAO.findByUser(userOwner, status, query, priorities, aimDAO.findById(idAim));
         else if(idProject != 0)
             return taskDAO.findByUser(userOwner, status, query, priorities, projectDAO.findById(idProject));
