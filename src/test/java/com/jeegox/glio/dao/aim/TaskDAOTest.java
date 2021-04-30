@@ -91,8 +91,8 @@ public class TaskDAOTest {
     }
 
     @Test
-    public void count_notRequired_seven(){
-        assertThat(taskDAO.count()).isEqualTo(7);
+    public void count_notRequired_eight(){
+        assertThat(taskDAO.count()).isEqualTo(8);
     }
 
     @Test
@@ -106,6 +106,7 @@ public class TaskDAOTest {
         tasks.add(new Task(3, "service", "create service", Status.ACTIVE, Priority.BAJA, 8, admin, worker, loginScreen));
         tasks.add(new Task(4, "dao", "create dao", Status.ACTIVE, Priority.ALTA, 8, admin, worker, loginScreen));
         tasks.add(new Task(5, "screen", "create screen for welcome", Status.ACTIVE, Priority.ALTA, 8, admin, worker, welcomeScreen));
+        tasks.add(new Task(8, "screen", "create screen for welcome", Status.ACCEPTED, Priority.ALTA, 8, admin, worker, welcomeScreen));
         tasks.add(new Task(7, "Open the door", "wake up and open the door", Status.ACTIVE, Priority.MEDIA, 8, admin, worker, welcomeScreenDeleted));
         return tasks;
     }
@@ -179,9 +180,10 @@ public class TaskDAOTest {
     
     private List<Task> getExpectedTasksByCommonName() {
         List<Task> tasks = new ArrayList<>();
-        tasks.add(new Task(5, "screen", "create screen for welcome", Status.ACTIVE, Priority.ALTA, 8, admin, worker, welcomeScreen));
         tasks.add(new Task(1, "screen", "create screen", Status.IN_PROCESS, Priority.MEDIA, 8, admin, worker, loginScreen));
         tasks.add(new Task(2, "screen", "create screen", Status.DELETED, Priority.MEDIA, 8, admin, worker, loginScreen));
+        tasks.add(new Task(5, "screen", "create screen for welcome", Status.ACTIVE, Priority.ALTA, 8, admin, worker, welcomeScreen));
+        tasks.add(new Task(8, "screen", "create screen for welcome", Status.ACCEPTED, Priority.ALTA, 8, admin, worker, welcomeScreen));
         return tasks;
     }
 
@@ -227,12 +229,13 @@ public class TaskDAOTest {
     
     private List<Task> getAllTasksByCompany() {
         List<Task> tasks = new ArrayList<>();
-        tasks.add(new Task(4, "dao", "create dao", Status.ACTIVE, Priority.ALTA, 8, admin, worker, loginScreen));
-        tasks.add(new Task(5, "screen", "create screen for welcome", Status.ACTIVE, Priority.ALTA, 8, admin, worker, welcomeScreen));
         tasks.add(new Task(1, "screen", "create screen", Status.IN_PROCESS, Priority.MEDIA, 8, admin, worker, loginScreen));
         tasks.add(new Task(2, "screen", "create screen", Status.DELETED, Priority.MEDIA, 8, admin, worker, loginScreen));
-        tasks.add(openDoorTask);
         tasks.add(new Task(3, "service", "create service", Status.ACTIVE, Priority.BAJA, 8, admin, worker, loginScreen));
+        tasks.add(new Task(4, "dao", "create dao", Status.ACTIVE, Priority.ALTA, 8, admin, worker, loginScreen));
+        tasks.add(new Task(5, "screen", "create screen for welcome", Status.ACTIVE, Priority.ALTA, 8, admin, worker, welcomeScreen));
+        tasks.add(new Task(8, "screen", "create screen for welcome", Status.ACCEPTED, Priority.ALTA, 8, admin, worker, welcomeScreen));
+        tasks.add(openDoorTask);
         return tasks;
     }
 
@@ -276,6 +279,24 @@ public class TaskDAOTest {
     }
     
     @Test
+    public void findByUser_overloadMethodWithAimParam_aimWithOneTask_listWithOnlyOneElement(){
+        List<Task> tasks = taskDAO.findByUser(worker, Status.values(), "", Priority.values(), smallAim);
+        assertThat(tasks).containsExactly(openDoorTask);
+    }
+    
+    @Test
+    public void findByUser_overloadMethodWithAimParam_nameNotExists_emptyList() {
+        List<Task> tasks = taskDAO.findByUser(worker, Status.values(), "NotExists", Priority.values(), smallAim);
+        assertThat(tasks).isEmpty();
+    }
+
+    @Test
+    public void findByUser_overloadMethodWithAimParam_deletedAim_emptyList() {
+        List<Task> tasks = taskDAO.findByUser(worker, Status.values(), "NotExists", Priority.values(), welcomeScreenDeleted);
+        assertThat(tasks).isEmpty();
+    }
+    
+    @Test
     public void countActiveByUserOwner_userExists_one() {
         assertThat(taskDAO.countActiveByUserOwner(worker)).isEqualTo(1);
     }
@@ -307,6 +328,16 @@ public class TaskDAOTest {
     @Test
     public void findSummaryTime_taskNotExists_null() {
         assertThat(taskDAO.findSummaryTime(100)).isNull();
+    }
+    
+    @Test
+    public void countFinishedByUserOwner_userExists_one() {
+        assertThat(taskDAO.countFinishedByUserOwner(worker)).isEqualTo(1);
+    }
+
+    @Test
+    public void countFinishedByUserOwner_userNotExists_zero() {
+        assertThat(taskDAO.countFinishedByUserOwner(admin)).isEqualTo(0);
     }
 
     private void insertInitialData() throws SQLException {
@@ -354,6 +385,9 @@ public class TaskDAOTest {
 
         connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"+
                 " values(5, 'screen', 'create screen for welcome', 'ACTIVE', 0, 8, 2, 1, 2)");
+        
+        connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"
+                + " values(8, 'screen', 'create screen for welcome', 'ACCEPTED', 0, 8, 2, 1, 2)");
 
         connection.createStatement().execute("insert into project(id_project, name, description, init_date, end_date, status, id_user) "+
                 " values (2, 'Small project', 'This is a really small project', '2010-01-01', '2020-12-31', 'ACTIVE', 1)");

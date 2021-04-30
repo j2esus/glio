@@ -1,10 +1,5 @@
-<%-- 
-    Document   : resources
-    Created on : 5/11/2017, 11:16:10 PM
-    Author     : j2esus
---%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<meta charset="utf-8">
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 

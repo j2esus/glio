@@ -70,8 +70,7 @@ public class TaskDAOImpl extends GenericDAOImpl<Task,Integer> implements TaskDAO
                 " and t.priority in ( :priorities ) "+
                 " and aim.status = :activeStatus "+
                 " and project.status = :activeStatus "+
-                " and project = :project "+
-                " order by t.priority ";
+                " and project = :project ";
 
         return sessionFactory.getCurrentSession().createQuery(query).
                 setParameter("userOwner", userOwner).
@@ -80,6 +79,31 @@ public class TaskDAOImpl extends GenericDAOImpl<Task,Integer> implements TaskDAO
                 setParameterList("priorities", priorities).
                 setParameter("activeStatus", Status.ACTIVE).
                 setParameter("project", project).
+                getResultList();
+    }
+    
+    @Override
+    public List<Task> findByUser(User userOwner, Status[] status, String name, Priority[] priorities, Aim aim) {
+        String query = " select t "
+                + " from Task t "
+                + " join t.userOwner user "
+                + " join t.father aim "
+                + " join aim.father project "
+                + " where user = :userOwner "
+                + " and t.status in ( :status ) "
+                + " and upper(t.name) like :name "
+                + " and t.priority in ( :priorities ) "
+                + " and aim.status = :activeStatus "
+                + " and project.status = :activeStatus "
+                + " and aim = :aim ";
+
+        return sessionFactory.getCurrentSession().createQuery(query).
+                setParameter("userOwner", userOwner).
+                setParameterList("status", status).
+                setParameter("name", "%" + name.toUpperCase() + "%").
+                setParameterList("priorities", priorities).
+                setParameter("activeStatus", Status.ACTIVE).
+                setParameter("aim", aim).
                 getResultList();
     }
 
@@ -95,8 +119,7 @@ public class TaskDAOImpl extends GenericDAOImpl<Task,Integer> implements TaskDAO
                 " and upper(t.name) like :name "+
                 " and t.priority in ( :priorities ) "+
                 " and aim.status = :activeStatus "+
-                " and project.status = :activeStatus "+
-                " order by t.priority ";
+                " and project.status = :activeStatus ";
 
         return sessionFactory.getCurrentSession().createQuery(query).
                 setParameter("userOwner", userOwner).
@@ -165,8 +188,7 @@ public class TaskDAOImpl extends GenericDAOImpl<Task,Integer> implements TaskDAO
                 setParameterList("status", new Status[]{
                     Status.PENDING,
                     Status.IN_PROCESS,
-                    Status.PAUSED,
-                    Status.FINISHED}).
+                    Status.PAUSED}).
                 setParameter("activeStatus", Status.ACTIVE).
                 getResultList().stream().
                 findFirst().orElse(0);
@@ -189,6 +211,27 @@ public class TaskDAOImpl extends GenericDAOImpl<Task,Integer> implements TaskDAO
                 (Integer) item[3], (Integer)item[4], (Integer) item[5], 
                 item[6] == null ? BigDecimal.ZERO : (BigDecimal)item[6]))
                 .collect(Collectors.toList()).stream().findFirst().orElse(null);
+    }
+
+    @Override
+    public Long countFinishedByUserOwner(User user) {
+        String query = " select count(t) "
+                + " from Task t "
+                + " join t.father a "
+                + " join a.father p "
+                + " where t.userOwner = :user "
+                + " and t.status in ( :status )"
+                + " and a.status = :activeStatus "
+                + " and p.status = :activeStatus ";
+
+        return (Long) sessionFactory.getCurrentSession().createQuery(query).
+                setParameter("user", user).
+                setParameterList("status", new Status[]{
+            Status.FINISHED,
+            Status.ACCEPTED}).
+                setParameter("activeStatus", Status.ACTIVE).
+                getResultList().stream().
+                findFirst().orElse(0);
     }
     
 }

@@ -133,7 +133,7 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Subcategoría
+                                Fecha
                             </div>
                             <div class="col-9">
                                 <input type="date" class="form-control" id="dateE" required="required"/>

@@ -169,7 +169,6 @@
                             </div>
                             <div class="col-9">
                                 <select id="statusProject" class="form-control" required="required">
-                                    <option value="">--Seleccione</option>
                                     <c:forEach items="${status}" var="status">
                                         <option value="${status}">${status}</option>
                                     </c:forEach>
@@ -292,7 +291,6 @@
                             </div>
                             <div class="col-9">
                                 <select id="statusAim" class="form-control" required="required">
-                                    <option value="">--Seleccione</option>
                                     <c:forEach items="${statusAim}" var="status">
                                         <option value="${status}">${status}</option>
                                     </c:forEach>

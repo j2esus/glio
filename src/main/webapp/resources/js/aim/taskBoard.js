@@ -1,4 +1,4 @@
-let $tasks, $aims, $projects;
+let $tasks, $aims, $projects, $finishedTasks;
 
 let $projectFilter, $statusFilter, $nameFilter;
 let $dataTable;
@@ -22,10 +22,13 @@ function initComponents() {
     $tasks = $('#tasks');
     $aims = $('#aims');
     $projects = $('#projects');
+    $finishedTasks = $('#finishedTasks');
     
     $projectFilter = $('#projectFilter');
     $statusFilter = $('#statusFilter');
-    $statusFilter.selectpicker('selectAll');
+    $aimFilter = $('#aimFilter');
+    selectDefaultStatusFilter();
+    
     $nameFilter = $('#nameFilter');
     
     $dataTable = $('#dataTable');
@@ -45,6 +48,11 @@ function initComponents() {
 function initEvents() {
 
     $projectFilter.change(function () {
+        findTasks();
+        findAims($projectFilter.val(), $aimFilter, '--Objetivo');
+    });
+    
+    $aimFilter.change(function () {
         findTasks();
     });
     
@@ -148,6 +156,8 @@ function toFinished() {
             if (response === "OK") {
                 refreshCurrentTaskData(_task, 'FINISHED');
                 _timersPerTasks.stop(_task.id);
+                countActiveTasksByUserOwner();
+                countFinishedByUserOwner();
             } else {
                 _notify.show(response, 'danger');
             }
@@ -168,6 +178,8 @@ function toCancel() {
         success: function (response) {
             if (response === "OK") {
                 refreshCurrentTaskData(_task, 'PAUSED');
+                countActiveTasksByUserOwner();
+                countFinishedByUserOwner();
             } else {
                 _notify.show(response, 'danger');
             }
@@ -179,34 +191,12 @@ function toCancel() {
 
 function bntNewOnClick() {
     $('#idNewTask').val(0);
-    findAims($idProjectTask.val());
+    findAims($idProjectTask.val(), $('#idAimTask'), '--Seleccione');
     $saveModalTask.modal();
 }
 
-function findAims(idProject) {
-    $.ajax({
-        type: "POST",
-        url: $.PATH + "task/findAim",
-        data: {idProject: idProject},
-        async: false,
-        beforeSend: function (xhr) {
-            _blockUI.block();
-            $('#idAimTask').empty();
-        },
-        success: function (response) {
-            if (response.length > 0) {
-                $.each(response, function (i, item) {
-                    $('#idAimTask').append("<option value=" + item.id + ">" + item.name + "</option>");
-                });
-            }
-        }, complete: function () {
-            _blockUI.unblock();
-        }
-    });
-}
-
 function idProjectTaskOnChange() {
-    findAims($idProjectTask.val());
+    findAims($idProjectTask.val(), $('#idAimTask'), '--Seleccione');
 }
 
 function saveTask() {
@@ -229,6 +219,8 @@ function saveTask() {
             _notify.show("Tarea guardado con éxito", 'success');
             $saveModalTask.modal('hide');
             addRowToTable(task, $dataTable);
+            countActiveTasksByUserOwner();
+            countFinishedByUserOwner();
         }, complete: function () {
             _blockUI.unblock();
             _uiUtil.cleanControls($saveModalTask);
@@ -240,6 +232,7 @@ function loadSummaryOfTasks(){
     countActiveTasksByUserOwner();
     countActiveAimsByUserOwner();
     countActiveProjectsByUserOwner();
+    countFinishedByUserOwner();
 }
 
 function countActiveTasksByUserOwner(){
@@ -252,6 +245,22 @@ function countActiveTasksByUserOwner(){
         },
         success: function (response) {
             $tasks.html(response);
+        }, complete: function () {
+            _blockUI.unblock();
+        }
+    });
+}
+
+function countFinishedByUserOwner() {
+    $.ajax({
+        type: "POST",
+        url: $.PATH + "task/countFinishedByUserOwner",
+        beforeSend: function (xhr) {
+            _blockUI.block();
+            $finishedTasks.html('0');
+        },
+        success: function (response) {
+            $finishedTasks.html(response);
         }, complete: function () {
             _blockUI.unblock();
         }
@@ -303,6 +312,7 @@ function findTasks() {
             query: $nameFilter.val(),
             priorities: priorities, 
             idProject: $projectFilter.val(),
+            idAim: $aimFilter.val(),
             status: $statusFilter.selectpicker('val')
         },
         beforeSend: function (xhr) {
@@ -488,4 +498,11 @@ function createNewTimer(currentTimePerTask, chart, estimatedTime, realTime){
         }
     };
     return timer;
+}
+
+function selectDefaultStatusFilter(){
+    $statusFilter.selectpicker('selectAll');
+    let statusValues = $statusFilter.selectpicker('val');
+    statusValues.pop();
+    $statusFilter.selectpicker('val', statusValues);
 }

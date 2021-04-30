@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="<c:url value="/resources/js/aim/activity.js"/>"></script>
+<script src="<c:url value="/resources/js/aim/commonFunctions.js"/>"></script>
 
 <h1>Actividad</h1>
 <hr/>

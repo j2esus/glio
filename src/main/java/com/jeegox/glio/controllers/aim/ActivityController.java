@@ -45,10 +45,4 @@ public class ActivityController extends BaseController {
         return userService.findActivityData(getCurrentCompany(request), Util.stringToDate(initDate, "yyyy-MM-dd"),
                 Util.stringToDate(endDate, "yyyy-MM-dd"), idProject, idAim);
     }
-    
-    @RequestMapping(value = "findAims", method = RequestMethod.POST)
-    @ResponseBody
-    public List<Aim> findAims(HttpServletRequest request, @RequestParam Integer idProject){
-        return projectService.findBy(projectService.findBydId(idProject));
-    }
 }

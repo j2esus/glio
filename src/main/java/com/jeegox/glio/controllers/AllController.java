@@ -7,6 +7,7 @@ import com.jeegox.glio.entities.Town;
 import com.jeegox.glio.entities.admin.CategoryMenu;
 import com.jeegox.glio.entities.admin.Token;
 import com.jeegox.glio.entities.admin.User;
+import com.jeegox.glio.entities.aim.Aim;
 import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.services.AddressService;
 import com.jeegox.glio.services.CategoryMenuService;
@@ -164,5 +165,11 @@ public class AllController extends BaseController {
     public ResponseEntity<Suburb> findSuburbsByZipCodeAndName(@RequestParam String zipcode, @RequestParam String name){
         return Optional.ofNullable(addressService.findBy(zipcode, name).get()).map(suburb->ResponseEntity.ok().body(suburb))
                 .orElseGet(()->new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+    
+    @RequestMapping(value = "findAims", method = RequestMethod.POST)
+    @ResponseBody
+    public List<Aim> findAims(HttpServletRequest request, @RequestParam Integer idProject) {
+        return projectService.findBy(projectService.findBydId(idProject));
     }
 }
