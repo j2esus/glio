@@ -48,8 +48,8 @@ function initComponents() {
 function initEvents() {
 
     $projectFilter.change(function () {
-        findTasks();
         findAims($projectFilter.val(), $aimFilter, '--Objetivo');
+        findTasks();
     });
     
     $aimFilter.change(function () {
