@@ -271,9 +271,10 @@
                                 Objetivo
                             </div>
                             <div class="col-9">
-                                <select class="custom-select" id = "idAimTask">
+                                <select class="custom-select" id = "idAimTask" required="required">
 
                                 </select>
+                                <div class="help-block with-errors"></div>
                             </div>
                         </div>
                     </div>
