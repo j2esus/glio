@@ -48,8 +48,8 @@ function initComponents() {
 function initEvents() {
 
     $projectFilter.change(function () {
+        findActiveAims($projectFilter.val(), $aimFilter, '--Objetivo', '0');
         findTasks();
-        findAims($projectFilter.val(), $aimFilter, '--Objetivo');
     });
     
     $aimFilter.change(function () {
@@ -191,12 +191,12 @@ function toCancel() {
 
 function bntNewOnClick() {
     $('#idNewTask').val(0);
-    findAims($idProjectTask.val(), $('#idAimTask'), '--Seleccione');
+    findActiveAims($idProjectTask.val(), $('#idAimTask'), '--Seleccione', '');
     $saveModalTask.modal();
 }
 
 function idProjectTaskOnChange() {
-    findAims($idProjectTask.val(), $('#idAimTask'), '--Seleccione');
+    findActiveAims($idProjectTask.val(), $('#idAimTask'), '--Seleccione', '');
 }
 
 function saveTask() {

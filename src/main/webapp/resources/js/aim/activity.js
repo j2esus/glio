@@ -32,7 +32,7 @@ function initEvents() {
     });
 
     $idProject.change(function () {
-        findAims($idProject.val(), $idAim, '--Todos');
+        findAllAims($idProject.val(), $idAim, '--Todos', '0');
     });
 }
 

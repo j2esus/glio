@@ -20,7 +20,7 @@ _uiUtil = (function () {
             $(this).val('');
         });
         $('textarea', context).each(function () {
-            $(this).text('');
+            $(this).val('');
         });
         $('select', context).each(function () {
             $(this).val('');
