@@ -1,7 +1,14 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<script>
+    window.module = {};
+</script>
 <script src="<c:url value="/resources/js/aim/taskBoard.js"/>"></script>
 <script src="<c:url value="/resources/js/aim/commonFunctions.js"/>"></script>
+<script src="<c:url value="/resources/js/util/confetti.js"/>"></script>
+<script>
+  window.confetti = module.exports;
+</script>
 
 <div class="row">
     <div class="col-8">
@@ -167,6 +174,10 @@
                     <div class="col-lg-2 mb-2"><b>Asignado a</b></div>
                     <div class="col-lg-4 mb-2" id="divAssignedTo"></div>
                 </div>
+                <div class="row">
+                    <div class="col-lg-2 mb-2"><b>Objetivo</b></div>
+                    <div class="col-lg-10 mb-2" id="divObjetivo"></div>
+                </div>
                 <hr/>
                 <div class="row">
                     <div class="col-lg-6">
@@ -271,9 +282,10 @@
                                 Objetivo
                             </div>
                             <div class="col-9">
-                                <select class="custom-select" id = "idAimTask">
+                                <select class="custom-select" id = "idAimTask" required="required">
 
                                 </select>
+                                <div class="help-block with-errors"></div>
                             </div>
                         </div>
                     </div>
@@ -284,6 +296,33 @@
                 </div>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="modal fade" id="congratulationsModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">¡Felicidades!</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <img src="<c:url value="/resources/images/congrats.png"/>" width="70%" class="imgcenter"/>
+                    </div>
+                    <div class="col-lg-8">
+                        <br/>
+                        <div class="h5 text-center">Haz finalizado con éxito el objetivo:</div>
+                        <div class="text-center" id="congratsContent"></div> 
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" data-dismiss="modal">¡Sí! soy genial</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
     </div>
 </div>
 

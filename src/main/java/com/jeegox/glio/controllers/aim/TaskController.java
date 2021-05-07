@@ -10,6 +10,7 @@ import com.jeegox.glio.enumerators.Priority;
 import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.services.UserService;
 import com.jeegox.glio.services.ProjectService;
+import com.jeegox.glio.services.aim.TaskService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +27,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class TaskController extends BaseController {
     private final ProjectService projectService;
     private final UserService userService;
+    private final TaskService taskService;
 
     @Autowired
-    public TaskController(ProjectService projectService, UserService userService) {
+    public TaskController(ProjectService projectService, UserService userService,
+            TaskService taskService) {
         this.projectService = projectService;
         this.userService = userService;
+        this.taskService = taskService;
     }
 
     @RequestMapping("init")
@@ -61,14 +65,8 @@ public class TaskController extends BaseController {
 
     @RequestMapping(value = "toFinishTask", method = RequestMethod.POST)
     @ResponseBody
-    public String toFinishTask(HttpServletRequest request, @RequestParam Integer idTask) {
-        try {
-            User user = getCurrentUser(request);
-            projectService.work(user, idTask, Status.FINISHED);
-            return "OK";
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+    public ResponseEntity<Task> toFinishTask(HttpServletRequest request, @RequestParam Integer idTask) {
+        return ResponseEntity.ok(taskService.finishTask(taskService.findById(idTask)));
     }
 
     @RequestMapping(value = "toPauseTask", method = RequestMethod.POST)
@@ -85,15 +83,9 @@ public class TaskController extends BaseController {
     
     @RequestMapping(value = "toCancelTask", method = RequestMethod.POST)
     @ResponseBody
-    public String toCancelTask(HttpServletRequest request, @RequestParam Integer idTask) {
-        try {
-            Task task = projectService.findTaskBydId(idTask);
-            task.setStatus(Status.PAUSED);
-            projectService.saveOrUpdate(task);
-            return "OK";
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+    public ResponseEntity<Void> toCancelTask(HttpServletRequest request, @RequestParam Integer idTask) {
+        taskService.cancelFinishedTask(taskService.findById(idTask));
+        return ResponseEntity.ok().build();
     }
     
     @RequestMapping(value = "saveTask", method = RequestMethod.POST)
@@ -103,20 +95,16 @@ public class TaskController extends BaseController {
             @RequestParam Integer estimated, @RequestParam String username, @RequestParam Integer idAim){
         Aim aim = projectService.findAimBydId(idAim);
         User user = userService.findById(username);
-        Task task = projectService.findTaskBydId(id);
-        if(task == null){
-            task = new Task(null, name, description, Status.PENDING, priority,
-                estimated, getCurrentUser(request), user, aim );
-        }else{
-            task.setName(name);
-            task.setDescription(description);
-            task.setPriority(priority);
-            task.setEstimatedTime(estimated);
-            task.setUserOwner(user);
-            task.setUserRequester(getCurrentUser(request));
-            task.setFather(aim);
-        }
-        projectService.saveOrUpdate(task);
+        Task task = new Task();
+        task.setName(name);
+        task.setDescription(description);
+        task.setStatus(Status.PENDING);
+        task.setPriority(priority);
+        task.setEstimatedTime(estimated);
+        task.setUserOwner(user);
+        task.setUserRequester(getCurrentUser(request));
+        task.setFather(aim);
+        taskService.createNewTask(task);
         return ResponseEntity.ok(task);
     }
     

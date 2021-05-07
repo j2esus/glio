@@ -167,9 +167,15 @@ public class AllController extends BaseController {
                 .orElseGet(()->new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     
-    @RequestMapping(value = "findAims", method = RequestMethod.POST)
+    @RequestMapping(value = "findAllAims", method = RequestMethod.POST)
     @ResponseBody
-    public List<Aim> findAims(HttpServletRequest request, @RequestParam Integer idProject) {
+    public List<Aim> findAllAims(HttpServletRequest request, @RequestParam Integer idProject) {
         return projectService.findBy(projectService.findBydId(idProject));
+    }
+    
+    @RequestMapping(value = "findActiveAims", method = RequestMethod.POST)
+    @ResponseBody
+    public List<Aim> findActiveAims(HttpServletRequest request, @RequestParam Integer idProject) {
+        return projectService.findBy(projectService.findBydId(idProject), new Status[]{Status.ACTIVE});
     }
 }
