@@ -32,4 +32,8 @@ public interface TaskDAO extends GenericDAO<Task,Integer>{
     TaskDTO findSummaryTime(Integer idTask);
     
     Long countFinishedByUserOwner(User user);
+    
+    Long countActiveByAim(Aim aim);
+    
+    Long countFinishByAim(Aim aim);
 }

@@ -9,6 +9,7 @@ import com.jeegox.glio.enumerators.Priority;
 import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.services.UserService;
 import com.jeegox.glio.services.ProjectService;
+import com.jeegox.glio.services.aim.TaskService;
 import com.jeegox.glio.util.Util;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -25,11 +26,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ProjectController extends BaseController{
     private final ProjectService projectService;
     private final UserService userService;
+    private final TaskService taskService;
 
     @Autowired
-    public ProjectController(ProjectService projectService, UserService userService) {
+    public ProjectController(ProjectService projectService, UserService userService,
+            TaskService taskService) {
         this.projectService = projectService;
         this.userService = userService;
+        this.taskService = taskService;
     }
 
     @RequestMapping("init")
@@ -121,6 +125,7 @@ public class ProjectController extends BaseController{
             if(task == null){
                 task = new Task(null, name, description, Status.PENDING, priority,
                     estimated, getCurrentUser(request), user, aim );
+                taskService.createNewTask(task);
             }else{
                 task.setName(name);
                 task.setDescription(description);
@@ -129,9 +134,8 @@ public class ProjectController extends BaseController{
                 task.setUserOwner(user);
                 task.setUserRequester(getCurrentUser(request));
                 task.setFather(aim);
+                projectService.saveOrUpdate(task);
             }
-            
-            projectService.saveOrUpdate(task);
             return "OK";
         }catch(Exception e){
             return e.getMessage();

@@ -233,5 +233,48 @@ public class TaskDAOImpl extends GenericDAOImpl<Task,Integer> implements TaskDAO
                 getResultList().stream().
                 findFirst().orElse(0);
     }
+
+    @Override
+    public Long countActiveByAim(Aim aim) {
+        String query = " select count(t) "
+                + " from Task t "
+                + " join t.father a "
+                + " join a.father p "
+                + " where a = :aim "
+                + " and t.status in ( :status )"
+                + " and a.status = :activeStatus "
+                + " and p.status = :activeStatus ";
+
+        return (Long) sessionFactory.getCurrentSession().createQuery(query).
+                setParameter("aim", aim).
+                setParameterList("status", new Status[]{
+            Status.PENDING,
+            Status.IN_PROCESS,
+            Status.PAUSED}).
+                setParameter("activeStatus", Status.ACTIVE).
+                getResultList().stream().
+                findFirst().orElse(0);
+    }
+
+    @Override
+    public Long countFinishByAim(Aim aim) {
+        String query = " select count(t) "
+                + " from Task t "
+                + " join t.father a "
+                + " join a.father p "
+                + " where a = :aim "
+                + " and t.status in ( :status )"
+                + " and a.status = :activeStatus "
+                + " and p.status = :activeStatus ";
+
+        return (Long) sessionFactory.getCurrentSession().createQuery(query).
+                setParameter("aim", aim).
+                setParameterList("status", new Status[]{
+            Status.FINISHED,
+            Status.ACCEPTED}).
+                setParameter("activeStatus", Status.ACTIVE).
+                getResultList().stream().
+                findFirst().orElse(0);
+    }
     
 }

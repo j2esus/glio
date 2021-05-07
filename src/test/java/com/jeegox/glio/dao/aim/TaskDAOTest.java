@@ -59,7 +59,7 @@ public class TaskDAOTest {
             java.sql.Date.valueOf("2010-01-01"), java.sql.Date.valueOf("2020-12-31"), admin);
     private final static Aim smallAim = new Aim(3, "Do workout", "Go outside and do exercise.",
             Status.ACTIVE, java.sql.Date.valueOf("2010-01-01"), java.sql.Date.valueOf("2010-01-05"), admin, smallProject);
-    private static Task openDoorTask = new Task(6, "Open the door", "wake up and open the door", Status.ACTIVE, Priority.MEDIA, 8, admin, worker, smallAim);
+    private static Task openDoorTask = new Task(6, "Open the door", "wake up and open the door", Status.PENDING, Priority.MEDIA, 8, admin, worker, smallAim);
     
     private final static Aim welcomeScreenDeleted = new Aim(4, "Welcome deleted", "Create a welcome screen",
             Status.DELETED, java.sql.Date.valueOf("2010-01-01"), java.sql.Date.valueOf("2010-01-05"), admin, project);
@@ -103,11 +103,11 @@ public class TaskDAOTest {
     private List<Task> getExpectedTasksByProject() {
         List<Task> tasks = new ArrayList<>();
         tasks.add(new Task(1, "screen", "create screen", Status.IN_PROCESS, Priority.MEDIA, 8, admin, worker, loginScreen));
-        tasks.add(new Task(3, "service", "create service", Status.ACTIVE, Priority.BAJA, 8, admin, worker, loginScreen));
-        tasks.add(new Task(4, "dao", "create dao", Status.ACTIVE, Priority.ALTA, 8, admin, worker, loginScreen));
-        tasks.add(new Task(5, "screen", "create screen for welcome", Status.ACTIVE, Priority.ALTA, 8, admin, worker, welcomeScreen));
+        tasks.add(new Task(3, "service", "create service", Status.PENDING, Priority.BAJA, 8, admin, worker, loginScreen));
+        tasks.add(new Task(4, "dao", "create dao", Status.PENDING, Priority.ALTA, 8, admin, worker, loginScreen));
+        tasks.add(new Task(5, "screen", "create screen for welcome", Status.PENDING, Priority.ALTA, 8, admin, worker, welcomeScreen));
         tasks.add(new Task(8, "screen", "create screen for welcome", Status.ACCEPTED, Priority.ALTA, 8, admin, worker, welcomeScreen));
-        tasks.add(new Task(7, "Open the door", "wake up and open the door", Status.ACTIVE, Priority.MEDIA, 8, admin, worker, welcomeScreenDeleted));
+        tasks.add(new Task(7, "Open the door", "wake up and open the door", Status.PENDING, Priority.MEDIA, 8, admin, worker, welcomeScreenDeleted));
         return tasks;
     }
 
@@ -126,8 +126,8 @@ public class TaskDAOTest {
     private List<Task> getExpectedTasksByAim() {
         List<Task> tasks = new ArrayList<>();
         tasks.add(new Task(1, "screen", "create screen", Status.IN_PROCESS, Priority.MEDIA, 8, admin, worker, loginScreen));
-        tasks.add(new Task(3, "service", "create service", Status.ACTIVE, Priority.BAJA, 8, admin, worker, loginScreen));
-        tasks.add(new Task(4, "dao", "create dao", Status.ACTIVE, Priority.ALTA, 8, admin, worker, loginScreen));
+        tasks.add(new Task(3, "service", "create service", Status.PENDING, Priority.BAJA, 8, admin, worker, loginScreen));
+        tasks.add(new Task(4, "dao", "create dao", Status.PENDING, Priority.ALTA, 8, admin, worker, loginScreen));
         return tasks;
     }
 
@@ -182,7 +182,7 @@ public class TaskDAOTest {
         List<Task> tasks = new ArrayList<>();
         tasks.add(new Task(1, "screen", "create screen", Status.IN_PROCESS, Priority.MEDIA, 8, admin, worker, loginScreen));
         tasks.add(new Task(2, "screen", "create screen", Status.DELETED, Priority.MEDIA, 8, admin, worker, loginScreen));
-        tasks.add(new Task(5, "screen", "create screen for welcome", Status.ACTIVE, Priority.ALTA, 8, admin, worker, welcomeScreen));
+        tasks.add(new Task(5, "screen", "create screen for welcome", Status.PENDING, Priority.ALTA, 8, admin, worker, welcomeScreen));
         tasks.add(new Task(8, "screen", "create screen for welcome", Status.ACCEPTED, Priority.ALTA, 8, admin, worker, welcomeScreen));
         return tasks;
     }
@@ -231,9 +231,9 @@ public class TaskDAOTest {
         List<Task> tasks = new ArrayList<>();
         tasks.add(new Task(1, "screen", "create screen", Status.IN_PROCESS, Priority.MEDIA, 8, admin, worker, loginScreen));
         tasks.add(new Task(2, "screen", "create screen", Status.DELETED, Priority.MEDIA, 8, admin, worker, loginScreen));
-        tasks.add(new Task(3, "service", "create service", Status.ACTIVE, Priority.BAJA, 8, admin, worker, loginScreen));
-        tasks.add(new Task(4, "dao", "create dao", Status.ACTIVE, Priority.ALTA, 8, admin, worker, loginScreen));
-        tasks.add(new Task(5, "screen", "create screen for welcome", Status.ACTIVE, Priority.ALTA, 8, admin, worker, welcomeScreen));
+        tasks.add(new Task(3, "service", "create service", Status.PENDING, Priority.BAJA, 8, admin, worker, loginScreen));
+        tasks.add(new Task(4, "dao", "create dao", Status.PENDING, Priority.ALTA, 8, admin, worker, loginScreen));
+        tasks.add(new Task(5, "screen", "create screen for welcome", Status.PENDING, Priority.ALTA, 8, admin, worker, welcomeScreen));
         tasks.add(new Task(8, "screen", "create screen for welcome", Status.ACCEPTED, Priority.ALTA, 8, admin, worker, welcomeScreen));
         tasks.add(openDoorTask);
         return tasks;
@@ -297,8 +297,8 @@ public class TaskDAOTest {
     }
     
     @Test
-    public void countActiveByUserOwner_userExists_one() {
-        assertThat(taskDAO.countActiveByUserOwner(worker)).isEqualTo(1);
+    public void countActiveByUserOwner_userExists_five() {
+        assertThat(taskDAO.countActiveByUserOwner(worker)).isEqualTo(5);
     }
     
     @Test
@@ -339,6 +339,36 @@ public class TaskDAOTest {
     public void countFinishedByUserOwner_userNotExists_zero() {
         assertThat(taskDAO.countFinishedByUserOwner(admin)).isEqualTo(0);
     }
+    
+    @Test
+    public void countActiveByAim_aimWithOneDeletedAndThreeActive_three() {
+        assertThat(taskDAO.countActiveByAim(loginScreen)).isEqualTo(3);
+    }
+    
+    @Test
+    public void countActiveByAim_aimWithOneActiveAndOneFinished_one() {
+        assertThat(taskDAO.countActiveByAim(welcomeScreen)).isEqualTo(1);
+    }
+    
+    @Test
+    public void countActiveByAim_deletedAim_zero() {
+        assertThat(taskDAO.countActiveByAim(welcomeScreenDeleted)).isEqualTo(0);
+    }
+    
+    @Test
+    public void countFinishByAim_aimWithOneDeletedAndThreeActive_zero() {
+        assertThat(taskDAO.countFinishByAim(loginScreen)).isEqualTo(0);
+    }
+
+    @Test
+    public void countFinishByAim_aimWithOneActiveAndOneFinished_one() {
+        assertThat(taskDAO.countFinishByAim(welcomeScreen)).isEqualTo(1);
+    }
+    
+    @Test
+    public void countFinishByAim_deletedAim_zero() {
+        assertThat(taskDAO.countFinishByAim(welcomeScreenDeleted)).isEqualTo(0);
+    }
 
     private void insertInitialData() throws SQLException {
         Session session = sessionFactory.getCurrentSession();
@@ -378,13 +408,13 @@ public class TaskDAOTest {
                 " values(2, 'screen', 'create screen', 'DELETED', 1, 8, 1, 1, 2)");
 
         connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"+
-                " values(3, 'service', 'create service', 'ACTIVE', 2, 8, 1, 1, 2)");
+                " values(3, 'service', 'create service', 'PENDING', 2, 8, 1, 1, 2)");
 
         connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"+
-                " values(4, 'dao', 'create dao', 'ACTIVE', 0, 8, 1, 1, 2)");
+                " values(4, 'dao', 'create dao', 'PENDING', 0, 8, 1, 1, 2)");
 
         connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"+
-                " values(5, 'screen', 'create screen for welcome', 'ACTIVE', 0, 8, 2, 1, 2)");
+                " values(5, 'screen', 'create screen for welcome', 'PENDING', 0, 8, 2, 1, 2)");
         
         connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"
                 + " values(8, 'screen', 'create screen for welcome', 'ACCEPTED', 0, 8, 2, 1, 2)");
@@ -396,13 +426,13 @@ public class TaskDAOTest {
                 " values (3, 'Do workout', 'Go outside and do exercise.', '2010-01-01', '2010-01-05', 'ACTIVE', 2, 1)");
 
         connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"+
-                " values(6, 'Open the door', 'wake up and open the door', 'ACTIVE', 1, 8, 3, 1, 2)");
+                " values(6, 'Open the door', 'wake up and open the door', 'PENDING', 1, 8, 3, 1, 2)");
         
         connection.createStatement().execute("insert into aim(id_aim, name, description, init_date, end_date, status, id_project, id_user)"
                 + " values (4, 'Welcome deleted', 'Create a welcome screen', '2010-01-01', '2010-01-05', 'DELETED', 1, 1)");
         
         connection.createStatement().execute("insert into task(id_task, name, description, status, priority, estimated_time, id_aim, id_user_requester, id_user_owner)"
-                + " values(7, 'Open the door', 'wake up and open the door', 'ACTIVE', 1, 8, 4, 1, 2)");
+                + " values(7, 'Open the door', 'wake up and open the door', 'PENDING', 1, 8, 4, 1, 2)");
     }
     
     private void insert4secondsTimeForTask1() throws SQLException{
