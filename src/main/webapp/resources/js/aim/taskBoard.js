@@ -11,6 +11,8 @@ let $btnNew,
         $dataFormTask;
 let _tasks = [], _indexSelected = -1, _task = null, _inProcessTasks = new Map();
 
+let $congratulationsModal;
+
 $(document).ready(function () {
     initComponents();
     initEvents();
@@ -43,6 +45,8 @@ function initComponents() {
     $btnToFinish = $('#btnToFinish');
     $btnToCancel = $('#btnToCancel');
     hideTaskActionButtons();
+    
+    $congratulationsModal = $('#congratulationsModal');
 }
 
 function initEvents() {
@@ -152,17 +156,17 @@ function toFinished() {
         beforeSend: function (xhr) {
             _blockUI.block();
         },
-        success: function (response) {
-            if (response === "OK") {
-                refreshCurrentTaskData(_task, 'FINISHED');
-                _timersPerTasks.stop(_task.id);
-                countActiveTasksByUserOwner();
-                countFinishedByUserOwner();
-            } else {
-                _notify.show(response, 'danger');
-            }
+        success: function (taskResponse) {
+            refreshCurrentTaskData(_task, 'FINISHED');
+            _timersPerTasks.stop(_task.id);
+            loadSummaryOfTasks();
+            showCongratulations(taskResponse);
         }, complete: function () {
             _blockUI.unblock();
+        },
+        error: function (xhr, status, error) {
+            _timersPerTasks.stop(_task.id);
+            _notify.show(xhr.responseText, 'danger');
         }
     });
 }
@@ -175,16 +179,14 @@ function toCancel() {
         beforeSend: function (xhr) {
             _blockUI.block();
         },
-        success: function (response) {
-            if (response === "OK") {
-                refreshCurrentTaskData(_task, 'PAUSED');
-                countActiveTasksByUserOwner();
-                countFinishedByUserOwner();
-            } else {
-                _notify.show(response, 'danger');
-            }
+        success: function () {
+            refreshCurrentTaskData(_task, 'PAUSED');
+            loadSummaryOfTasks();
         }, complete: function () {
             _blockUI.unblock();
+        },
+        error: function (xhr, status, error) {
+            _notify.show(xhr.responseText, 'danger');
         }
     });
 }
@@ -219,8 +221,7 @@ function saveTask() {
             _notify.show("Tarea guardado con éxito", 'success');
             $saveModalTask.modal('hide');
             addRowToTable(task, $dataTable);
-            countActiveTasksByUserOwner();
-            countFinishedByUserOwner();
+            loadSummaryOfTasks();
         }, complete: function () {
             _blockUI.unblock();
             _uiUtil.cleanControls($saveModalTask);
@@ -356,6 +357,7 @@ function showTaskDetails() {
     $('#divEstimated').html(_uiUtil.secondsToHHmmss(_task.estimatedTime));
     $('#divCreatedBy').html(_task.userRequester.username);
     $('#divAssignedTo').html(_task.userOwner.username);
+    $('#divObjetivo').html(_task.father.description);
     
     configButtonsByStatus(_task.status);
     setSummaryTimePerTask();
@@ -505,4 +507,30 @@ function selectDefaultStatusFilter(){
     let statusValues = $statusFilter.selectpicker('val');
     statusValues.pop();
     $statusFilter.selectpicker('val', statusValues);
+}
+
+function showCongratulations(taskResponse){
+    if(taskResponse.father.status == 'FINISHED'){
+        showConfetti();
+        $('#congratsContent').html(taskResponse.father.description);
+        $congratulationsModal.modal();
+    }
+}
+
+function showConfetti(){
+    let duration = 5 * 1000;
+    let animationEnd = Date.now() + duration;
+    let interval = setInterval(function() {
+        let timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+            return clearInterval(interval);
+        }
+        
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: {y: 0.6}
+        });
+    }, 1000);
 }

@@ -8,6 +8,7 @@ import com.jeegox.glio.entities.util.JComplexEntity;
 import com.jeegox.glio.enumerators.Priority;
 import com.jeegox.glio.enumerators.Status;
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -22,7 +23,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "task")
-@JsonIgnoreProperties({"father","hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Task extends JComplexEntity<Integer, Aim> implements Serializable {
     private String name;
     private String description;
@@ -123,7 +124,7 @@ public class Task extends JComplexEntity<Integer, Aim> implements Serializable {
         this.userOwner = userOwner;
     }
     
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_aim",referencedColumnName = "id_aim", nullable = false)
     @Override
     public Aim getFather() {
