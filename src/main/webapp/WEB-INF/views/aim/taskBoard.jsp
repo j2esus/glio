@@ -214,7 +214,7 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Nombre
+                                * Nombre
                             </div>
                             <div class="col-9">
                                 <input type="text" id="nameTask" name="nameTask" class="form-control" required="required" maxlength="50" autocomplete="off"/>
@@ -227,14 +227,13 @@
                                 Descripción
                             </div>
                             <div class="col-9">
-                                <textarea id="descriptionTask" name="descriptionTask" class="form-control" required="required" maxlength="500" rows="3"></textarea>
-                                <div class="help-block with-errors"></div>
+                                <textarea id="descriptionTask" name="descriptionTask" class="form-control" maxlength="500" rows="3"></textarea>
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Prioridad
+                                * Prioridad
                             </div>
                             <div class="col-9">
                                 <select id="priorityTask" class="form-control" required="required">
@@ -249,7 +248,7 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Estimado
+                                * Estimado
                             </div>
                             <div class="col-9">
                                 <select id="estimatedTask" class="form-control" required="required">
@@ -266,7 +265,7 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Proyecto
+                                * Proyecto
                             </div>
                             <div class="col-9">
                                 <select class="custom-select" id = "idProjectTask">
@@ -279,7 +278,7 @@
 
                         <div class="form-group row">
                             <div class="col-3 col-form-label">
-                                Objetivo
+                                * Objetivo
                             </div>
                             <div class="col-9">
                                 <select class="custom-select" id = "idAimTask" required="required">
