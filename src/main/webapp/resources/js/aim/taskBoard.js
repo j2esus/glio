@@ -13,6 +13,10 @@ let _tasks = [], _indexSelected = -1, _task = null, _inProcessTasks = new Map();
 
 let $congratulationsModal;
 
+let status = {
+    MEDIA: 2
+};
+
 $(document).ready(function () {
     initComponents();
     initEvents();
@@ -192,7 +196,9 @@ function toCancel() {
 }
 
 function bntNewOnClick() {
+    _uiUtil.cleanControls($saveModalTask);
     $('#idNewTask').val(0);
+    $("#priorityTask").prop("selectedIndex", status.MEDIA).val();
     findActiveAims($idProjectTask.val(), $('#idAimTask'), '--Seleccione', '');
     $saveModalTask.modal();
 }
