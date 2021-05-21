@@ -33,35 +33,6 @@ public class CategoryMenuService {
     }
 
     @Transactional(readOnly = true)
-    public List<CategoryMenuDTO> findByDTO(UserType userType) {
-        List<CategoryMenuDTO> categories = new ArrayList<>();
-        Set<OptionMenu> options = userType.getOptions();
-        Iterator<OptionMenu> it = options.iterator();
-        
-        Map<Integer, CategoryMenuDTO> mapCategory = new HashMap<>();
-        
-        while(it.hasNext()){
-            OptionMenu op = it.next();
-            CategoryMenu catMenu = op.getFather();
-            
-            if(!mapCategory.containsKey(catMenu.getId())){
-                CategoryMenuDTO categoryMenuDTO = new CategoryMenuDTO(catMenu.getId(),catMenu.getName(), 
-                        catMenu.getOrder(), catMenu.getStatus(), catMenu.getIcon(), catMenu.getClazz());
-                categoryMenuDTO.getOptionsMenus().add(op);
-                mapCategory.put(catMenu.getId(), categoryMenuDTO);
-            }else{
-                CategoryMenuDTO categoryMenuDTO = mapCategory.get(catMenu.getId());
-                categoryMenuDTO.getOptionsMenus().add(op);
-            }
-        }
-        
-        for (Map.Entry<Integer, CategoryMenuDTO> entry : mapCategory.entrySet()){
-            categories.add(entry.getValue());
-        }
-        return categories;
-    }
-
-    @Transactional(readOnly = true)
     public CategoryMenu findById(Integer id) {
         return categoryMenuDAO.findById(id);
     }
