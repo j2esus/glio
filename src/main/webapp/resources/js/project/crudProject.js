@@ -49,6 +49,10 @@ var $btnRefreshTask,
         $tableTask,
         $totalTask;
 
+let status = {
+    MEDIA: 2
+};
+
 $(document).ready(function () {
     initComponents();
     initPanels();
@@ -508,6 +512,7 @@ function onClickBtnNewTask() {
     $('#idNewTask').val(0);
     $('#divTitleAim').html(item.name);
     $("#estimatedTask").val($("#estimatedTask option:first").val());
+    $("#priorityTask").prop("selectedIndex", status.MEDIA).val();
     $saveModalTask.modal();
 }
 

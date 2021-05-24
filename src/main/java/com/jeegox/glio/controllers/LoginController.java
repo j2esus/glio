@@ -1,17 +1,17 @@
 package com.jeegox.glio.controllers;
 
+import com.jeegox.glio.dto.admin.CategoryMenuDTO;
 import com.jeegox.glio.entities.admin.OptionMenu;
 import com.jeegox.glio.entities.admin.Session;
 import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.services.CompanyService;
 import com.jeegox.glio.services.UserService;
+import com.jeegox.glio.services.admin.AppMenuService;
 import com.jeegox.glio.util.Constants;
 import com.jeegox.glio.util.Util;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +27,14 @@ import org.springframework.web.servlet.ModelAndView;
 public class LoginController {
     private final UserService userService;
     private final CompanyService companyService;
+    private final AppMenuService appMenuService;
 
     @Autowired
-    public LoginController(UserService userService, CompanyService companyService) {
+    public LoginController(UserService userService, CompanyService companyService,
+            AppMenuService appMenuService) {
         this.userService = userService;
         this.companyService = companyService;
+        this.appMenuService = appMenuService;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -82,16 +85,18 @@ public class LoginController {
             if (session != null) {
                 Set<OptionMenu> options = session.getFather().getUserType().getOptions();
 
-                Map<String, String> mapaOptios = options.stream()
-                        .collect(Collectors.toMap(x -> x.getUrl().
-                                replace("/init","").substring(1), x -> x.getUrl()));
-
-                mapaOptios.put("resources", "");
-                mapaOptios.put("all", "");
+                Map<String, String> mapaAllowedOptions = appMenuService.transformAllowedOptionsToMap(options);
+                List<CategoryMenuDTO> categoriesMenu = appMenuService.transformOptionsMenu(options);
+                
                 HttpSession httpSession = request.getSession(false);
                 httpSession.setAttribute(Constants.Security.USER_SESSION, session);
-                httpSession.setAttribute(Constants.Security.OPTIONS_MAP, mapaOptios);
-                mv = new ModelAndView("redirect:all/dash");
+                httpSession.setAttribute(Constants.Security.OPTIONS_MAP, mapaAllowedOptions);
+                httpSession.setAttribute(Constants.Security.CATEGORY_LIST, categoriesMenu);
+                
+                if(categoriesMenu.size() == 1)
+                    mv = new ModelAndView("redirect:all/module?id="+categoriesMenu.get(0).getId());
+                else
+                    mv = new ModelAndView("redirect:all/dash");
                 return mv;
             }
             mv = new ModelAndView("index");

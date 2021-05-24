@@ -107,7 +107,6 @@ public class TaskDAOTest {
         tasks.add(new Task(4, "dao", "create dao", Status.PENDING, Priority.ALTA, 8, admin, worker, loginScreen));
         tasks.add(new Task(5, "screen", "create screen for welcome", Status.PENDING, Priority.ALTA, 8, admin, worker, welcomeScreen));
         tasks.add(new Task(8, "screen", "create screen for welcome", Status.ACCEPTED, Priority.ALTA, 8, admin, worker, welcomeScreen));
-        tasks.add(new Task(7, "Open the door", "wake up and open the door", Status.PENDING, Priority.MEDIA, 8, admin, worker, welcomeScreenDeleted));
         return tasks;
     }
 
