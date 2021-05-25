@@ -1,114 +1,56 @@
-let $btnRefresh,
-        $dataTableGral,
-        $btnRefreshSub, $btnYearBack, $btnGralBack, $btnRefreshComparator,
-    $idCategoryF, $idSubcategoryF, $btnCategoryBack;
+let $btnYearBack, $idCategoryF, $idSubcategoryF, $btnCategoryBack;
 
-let $btnRefreshMonth, $year, $totalMonth, $totalMonthCategory;
+let $btnRefresh, $year, $totalMonth, $totalMonthCategory;
 
-let $divCategory, $totalCategory,
-        $divSubcategory, $totalSubcategory;
-
-let _indexSelectedCategory = -1, _dataCategory = [], _indexSelectedMonth = -1, _indexSelectedCategoryDetail = -1;
-
-let $dataTableSub;
+let _indexSelectedMonth = -1, _indexSelectedCategoryDetail = -1;
 
 let _dataCategoryDetails = [];
 
 let _months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-let __chartCategory, __chartSubcategory;
-
 $(document).ready(function () {
     initComponents();
-    initPanels();
     initEvents();
-    findDataCategory();
+    createGeneralCategoryPieChart();
     createChartsPerYear();
-    buildChartsComparator();
+    createLineChartYearComparator();
 });
 
 function initComponents() {
-    $btnRefresh = $('#btnRefresh');
-    $btnRefreshSub = $('#btnRefreshSub');
-    $dataTableGral = $('#dataTableGral');
     $btnYearBack = $('#btnYearBack');
     $btnCategoryBack = $('#btnCategoryBack');
-    $btnGralBack = $('#btnGralBack');
-    $btnRefreshComparator = $('#btnRefreshComparator');
     $idCategoryF = $('#idCategoryF');
     $idSubcategoryF = $('#idSubcategoryF');
 
-    $dataTableSub = $('#dataTableSub');
-
-    $divCategory = $('#divCategory');
-    $totalCategory = $('#totalCategory');
-    $divSubcategory = $('#divSubcategory');
-    $totalSubcategory = $('#totalSubcategory');
-
-    $btnRefreshMonth = $('#btnRefreshMonth');
+    $btnRefresh = $('#btnRefresh');
     $year = $('#year');
     $totalMonth = $('#totalMonth');
     $totalMonthCategory = $('#totalMonthCategory');
 
     $btnYearBack.hide();
     $btnCategoryBack.hide();
-    
-    __chartCategory = new mx.jeegox.jChart($('#divGraphCategory'));
-    __chartSubcategory = new mx.jeegox.jChart($('#divGraphSubcategory'));
-}
-
-function initPanels() {
-    $divCategory.css("display", "block");
-    $divSubcategory.css("display", "none");
-}
-
-function returnGeneral() {
-    $divCategory.css("display", "block");
-    $divSubcategory.css("display", "none");
 }
 
 function initEvents() {
     $btnRefresh.click(onClickBtnRefresh);
-
-    $dataTableGral.on('click', 'tbody tr', function (event) {
-        $(this).addClass('row-selected').siblings().removeClass('row-selected');
-        _indexSelectedCategory = $(this).data('meta-row');
-    });
-
-    $dataTableGral.on('dblclick', 'tbody tr', function (event) {
-        _indexSelectedCategory = $(this).data('meta-row');
-        showSubcategoryData();
-    });
-
-    $btnRefreshSub.click(onClickBtnRefreshSub);
-    $btnRefreshMonth.click(onClickBtnRefreshMonth);
     $year.change(onChangeYear);
     $btnYearBack.click(onClickBtnYearBack);
     $btnCategoryBack.click(onClickBtnCategoryBack);
-    $btnGralBack.click(onClickBtnGralBack);
-    $btnRefreshComparator.click(onClickBtnRefreshComparator);
-
 
     $idCategoryF.change(function(){
-        findSubcategories($idCategoryF.val(), $idSubcategoryF, "--Todos");
-        buildChartsComparator();
+        findSubcategories($idCategoryF.val(), $idSubcategoryF, "--Subcategoría");
+        createLineChartYearComparator();
     });
 
     $idSubcategoryF.change(function(){
-        buildChartsComparator();
+        createLineChartYearComparator();
     });
 }
 
 function onClickBtnRefresh() {
-    findDataCategory();
-}
-
-function onClickBtnRefreshSub() {
-    showSubcategoryData();
-}
-
-function onClickBtnRefreshMonth() {
+    createGeneralCategoryPieChart();
     createChartsPerYear();
+    createLineChartYearComparator();
 }
 
 function onChangeYear() {
@@ -123,14 +65,6 @@ function onClickBtnYearBack() {
 function onClickBtnCategoryBack(){
     setCategoryMonthLevel();
     createCategoryDetailCharts();
-}
-
-function onClickBtnGralBack() {
-    returnGeneral();
-}
-
-function onClickBtnRefreshComparator(){
-    buildChartsComparator();
 }
 
 function setSubcategoryLevel() {
@@ -170,103 +104,38 @@ function setCategoryMonthLevel(){
         setYearLevel();
 }
 
-function findDataCategory() {
-    let data = [];
+function createGeneralCategoryPieChart() {
+    let values = [];
     let labels = [];
-    let total = 0;
 
     $.ajax({
         type: "POST",
         url: $.PATH + "analytic/findDataCategory",
         beforeSend: function (xhr) {
             _blockUI.block();
-            _uiUtil.clearDataTable($dataTableGral);
-            __chartCategory.clearPie();
-            _dataCategory = [];
-            _indexSelectedCategory = -1;
         },
         success: function (items) {
             if (items.length > 0) {
                 $.each(items, function (i, item) {
                     labels.push(item.name);
-                    total += item.amount;
+                    values.push([item.name, item.amount]);
                 });
-
-                $.each(items, function (i, item) {
-                    var percent = _jsUtil.round((item.amount / total) * 100);
-                    data.push(percent);
-                    addRowToTable(item, $dataTableGral, percent);
-                    _dataCategory.push(item);
-                });
-
-                $dataTableGral.tablePagination(_uiUtil.getOptionsPaginator(5));
-                __chartCategory.buildPie(data, labels);
-                $totalCategory.html(accounting.formatMoney(total));
             } else {
                 _notify.show("La consulta no produjo resultados.", "danger");
             }
         }, complete: function () {
             _blockUI.unblock();
+            createGeneralPieChart(values);
         }
     });
 }
 
-function addRowToTable(item, table, percent) {
-    let noFila = parseInt(table.find("tbody").eq(0).find("tr").length);
-
-    let fila = "";
-    fila += "<tr data-meta-row='" + noFila + "'>";
-    fila += "<td>" + item.name + "</td>";
-    fila += "<td  align='right'>" + accounting.formatMoney(item.amount) + "</td>";
-    fila += "<td  align='right'>" + percent + " %</td>";
-    fila += "</tr>";
-    table.append(fila);
-}
-
-function showSubcategoryData() {
-    let item = _dataCategory[_indexSelectedCategory];
-    $('#titleModalNew').html(item.name);
-    $divCategory.css("display", "none");
-    $divSubcategory.css("display", "block");
-    findDataSubcategory(item.id);
-}
-
-function findDataSubcategory(idCategory) {
-    let data = [];
-    let labels = [];
-    let total = 0;
-
-    $.ajax({
-        type: "POST",
-        url: $.PATH + "analytic/findDataSubcategory",
-        data: {idCategory: idCategory},
-        async: false,
-        beforeSend: function (xhr) {
-            _blockUI.block();
-            _uiUtil.clearDataTable($dataTableSub);
-            __chartSubcategory.clearPie();
-        },
-        success: function (items) {
-            if (items.length > 0) {
-                $.each(items, function (i, item) {
-                    labels.push(item.name);
-                    total += item.amount;
-                });
-
-                $.each(items, function (i, item) {
-                    var percent = _jsUtil.round((item.amount / total) * 100);
-                    data.push(percent);
-                    addRowToTable(item, $dataTableSub, percent);
-                });
-
-                $dataTableSub.tablePagination(_uiUtil.getOptionsPaginator(5));
-
-                __chartSubcategory.buildPie(data, labels);
-                $totalSubcategory.html(accounting.formatMoney(total));
-
-            }
-        }, complete: function () {
-            _blockUI.unblock();
+function createGeneralPieChart(values){
+    c3.generate({
+        bindto: '#divGeneralCategoryPieChart',
+        data: {
+            columns: values,
+            type: 'pie'
         }
     });
 }
@@ -293,7 +162,6 @@ function createChartsPerYear() {
                     totalMonth += _jsUtil.round(item.amount);
                 });
                 $totalMonth.html(accounting.formatMoney(totalMonth));
-
             }
         }, complete: function () {
             createMonthBarChart(values);
@@ -454,10 +322,9 @@ function createSubcategoryDetailCharts(idCategory) {
     });
 }
 
-
-
-function buildChartsComparator() {
-    let datasets= [];
+function createLineChartYearComparator() {
+    let values = [];
+    let totalPerYear = [];
 
     $.ajax({
         type: "POST",
@@ -469,48 +336,76 @@ function buildChartsComparator() {
         async: false,
         beforeSend: function (xhr) {
             _blockUI.block();
-            //writeGraphComparator(datasets);
         },
         success: function (items) {
-            let colors = _uiUtil.randomArrayColorGenerator($year.find("option").length);
-            let i = 0;
             $.each(items, function (year, item) {
-                datasets.push({
-                    label: year,
-                    backgroundColor: colors[i],
-                    borderColor: colors[i],
-                    data: item.map(function(i){
-                        return i.amount;
-                    }),
-                    fill: false
+                let amounts = item.map(function (i) {
+                    return i.amount;
                 });
-                i++;
+                let cadena = year+";"+amounts.join(";");
+                values.push(cadena.split(";"));
+                
+                totalPerYear.push([year, 
+                    amounts.reduce(function (a, b) {
+                        return a + b;
+                    })
+                ]);
             });
-            writeGraphComparator(datasets);
         }, complete: function () {
             _blockUI.unblock();
+            createLineChartComparator(values);
+            createBarChartComparator(totalPerYear);
         }
     });
 }
 
-function writeGraphComparator(datasets) {
-    $('#divCharComparator').html('<canvas id="myComparatorChart" width="100" height="40"></canvas>');
-    const ctxLine = $("#myComparatorChart");
-    new Chart(ctxLine, {
-        type: 'line',
+function createLineChartComparator(values){
+    c3.generate({
+        bindto: '#divComparativeYearLineChart',
         data: {
-            labels: _months,
-            datasets: datasets
+            columns: values,
+            type: 'spline'
         },
-        options: {
-            responsive: true,
-            tooltips: {
-                mode: 'index',
-                intersect: false,
+        axis: {
+            y: {
+                tick: {
+                    format: d3.format("$,")
+                }
             },
-            hover: {
-                mode: 'nearest',
-                intersect: true
+            x: {
+                type: 'category',
+                categories: _months
+            }
+        }
+    });
+}
+
+function createBarChartComparator(values) {
+    c3.generate({
+        bindto: '#divComparativeYearBarChart',
+        data: {
+            columns: values,
+            type: 'bar',
+            labels: {
+                format: function (v, id, i, j) {
+                    return accounting.formatMoney(v);
+                }
+            }
+        },
+        axis: {
+            y: {
+                show: false,
+                tick: {
+                    format: d3.format("$,")
+                }
+            },
+            x: {
+                show: false
+            }
+        },
+        bar: {
+            width: {
+                ratio: 1
             }
         }
     });
