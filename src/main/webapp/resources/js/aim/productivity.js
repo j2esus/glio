@@ -66,7 +66,6 @@ function buildChart() {
                 _notify.show("La consulta no produjo resultados.", "danger");
             }
         }, complete: function () {
-            console.log(productivityData);
             _blockUI.unblock();
             createBarChart(productivityData);
         }
@@ -81,7 +80,9 @@ function createBarChart(productivityData){
             type: 'bar'
         },
         bar: {
-            ratio: 0.2
+            width: {
+                ratio: 1
+            }
         },
         size: {
             height: 400
