@@ -3,13 +3,12 @@ var $btnNew,
     $btnDelete,
     $btnEdit,
     $btnConfirmDelete,
-    $btnAccess;
+    $btnSaveOption;
     
 var $saveModal,
     $dataForm;
 
-var $optionsModal,
-    $dataFormOption;
+var $dataFormOption;
 
 var $table;
 
@@ -30,12 +29,12 @@ function initComponents() {
     $btnDelete = $('#btnDelete');
     $btnEdit = $('#btnEdit');
     $btnConfirmDelete = $('#btnConfirmDelete');
-    $btnAccess = $('#btnAccess');
     
     $saveModal = $('#saveModal');
     $dataForm = $('#dataForm');
+    $btnSaveOption = $('#btnSaveOption');
+    $btnSaveOption.hide();
     
-    $optionsModal = $('#optionsModal');
     $dataFormOption = $('#dataFormOption');
 
     $table = $('#dataTableUserType');
@@ -56,6 +55,10 @@ function initEvents() {
     $dataFormOption.validator().on('submit', function (e) {
         if (!e.isDefaultPrevented()) {
             e.preventDefault();
+            if($('.checkOption').filter(':checked').length == 0){
+                _notify.show("Debes elegir al menos una funcionalidad", "danger");
+                return;
+            }
             saveOption();
         }
     });
@@ -63,13 +66,12 @@ function initEvents() {
     $table.on('click', 'tbody tr', function (event) {
         $(this).addClass('row-selected').siblings().removeClass('row-selected');
         _indexSelected = $(this).data('meta-row');
+        loadOptionsByUserType();
     });
     
     $btnConfirmDelete.click(onClickBtnConfirmDelete);
     
     $btnEdit.click(onClickBtnEdit);
-    
-    $btnAccess.click(onClickBtnAccess);
 }
 
 function onClickNew() {
@@ -105,9 +107,9 @@ function addRowToTableOptions(item, table) {
     var fila = "";
     fila += "<tr><input type='hidden' id='idOption" + noFila + "' value='" + item.idOptionMenu + "'/>";
     if(item.assigned){
-        fila += "<td><input type='checkbox' id='check"+noFila+"' name = 'check"+noFila+"' checked = 'checked'/></td>";
+        fila += "<td><input type='checkbox' id='check"+noFila+"' onchange='checkAllIfAllOptionsAreChecked()' checked = 'checked' class='checkOption'/></td>";
     }else{
-        fila += "<td><input type='checkbox' id='check"+noFila+"' name = 'check"+noFila+"'/></td>";
+        fila += "<td><input type='checkbox' id='check"+noFila+"' onchange='checkAllIfAllOptionsAreChecked()' class='checkOption'/></td>";
     }
     fila += "<td>" + item.categoryOptionName + "</td>";
     fila += "<td>" + item.optionMenuName + "</td>";
@@ -128,21 +130,6 @@ function onClickBtnEdit(){
     $('#status').val(item.status);
     
     $saveModal.modal();
-}
-
-function onClickBtnAccess(){
-    if (_indexSelected === -1) {
-        _notify.show('Debes seleccionar un tipo de usuario', 'warning');
-        return;
-    }
-    var item = _data[_indexSelected];
-    
-    $('#titleModalOption').html("Agregar opciones menú");
-    $('#idUserType').val(item.id);
-    $('#nameUserType').val(item.name);
-    $("#checkAll").prop("checked", false);
-    $optionsModal.modal();
-    findOptions();
 }
 
 function findData() {
@@ -184,6 +171,7 @@ function findOptions() {
         beforeSend: function (xhr) {
             _blockUI.block();
             _uiUtil.clearDataTable(table);
+            $("#checkAll").prop("checked", false);
         },
         success: function (items) {
             if (items.length > 0) {
@@ -191,15 +179,15 @@ function findOptions() {
                     addRowToTableOptions(item, table);
                     _totalOptions++;
                 });
-                table.tablePagination(_uiUtil.getOptionsPaginator(4));
+                table.tablePagination(_uiUtil.getOptionsPaginator(10));
+                $btnSaveOption.show();
             }
         }, complete: function () {
             _blockUI.unblock();
+            checkAllIfAllOptionsAreChecked();
         }
     });
 }
-
-
 
 function deleteElement(){
     var id = $('#idDelete').val();
@@ -300,8 +288,6 @@ function saveOption(){
             }
         }, complete: function () {
             _blockUI.unblock();
-            $optionsModal.modal('hide');
-            findData();
         }
     });
 }
@@ -315,5 +301,24 @@ function onClickBtnConfirmDelete(){
     $('#idDelete').val(item.id);
     $('#deleteLabel').html("¿Está seguro de eliminar <b>"+item.name+"</b>?");
     $('#confirmModal').modal();
-    
+}
+
+function loadOptionsByUserType() {
+    if (_indexSelected === -1) {
+        _notify.show('Debes seleccionar un tipo de usuario', 'warning');
+        return;
+    }
+    var item = _data[_indexSelected];
+
+    $('#idUserType').val(item.id);
+    $('#nameUserType').html(item.name);
+    findOptions();
+}
+
+function checkAllIfAllOptionsAreChecked() {
+    let totalChecked = $('.checkOption').filter(':checked').length;
+    if (_totalOptions == totalChecked)
+        $("#checkAll").prop("checked", true);
+    else
+        $("#checkAll").prop("checked", false);
 }
