@@ -38,11 +38,11 @@
 
 <!-- notify -->
 <script src="<c:url value="/resources/js/util/jquery.blockUI.js"/>"></script>
-<script src="<c:url value="/resources/js/bootstrap/bootstrap-notify.min.js"/>"></script> 
+<script src="<c:url value="/resources/js/util/bootstrap-notify.min.js"/>"></script> 
 <!-- validator -->
 <script src="<c:url value="/resources/js/util/validator.js"/>"></script>
 <!-- bootstrap -->
-<script src="<c:url value="/resources/js/bootstrap/bootstrap.min.js"/>"></script> 
+<script src="<c:url value="/resources/js/util/bootstrap.min.js"/>"></script> 
 
 <!-- util -->
 <script src="<c:url value="/resources/js/util/util.js"/>"></script>

@@ -10,7 +10,7 @@ var $saveModal,
 var $table;
 
 var _indexSelected = -1,
-    _data = [];
+        _data = [];
 
 $(document).ready(function () {
     initComponents();
@@ -42,14 +42,14 @@ function initEvents() {
             saveElement();
         }
     });
-    
+
     $table.on('click', 'tbody tr', function (event) {
         $(this).addClass('row-selected').siblings().removeClass('row-selected');
         _indexSelected = $(this).data('meta-row');
     });
-    
+
     $btnConfirmDelete.click(onClickBtnConfirmDelete);
-    
+
     $btnEdit.click(onClickBtnEdit);
 }
 
@@ -108,7 +108,7 @@ function onClickBtnEdit() {
     $('#status').val(item.status);
     $('#email').val(item.email);
     $('#onlyOneAccess').removeAttr("checked");
-    if(item.onlyOneAccess)
+    if (item.onlyOneAccess)
         $('#onlyOneAccess').attr("checked", "checked");
     $('#password').prop('disabled', true);
     $saveModal.modal();
@@ -197,7 +197,7 @@ function saveElement() {
     });
 }
 
-function onClickBtnConfirmDelete(){
+function onClickBtnConfirmDelete() {
     if (_indexSelected === -1) {
         _notify.show('Debes seleccionar un usuario', 'warning');
         return;
@@ -206,5 +206,5 @@ function onClickBtnConfirmDelete(){
     $('#idDelete').val(item.id);
     $('#deleteLabel').html("¿Está seguro de eliminar <b>" + item.name + "</b>?");
     $('#confirmModal').modal();
-    
+
 }

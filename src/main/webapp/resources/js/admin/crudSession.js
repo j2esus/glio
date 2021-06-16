@@ -1,5 +1,5 @@
 var $btnRefresh,
-    $btnDelete;
+        $btnDelete;
 
 var $table;
 
@@ -25,14 +25,14 @@ function onClickRefresh() {
     findData();
 }
 
-function onClickDelete(){
+function onClickDelete() {
     finishElement();
 }
 
 function addRowToTable(item, table) {
     var noRow = parseInt(table.find("tbody").eq(0).find("tr").length) + 1;
-    
-    var endDate = item.endDate === null ? '':_uiUtil.getFormattedDateTime(item.endDate);
+
+    var endDate = item.endDate === null ? '' : _uiUtil.getFormattedDateTime(item.endDate);
 
     var fila = "";
     fila += "<tr><input type='hidden' id='id" + noRow + "' value='" + item.id + "'/>";
@@ -41,19 +41,19 @@ function addRowToTable(item, table) {
     fila += "<td>" + item.status + "</td>";
     fila += "<td>" + _uiUtil.getFormattedDateTime(item.initDate) + "</td>";
     fila += "<td>" + endDate + "</td>";
-    if(item.status === 'CLOSED')
+    if (item.status === 'CLOSED')
         fila += "<td align='center'>" + "<a class='btn btn-primary fa fa-times' onclick='return 0;'></a>" + "</td>";
     else
-        fila += "<td align='center'>" + "<a class='btn btn-danger fa fa-times' onclick='confirmDialog(" + noRow +");'></a>" + "</td>";
+        fila += "<td align='center'>" + "<a class='btn btn-danger fa fa-times' onclick='confirmDialog(" + noRow + ");'></a>" + "</td>";
     fila += "</tr>";
     table.append(fila);
 }
 
-function confirmDialog(noRow){
-    var id = $('#id'+noRow).val();
-    var label = $('#session'+noRow).val();
+function confirmDialog(noRow) {
+    var id = $('#id' + noRow).val();
+    var label = $('#session' + noRow).val();
     $('#idDelete').val(id);
-    $('#deleteLabel').html("¿Está seguro de finalizar <b>"+label+"</b>?");
+    $('#deleteLabel').html("¿Está seguro de finalizar <b>" + label + "</b>?");
     $('#confirmModal').modal();
 }
 
@@ -72,7 +72,7 @@ function findData() {
                 });
                 $table.tablePagination(_uiUtil.getOptionsPaginator(10));
             } else {
-                _notify.show("La consulta no produjo resultados.","danger");
+                _notify.show("La consulta no produjo resultados.", "danger");
             }
         }, complete: function () {
             _blockUI.unblock();
@@ -80,19 +80,19 @@ function findData() {
     });
 }
 
-function finishElement(){
+function finishElement() {
     var id = $('#idDelete').val();
     $.ajax({
         type: "POST",
         url: $.PATH + "session/finishSession",
-        data: { id: id},
+        data: {id: id},
         beforeSend: function (xhr) {
             _blockUI.block();
         },
         success: function (response) {
-            if(response === "OK"){
+            if (response === "OK") {
                 _notify.show("Sesión finalizada con éxito", 'success');
-            }else{
+            } else {
                 _notify.show(response, 'danger');
             }
         }, complete: function () {
@@ -102,5 +102,3 @@ function finishElement(){
         }
     });
 }
-
-
