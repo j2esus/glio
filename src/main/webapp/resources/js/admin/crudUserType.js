@@ -1,12 +1,12 @@
 var $btnNew,
-    $btnRefresh,
-    $btnDelete,
-    $btnEdit,
-    $btnConfirmDelete,
-    $btnSaveOption;
-    
+        $btnRefresh,
+        $btnDelete,
+        $btnEdit,
+        $btnConfirmDelete,
+        $btnSaveOption;
+
 var $saveModal,
-    $dataForm;
+        $dataForm;
 
 var $dataFormOption;
 
@@ -15,7 +15,7 @@ var $table;
 var _totalOptions = 0;
 
 var _indexSelected = -1,
-    _data = [];
+        _data = [];
 
 $(document).ready(function () {
     initComponents();
@@ -29,12 +29,12 @@ function initComponents() {
     $btnDelete = $('#btnDelete');
     $btnEdit = $('#btnEdit');
     $btnConfirmDelete = $('#btnConfirmDelete');
-    
+
     $saveModal = $('#saveModal');
     $dataForm = $('#dataForm');
     $btnSaveOption = $('#btnSaveOption');
     $btnSaveOption.hide();
-    
+
     $dataFormOption = $('#dataFormOption');
 
     $table = $('#dataTableUserType');
@@ -44,33 +44,33 @@ function initEvents() {
     $btnNew.click(onClickNew);
     $btnRefresh.click(onClickRefresh);
     $btnDelete.click(onClickDelete);
-    
+
     $dataForm.validator().on('submit', function (e) {
         if (!e.isDefaultPrevented()) {
             e.preventDefault();
             saveElement();
         }
     });
-    
+
     $dataFormOption.validator().on('submit', function (e) {
         if (!e.isDefaultPrevented()) {
             e.preventDefault();
-            if($('.checkOption').filter(':checked').length == 0){
+            if ($('.checkOption').filter(':checked').length == 0) {
                 _notify.show("Debes elegir al menos una funcionalidad", "danger");
                 return;
             }
             saveOption();
         }
     });
-    
+
     $table.on('click', 'tbody tr', function (event) {
         $(this).addClass('row-selected').siblings().removeClass('row-selected');
         _indexSelected = $(this).data('meta-row');
         loadOptionsByUserType();
     });
-    
+
     $btnConfirmDelete.click(onClickBtnConfirmDelete);
-    
+
     $btnEdit.click(onClickBtnEdit);
 }
 
@@ -86,7 +86,7 @@ function onClickRefresh() {
     findData();
 }
 
-function onClickDelete(){
+function onClickDelete() {
     deleteElement();
 }
 
@@ -106,10 +106,10 @@ function addRowToTableOptions(item, table) {
 
     var fila = "";
     fila += "<tr><input type='hidden' id='idOption" + noFila + "' value='" + item.idOptionMenu + "'/>";
-    if(item.assigned){
-        fila += "<td><input type='checkbox' id='check"+noFila+"' onchange='checkAllIfAllOptionsAreChecked()' checked = 'checked' class='checkOption'/></td>";
-    }else{
-        fila += "<td><input type='checkbox' id='check"+noFila+"' onchange='checkAllIfAllOptionsAreChecked()' class='checkOption'/></td>";
+    if (item.assigned) {
+        fila += "<td><input type='checkbox' id='check" + noFila + "' onchange='checkAllIfAllOptionsAreChecked()' checked = 'checked' class='checkOption'/></td>";
+    } else {
+        fila += "<td><input type='checkbox' id='check" + noFila + "' onchange='checkAllIfAllOptionsAreChecked()' class='checkOption'/></td>";
     }
     fila += "<td>" + item.categoryOptionName + "</td>";
     fila += "<td>" + item.optionMenuName + "</td>";
@@ -117,18 +117,18 @@ function addRowToTableOptions(item, table) {
     table.append(fila);
 }
 
-function onClickBtnEdit(){
+function onClickBtnEdit() {
     if (_indexSelected === -1) {
         _notify.show('Debes seleccionar un tipo de usuario', 'warning');
         return;
     }
     var item = _data[_indexSelected];
-    
+
     $('#titleModalNew').html("Editar");
     $('#idNew').val(item.id);
     $('#name').val(item.name);
     $('#status').val(item.status);
-    
+
     $saveModal.modal();
 }
 
@@ -150,7 +150,7 @@ function findData() {
                 });
                 $table.tablePagination(_uiUtil.getOptionsPaginator(10));
             } else {
-                _notify.show("La consulta no produjo resultados.","danger");
+                _notify.show("La consulta no produjo resultados.", "danger");
             }
         }, complete: function () {
             _blockUI.unblock();
@@ -161,7 +161,7 @@ function findData() {
 function findOptions() {
     var idUserType = $('#idUserType').val();
     var table = $('#dataTableOptions');
-    
+
     _totalOptions = 0;
     $.ajax({
         type: "POST",
@@ -189,19 +189,19 @@ function findOptions() {
     });
 }
 
-function deleteElement(){
+function deleteElement() {
     var id = $('#idDelete').val();
     $.ajax({
         type: "POST",
         url: $.PATH + "userType/deleteUserType",
-        data: { id: id},
+        data: {id: id},
         beforeSend: function (xhr) {
             _blockUI.block();
         },
         success: function (response) {
-            if(response === "OK"){
+            if (response === "OK") {
                 _notify.show("Tipo de usuario eliminado con éxito", 'success');
-            }else{
+            } else {
                 _notify.show(response, 'danger');
             }
         }, complete: function () {
@@ -212,21 +212,21 @@ function deleteElement(){
     });
 }
 
-function saveElement(){
+function saveElement() {
     var id = $('#idNew').val();
     var name = $('#name').val();
     var status = $('#status').val();
     $.ajax({
         type: "POST",
         url: $.PATH + "userType/saveUserType",
-        data: { id: id, name: name, status: status},
+        data: {id: id, name: name, status: status},
         beforeSend: function (xhr) {
             _blockUI.block();
         },
         success: function (response) {
-            if(response === "OK"){
+            if (response === "OK") {
                 _notify.show("Tipo usuario guardado con éxito", 'success');
-            }else{
+            } else {
                 _notify.show(response, 'danger');
             }
         }, complete: function () {
@@ -237,7 +237,7 @@ function saveElement(){
     });
 }
 
-function selectAll(){
+function selectAll() {
     var checkAll = $("#checkAll").is(":checked");
     if (checkAll) {
         for (var i = 0; i <= _totalOptions; i++) {
@@ -250,40 +250,40 @@ function selectAll(){
     }
 }
 
-function saveOption(){
+function saveOption() {
     var idUserType = $('#idUserType').val();
     var optionsAdd = "";
     var optionsDel = "";
-    
+
     var i = 0;
     while ($("#check" + i).val() != undefined) {
         if ($("#check" + i).is(":checked")) {
-            optionsAdd += $('#idOption' + i).val()+",";
-        }else{
-            optionsDel += $('#idOption' + i).val()+",";
+            optionsAdd += $('#idOption' + i).val() + ",";
+        } else {
+            optionsDel += $('#idOption' + i).val() + ",";
         }
         i++;
     }
-    
-    if(optionsAdd.length > 0){
-        optionsAdd = optionsAdd.substring(0, optionsAdd.length-1);
+
+    if (optionsAdd.length > 0) {
+        optionsAdd = optionsAdd.substring(0, optionsAdd.length - 1);
     }
-    
-    if(optionsDel.length > 0){
-        optionsDel = optionsDel.substring(0, optionsDel.length-1);
+
+    if (optionsDel.length > 0) {
+        optionsDel = optionsDel.substring(0, optionsDel.length - 1);
     }
-    
+
     $.ajax({
         type: "POST",
         url: $.PATH + "userType/saveOptions",
-        data: { idUserType: idUserType, optionsAdd: optionsAdd,optionsDel:optionsDel},
+        data: {idUserType: idUserType, optionsAdd: optionsAdd, optionsDel: optionsDel},
         beforeSend: function (xhr) {
             _blockUI.block();
         },
         success: function (response) {
-            if(response === "OK"){
+            if (response === "OK") {
                 _notify.show("Opciones guardadas con éxito", 'success');
-            }else{
+            } else {
                 _notify.show(response, 'danger');
             }
         }, complete: function () {
@@ -292,14 +292,14 @@ function saveOption(){
     });
 }
 
-function onClickBtnConfirmDelete(){
+function onClickBtnConfirmDelete() {
     if (_indexSelected === -1) {
         _notify.show('Debes seleccionar un tipo de usuario', 'warning');
         return;
     }
     var item = _data[_indexSelected];
     $('#idDelete').val(item.id);
-    $('#deleteLabel').html("¿Está seguro de eliminar <b>"+item.name+"</b>?");
+    $('#deleteLabel').html("¿Está seguro de eliminar <b>" + item.name + "</b>?");
     $('#confirmModal').modal();
 }
 

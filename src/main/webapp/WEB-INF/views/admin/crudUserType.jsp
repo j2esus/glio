@@ -1,6 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<script src="<c:url value="/resources/js/userType/crudUserType.js"/>"></script>
+<script src="<c:url value="/resources/js/admin/crudUserType.js"/>"></script>
 
 <h1>Tipos de usuario</h1>
 <hr/>
