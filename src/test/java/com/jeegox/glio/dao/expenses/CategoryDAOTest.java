@@ -136,7 +136,7 @@ public class CategoryDAOTest {
     }
     
     @Test
-    public void findBy_companyNotExistsThreeStatusAndName_listWithTwoElements() {
+    public void findBy_companyExistsThreeStatusAndName_listWithTwoElements() {
         Status[] statusFilter = new Status[]{
             Status.ACTIVE, 
             Status.INACTIVE,
