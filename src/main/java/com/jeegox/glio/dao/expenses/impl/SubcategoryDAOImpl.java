@@ -6,7 +6,6 @@ import com.jeegox.glio.entities.expenses.Category;
 import com.jeegox.glio.entities.expenses.Subcategory;
 import com.jeegox.glio.enumerators.Status;
 import java.util.List;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -14,17 +13,16 @@ public class SubcategoryDAOImpl extends GenericDAOImpl<Subcategory, Integer> imp
 
     @Override
     public List<Subcategory> findBy(Category category, Status[] estatus, String name) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select s ");
-        sb.append(" from Subcategory s ");
-        sb.append(" where s.father = :category ");
-        sb.append(" and s.status in ( :status ) ");
-        sb.append(" and s.name like  :name ");
-        Query q = sessionFactory.getCurrentSession().createQuery(sb.toString());
-        q.setParameter("category", category);
-        q.setParameter("name", "%"+name+"%");
-        q.setParameterList("status", estatus);
-        return q.list();
+        String query = " select s "+
+                " from Subcategory s "+
+                " where s.father = :category "+
+                " and s.status in ( :status ) "+
+                " and s.name like  :name ";
+        return sessionFactory.getCurrentSession().createQuery(query)
+                .setParameter("category", category)
+                .setParameter("name", "%"+name+"%")
+                .setParameterList("status", estatus)
+                .getResultList();
     }
     
 }
