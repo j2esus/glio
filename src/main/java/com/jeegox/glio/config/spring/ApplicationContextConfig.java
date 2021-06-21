@@ -107,6 +107,7 @@ public class ApplicationContextConfig {
         hibernateProperties.setProperty("hibernate.connection.autoReconnect", env.getProperty("hibernate.connection.autoReconnect"));
         hibernateProperties.setProperty("current_session_context_class", env.getProperty("hibernate.current_session_context_class"));
         hibernateProperties.setProperty("hibernate.enable_lazy_load_no_trans", env.getProperty("hibernate.enable_lazy_load_no_trans"));
+        hibernateProperties.setProperty("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
         return hibernateProperties;
     }
 }
