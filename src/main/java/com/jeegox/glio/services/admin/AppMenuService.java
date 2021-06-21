@@ -1,6 +1,8 @@
 package com.jeegox.glio.services.admin;
 
+import com.jeegox.glio.dao.admin.OptionMenuDAO;
 import com.jeegox.glio.dto.admin.CategoryMenuDTO;
+import com.jeegox.glio.dto.admin.OptionMenuDTO;
 import com.jeegox.glio.entities.admin.CategoryMenu;
 import com.jeegox.glio.entities.admin.OptionMenu;
 import java.util.ArrayList;
@@ -10,10 +12,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AppMenuService {
+    private final OptionMenuDAO optionMenuDAO;
+    
+    @Autowired
+    public AppMenuService(OptionMenuDAO optionMenuDAO){
+        this.optionMenuDAO = optionMenuDAO;
+    }
 
     public Map<String, String> transformAllowedOptionsToMap(Set<OptionMenu> options){
         Map<String, String> mapaOptions = options.stream()
@@ -49,5 +59,15 @@ public class AppMenuService {
             categories.add(entry.getValue());
         }
         return categories;
+    }
+    
+    @Transactional
+    public List<OptionMenuDTO> getPublicOptions(){
+        return optionMenuDAO.getPublicOptions();
+    }
+    
+    @Transactional
+    public List<OptionMenu> findByIds(Integer[] ids) {
+        return optionMenuDAO.findByIds(ids);
     }
 }

@@ -21,6 +21,7 @@ $(document).ready(function () {
     initComponents();
     initEvents();
     findData();
+    getPublicOptions();
 });
 
 function initComponents() {
@@ -101,22 +102,6 @@ function addRowToTable(item, table) {
     table.append(fila);
 }
 
-function addRowToTableOptions(item, table) {
-    var noFila = parseInt(table.find("tbody").eq(0).find("tr").length);
-
-    var fila = "";
-    fila += "<tr><input type='hidden' id='idOption" + noFila + "' value='" + item.idOptionMenu + "'/>";
-    if (item.assigned) {
-        fila += "<td><input type='checkbox' id='check" + noFila + "' onchange='checkAllIfAllOptionsAreChecked()' checked = 'checked' class='checkOption'/></td>";
-    } else {
-        fila += "<td><input type='checkbox' id='check" + noFila + "' onchange='checkAllIfAllOptionsAreChecked()' class='checkOption'/></td>";
-    }
-    fila += "<td>" + item.categoryOptionName + "</td>";
-    fila += "<td>" + item.optionMenuName + "</td>";
-    fila += "</tr>";
-    table.append(fila);
-}
-
 function onClickBtnEdit() {
     if (_indexSelected === -1) {
         _notify.show('Debes seleccionar un tipo de usuario', 'warning');
@@ -139,6 +124,7 @@ function findData() {
         beforeSend: function (xhr) {
             _blockUI.block();
             _uiUtil.clearDataTable($table);
+            uncheckAllOptionsMenu();
             _indexSelected = -1;
             _data = [];
         },
@@ -158,28 +144,24 @@ function findData() {
     });
 }
 
-function findOptions() {
+function getOptionsByUserType() {
     var idUserType = $('#idUserType').val();
-    var table = $('#dataTableOptions');
 
-    _totalOptions = 0;
     $.ajax({
         type: "POST",
-        url: $.PATH + "userType/findOptions",
+        url: $.PATH + "userType/getOptionsByUserType",
         data: {idUserType: idUserType},
         async: false,
         beforeSend: function (xhr) {
             _blockUI.block();
-            _uiUtil.clearDataTable(table);
             $("#checkAll").prop("checked", false);
+            uncheckAllOptionsMenu();
         },
         success: function (items) {
             if (items.length > 0) {
                 $.each(items, function (i, item) {
-                    addRowToTableOptions(item, table);
-                    _totalOptions++;
+                    $("#check_"+item.id).prop("checked", true);
                 });
-                table.tablePagination(_uiUtil.getOptionsPaginator(10));
                 $btnSaveOption.show();
             }
         }, complete: function () {
@@ -240,54 +222,49 @@ function saveElement() {
 function selectAll() {
     var checkAll = $("#checkAll").is(":checked");
     if (checkAll) {
-        for (var i = 0; i <= _totalOptions; i++) {
-            $("#check" + i).prop("checked", true);
-        }
+        checkAllOptionsMenu();
     } else {
-        for (var i = 0; i <= _totalOptions; i++) {
-            $("#check" + i).prop("checked", false);
-        }
+        uncheckAllOptionsMenu();
     }
+}
+
+function checkAllOptionsMenu(){
+    $("input:checkbox[name=checkOption]").each(function () {
+        $(this).prop("checked", true);
+    });
+}
+
+function uncheckAllOptionsMenu() {
+    $("input:checkbox[name=checkOption]").each(function () {
+        $(this).prop("checked", false);
+    });
 }
 
 function saveOption() {
     var idUserType = $('#idUserType').val();
-    var optionsAdd = "";
-    var optionsDel = "";
-
-    var i = 0;
-    while ($("#check" + i).val() != undefined) {
-        if ($("#check" + i).is(":checked")) {
-            optionsAdd += $('#idOption' + i).val() + ",";
-        } else {
-            optionsDel += $('#idOption' + i).val() + ",";
-        }
-        i++;
-    }
-
-    if (optionsAdd.length > 0) {
-        optionsAdd = optionsAdd.substring(0, optionsAdd.length - 1);
-    }
-
-    if (optionsDel.length > 0) {
-        optionsDel = optionsDel.substring(0, optionsDel.length - 1);
-    }
-
+    let idOptionsMenu = [];
+    $("input:checkbox[name=checkOption]:checked").each(function () {
+        let idOption = $(this).prop("id").replace("check_", "");
+        idOptionsMenu.push(idOption);
+    });
+    
     $.ajax({
         type: "POST",
         url: $.PATH + "userType/saveOptions",
-        data: {idUserType: idUserType, optionsAdd: optionsAdd, optionsDel: optionsDel},
+        data: {
+            idUserType: idUserType, 
+            'options[]': idOptionsMenu
+        },
         beforeSend: function (xhr) {
             _blockUI.block();
         },
-        success: function (response) {
-            if (response === "OK") {
-                _notify.show("Opciones guardadas con éxito", 'success');
-            } else {
-                _notify.show(response, 'danger');
-            }
+        success: function () {
+            _notify.show("Opciones guardadas con éxito", 'success');
         }, complete: function () {
             _blockUI.unblock();
+        },
+        error: function (xhr, status, error) {
+            _notify.show(xhr.responseJSON, 'danger');
         }
     });
 }
@@ -312,13 +289,49 @@ function loadOptionsByUserType() {
 
     $('#idUserType').val(item.id);
     $('#nameUserType').html(item.name);
-    findOptions();
+    getOptionsByUserType();
 }
 
-function checkAllIfAllOptionsAreChecked() {
+function checkAllIfAllOptionsAreChecked() {    
     let totalChecked = $('.checkOption').filter(':checked').length;
     if (_totalOptions == totalChecked)
         $("#checkAll").prop("checked", true);
     else
         $("#checkAll").prop("checked", false);
+}
+
+function getPublicOptions() {
+    let table = $('#dataTableOptions');
+
+    $.ajax({
+        type: "POST",
+        url: $.PATH + "userType/getPublicOptions",
+        async: false,
+        beforeSend: function (xhr) {
+            _blockUI.block();
+            _uiUtil.clearDataTable(table);
+            $("#checkAll").prop("checked", false);
+            _totalOptions = 0;
+        },
+        success: function (items) {
+            $.each(items, function (i, item) {
+                addRowToTableOptions(item, table);
+                _totalOptions++;
+            });
+            table.tablePagination(_uiUtil.getOptionsPaginator(10));
+        }, complete: function () {
+            _blockUI.unblock();
+        }
+    });
+}
+
+function addRowToTableOptions(item, table) {
+    var fila = "";
+    fila += "<tr>";
+    fila += "<td><input type='checkbox' name='checkOption' id='check_" + item.id + "'"+
+            " onchange='checkAllIfAllOptionsAreChecked()' class='checkOption'/></td>";
+    fila += "<td>" + item.category + "</td>";
+    fila += "<td>" + item.name + "</td>";
+    fila += "</tr>";
+    table.append(fila);
 }

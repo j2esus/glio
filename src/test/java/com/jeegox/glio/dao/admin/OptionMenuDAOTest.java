@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.truth.Truth.assertThat;
+import com.jeegox.glio.dto.admin.OptionMenuDTO;
 
 @WebAppConfiguration
 @ContextConfiguration(classes = ApplicationContextConfigTest.class)
@@ -70,6 +71,23 @@ public class OptionMenuDAOTest {
     public void findAll_notRequired_listWithFiveElements(){
         assertThat(optionMenuDAO.findAll()).isEqualTo(expectedAllOptionsMenusList());
     }
+    
+    private List<OptionMenu> expectedAllOptionsMenusList() {
+        CategoryMenu categoryMenuAdmin = new CategoryMenu(1, "Administración", 1, Status.ACTIVE, "fa-building", "bg-primary");
+        CategoryMenu categoryMenuTask = new CategoryMenu(2, "Tareas", 2, Status.ACTIVE, "fa-list", "bg-warning");
+        List<OptionMenu> optionMenuList = new ArrayList<>();
+        optionMenuList.add(new OptionMenu(1, "Empresa", 1, "/company/init", Status.ACTIVE, "fa-server",
+                EntityType.PRIVATE, categoryMenuAdmin));
+        optionMenuList.add(new OptionMenu(2, "Usuario", 2, "/user/init", Status.ACTIVE, "fa-user",
+                EntityType.PUBLIC, categoryMenuAdmin));
+        optionMenuList.add(new OptionMenu(6, "Proyecto", 1, "/project/init", Status.ACTIVE, "fa-cubes",
+                EntityType.PUBLIC, categoryMenuTask));
+        optionMenuList.add(new OptionMenu(7, "Tareas", 2, "/task/init", Status.ACTIVE, "fa-tasks",
+                EntityType.PUBLIC, categoryMenuTask));
+        optionMenuList.add(new OptionMenu(8, "Avances", 3, "/advance/init", Status.ACTIVE, "fa-pie-chart",
+                EntityType.PUBLIC, categoryMenuTask));
+        return optionMenuList;
+    }
 
     @Test
     public void findByEntityType_private_listWithOnlyOneElement(){
@@ -79,6 +97,71 @@ public class OptionMenuDAOTest {
     @Test
     public void findByEntityType_public_listWithFourElement(){
         assertThat(optionMenuDAO.findBy(EntityType.PUBLIC)).isEqualTo(expectedPublicOptionsMenusList());
+    }
+    
+    private List<OptionMenu> expectedPublicOptionsMenusList() {
+        CategoryMenu categoryMenuAdmin = new CategoryMenu(1, "Administración", 1, Status.ACTIVE, "fa-building", "bg-primary");
+        CategoryMenu categoryMenuTask = new CategoryMenu(2, "Tareas", 2, Status.ACTIVE, "fa-list", "bg-warning");
+        List<OptionMenu> optionMenuList = new ArrayList<>();
+        optionMenuList.add(new OptionMenu(2, "Usuario", 2, "/user/init", Status.ACTIVE, "fa-user",
+                EntityType.PUBLIC, categoryMenuAdmin));
+        optionMenuList.add(new OptionMenu(6, "Proyecto", 1, "/project/init", Status.ACTIVE, "fa-cubes",
+                EntityType.PUBLIC, categoryMenuTask));
+        optionMenuList.add(new OptionMenu(7, "Tareas", 2, "/task/init", Status.ACTIVE, "fa-tasks",
+                EntityType.PUBLIC, categoryMenuTask));
+        optionMenuList.add(new OptionMenu(8, "Avances", 3, "/advance/init", Status.ACTIVE, "fa-pie-chart",
+                EntityType.PUBLIC, categoryMenuTask));
+        return optionMenuList;
+    }
+    
+    @Test
+    public void getPublicOptions_returnListWithFourElements(){
+        List<OptionMenuDTO> listPublicOptions = optionMenuDAO.getPublicOptions();
+        assertThat(listPublicOptions).isEqualTo(getExpectedPublicOptions());
+    }
+    
+    private List<OptionMenuDTO> getExpectedPublicOptions(){
+        List<OptionMenuDTO> listPublicOptions = new ArrayList<>();
+        listPublicOptions.add(new OptionMenuDTO(2, "Usuario", 2, "/user/init", Status.ACTIVE, 1, "Administración"));
+        listPublicOptions.add(new OptionMenuDTO(6, "Proyecto", 1, "/project/init", Status.ACTIVE, 2, "Tareas"));
+        listPublicOptions.add(new OptionMenuDTO(7, "Tareas", 2, "/task/init", Status.ACTIVE, 2, "Tareas"));
+        listPublicOptions.add(new OptionMenuDTO(8, "Avances", 3, "/advance/init", Status.ACTIVE, 2, "Tareas"));
+        return listPublicOptions;
+    }
+    
+    @Test
+    public void findByIds_oneId_listWithOneElement(){
+        List<OptionMenu> options = optionMenuDAO.findByIds(new Integer[]{2});
+        assertThat(options).containsExactly(expectedOptionMenu());
+    }
+    
+    private OptionMenu expectedOptionMenu(){
+        CategoryMenu categoryMenuAdmin = new CategoryMenu(1, "Administración", 1, 
+                Status.ACTIVE, "fa-building", "bg-primary");
+        OptionMenu optionMenu = new OptionMenu(2, "Usuario", 2, "/user/init", 
+                Status.ACTIVE, "fa-user", EntityType.PUBLIC, categoryMenuAdmin);
+        return optionMenu;
+    }
+    
+    @Test
+    public void findByIds_twoIds_listWithTwoElements() {
+        List<OptionMenu> options = optionMenuDAO.findByIds(new Integer[]{2, 6});
+        assertThat(options).isEqualTo(expectedOptionsMenu());
+    }
+    
+    private List<OptionMenu> expectedOptionsMenu() {
+        List<OptionMenu> listOptions = new ArrayList<>();
+        
+        CategoryMenu categoryMenuAdmin = new CategoryMenu(1, "Administración", 1,
+                Status.ACTIVE, "fa-building", "bg-primary");
+        CategoryMenu categoryMenuTask = new CategoryMenu(2, "Tareas", 2, 
+                Status.ACTIVE, "fa-list", "bg-warning");
+        
+        listOptions.add(new OptionMenu(2, "Usuario", 2, "/user/init",
+                Status.ACTIVE, "fa-user", EntityType.PUBLIC, categoryMenuAdmin));
+        listOptions.add(new OptionMenu(6, "Proyecto", 1, "/project/init", Status.ACTIVE, "fa-cubes",
+                EntityType.PUBLIC, categoryMenuTask));
+        return listOptions;
     }
 
     private void insertInitialData() throws SQLException{
@@ -111,37 +194,5 @@ public class OptionMenuDAOTest {
         connection.createStatement().execute("insert into option_menu "+
                 "(id_option_menu, name, order_option_menu, url, status, id_category_menu, entity_type, icon) "+
                 "values (8, 'Avances', 3, '/advance/init', 'ACTIVE', 2, 'PUBLIC', 'fa-pie-chart')");
-    }
-
-    private List<OptionMenu> expectedAllOptionsMenusList(){
-        CategoryMenu categoryMenuAdmin = new CategoryMenu(1, "Administración" , 1, Status.ACTIVE, "fa-building","bg-primary");
-        CategoryMenu categoryMenuTask = new CategoryMenu(2, "Tareas" , 2, Status.ACTIVE, "fa-list","bg-warning");
-        List<OptionMenu> optionMenuList = new ArrayList<>();
-        optionMenuList.add(new OptionMenu(1, "Empresa", 1, "/company/init", Status.ACTIVE, "fa-server",
-                EntityType.PRIVATE, categoryMenuAdmin));
-        optionMenuList.add(new OptionMenu(2, "Usuario", 2, "/user/init", Status.ACTIVE, "fa-user",
-                EntityType.PUBLIC, categoryMenuAdmin));
-        optionMenuList.add(new OptionMenu(6, "Proyecto", 1, "/project/init", Status.ACTIVE, "fa-cubes",
-                EntityType.PUBLIC, categoryMenuTask));
-        optionMenuList.add(new OptionMenu(7, "Tareas", 2, "/task/init", Status.ACTIVE, "fa-tasks",
-                EntityType.PUBLIC, categoryMenuTask));
-        optionMenuList.add(new OptionMenu(8, "Avances", 3, "/advance/init", Status.ACTIVE, "fa-pie-chart",
-                EntityType.PUBLIC, categoryMenuTask));
-        return optionMenuList;
-    }
-
-    private List<OptionMenu> expectedPublicOptionsMenusList(){
-        CategoryMenu categoryMenuAdmin = new CategoryMenu(1, "Administración" , 1, Status.ACTIVE, "fa-building","bg-primary");
-        CategoryMenu categoryMenuTask = new CategoryMenu(2, "Tareas" , 2, Status.ACTIVE, "fa-list","bg-warning");
-        List<OptionMenu> optionMenuList = new ArrayList<>();
-        optionMenuList.add(new OptionMenu(2, "Usuario", 2, "/user/init", Status.ACTIVE, "fa-user",
-                EntityType.PUBLIC, categoryMenuAdmin));
-        optionMenuList.add(new OptionMenu(6, "Proyecto", 1, "/project/init", Status.ACTIVE, "fa-cubes",
-                EntityType.PUBLIC, categoryMenuTask));
-        optionMenuList.add(new OptionMenu(7, "Tareas", 2, "/task/init", Status.ACTIVE, "fa-tasks",
-                EntityType.PUBLIC, categoryMenuTask));
-        optionMenuList.add(new OptionMenu(8, "Avances", 3, "/advance/init", Status.ACTIVE, "fa-pie-chart",
-                EntityType.PUBLIC, categoryMenuTask));
-        return optionMenuList;
     }
 }
