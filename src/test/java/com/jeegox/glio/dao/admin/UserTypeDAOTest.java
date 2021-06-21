@@ -76,10 +76,28 @@ public class UserTypeDAOTest {
         Company company = new Company(1, "Mcdonals", "burguers", Status.ACTIVE, 3);
         assertThat(userTypeDAO.findByCompany(company)).isEqualTo(expectedUserTypesByCompany());
     }
+    
+    private List<UserType> expectedUserTypesByCompany() {
+        List<UserType> userTypeList = new ArrayList<>();
+        userTypeList.add(expectedUserType);
+        userTypeList.add(new UserType(2, "Programer", Status.ACTIVE, new Company(1,
+                "Mcdonals", "burguers", Status.ACTIVE, 3)));
+        return userTypeList;
+    }
 
     @Test
     public void findAll_notRequired_listWithThreeElements(){
         assertThat(userTypeDAO.findAll()).isEqualTo(allExpectedUserTypes());
+    }
+    
+    private List<UserType> allExpectedUserTypes() {
+        List<UserType> userTypeList = new ArrayList<>();
+        userTypeList.add(expectedUserType);
+        userTypeList.add(new UserType(2, "Programer", Status.ACTIVE, new Company(1,
+                "Mcdonals", "burguers", Status.ACTIVE, 3)));
+        userTypeList.add(new UserType(3, "Provider", Status.DELETED, new Company(1,
+                "Mcdonals", "burguers", Status.ACTIVE, 3)));
+        return userTypeList;
     }
 
     private void insertInitialData() throws SQLException{
@@ -98,23 +116,5 @@ public class UserTypeDAOTest {
 
         connection.createStatement().execute("insert into user_type (id_user_type, name, id_company, status)"+
                 " values(3, 'Provider', 1, 'DELETED')");
-    }
-
-    private List<UserType> expectedUserTypesByCompany(){
-        List<UserType> userTypeList = new ArrayList<>();
-        userTypeList.add(expectedUserType);
-        userTypeList.add(new UserType(2, "Programer",Status.ACTIVE, new Company(1,
-                "Mcdonals", "burguers",Status.ACTIVE, 3)));
-        return userTypeList;
-    }
-
-    private List<UserType> allExpectedUserTypes(){
-        List<UserType> userTypeList = new ArrayList<>();
-        userTypeList.add(expectedUserType);
-        userTypeList.add(new UserType(2, "Programer",Status.ACTIVE, new Company(1,
-                "Mcdonals", "burguers",Status.ACTIVE, 3)));
-        userTypeList.add(new UserType(3, "Provider",Status.DELETED, new Company(1,
-                "Mcdonals", "burguers",Status.ACTIVE, 3)));
-        return userTypeList;
     }
 }

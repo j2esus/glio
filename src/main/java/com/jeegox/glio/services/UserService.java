@@ -9,7 +9,6 @@ import com.jeegox.glio.dao.aim.TaskDAO;
 import com.jeegox.glio.dto.GenericResponse;
 import com.jeegox.glio.dto.GraphProductivityDTO;
 import com.jeegox.glio.dto.TaskDTO;
-import com.jeegox.glio.dto.admin.OptionMenuUserTypeDTO;
 import com.jeegox.glio.dto.admin.UserResponse;
 import com.jeegox.glio.entities.admin.Company;
 import com.jeegox.glio.entities.admin.OptionMenu;
@@ -27,7 +26,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -281,37 +280,10 @@ public class UserService {
         userTypeDAO.save(userType);
     }
 
-    @Transactional(readOnly = true)
-    public List<OptionMenuUserTypeDTO> findOptionsMenu(Integer idUserType) {
-        UserType userType = userTypeDAO.findById(idUserType);
-        List<OptionMenuUserTypeDTO> options = userTypeDAO.findOptionsMenu();
-        Set<OptionMenu> optionUser = userType.getOptions();
-        Iterator<OptionMenu> it = optionUser.iterator();
-        while(it.hasNext()){
-            OptionMenu om = it.next();
-            for(OptionMenuUserTypeDTO item : options){
-                if(item.getIdOptionMenu().equals(om.getId())){
-                    item.setAssigned(true);
-                    continue;
-                }
-            }
-            it.remove();
-        }
-        return options;
-    }
-
     @Transactional
-    public void saveOptions(Integer idUserType, String[] optionsAdd, String[] optionsDel) throws Exception {
-        if(optionsAdd.length > 0){
-            for(String option: optionsAdd){
-                if(userTypeDAO.findOption(idUserType, option).intValue() == 0)
-                    userTypeDAO.addOption(idUserType, option);
-            }
-        }
-        
-        if(optionsDel.length > 0){
-            userTypeDAO.deleteOptions(idUserType, optionsDel);
-        }
+    public void saveOptions(UserType userType, List<OptionMenu> options) {
+        userType.setOptions(new HashSet<>(options));
+        userTypeDAO.save(userType);
     }
     
     @Transactional(readOnly = true)

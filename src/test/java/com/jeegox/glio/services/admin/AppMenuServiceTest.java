@@ -1,6 +1,9 @@
 package com.jeegox.glio.services.admin;
 
+import com.google.common.collect.Lists;
 import static com.google.common.truth.Truth.assertThat;
+import com.jeegox.glio.dao.admin.OptionMenuDAO;
+import com.jeegox.glio.dao.admin.impl.OptionMenuDAOImpl;
 import com.jeegox.glio.dto.admin.CategoryMenuDTO;
 import com.jeegox.glio.entities.admin.CategoryMenu;
 import com.jeegox.glio.entities.admin.OptionMenu;
@@ -14,13 +17,18 @@ import java.util.Map;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class AppMenuServiceTest {
     private AppMenuService appMenuService;
+    private OptionMenuDAO optionMenuDAO;
     
     @Before
     public void setUp(){
-        appMenuService = new AppMenuService();
+        optionMenuDAO = mock(OptionMenuDAOImpl.class);
+        appMenuService = new AppMenuService(optionMenuDAO);
     }
     
     @Test
@@ -141,5 +149,22 @@ public class AppMenuServiceTest {
         
         categories.add(categoryMenuDTO2);
         return categories;
+    }
+    
+    @Test
+    public void getPublicOptions_proxyMethod_returnEmptyList(){
+        when(optionMenuDAO.getPublicOptions()).thenReturn(Lists.newArrayList());
+        assertThat(appMenuService.getPublicOptions()).isEmpty();
+    }
+    
+    @Test
+    public void findByIds_proxyMethod_returnEmptyList(){
+        CategoryMenu category = new CategoryMenu(2, "Tareas", 2, Status.ACTIVE,
+                "fa-list", "bg-warning");
+        when(optionMenuDAO.findByIds(any())).thenReturn(Lists.newArrayList(
+                new OptionMenu(6, "Proyecto", 1, "/project/init",
+                        Status.ACTIVE, "fa-cogs", EntityType.PUBLIC, category)
+            ));
+        assertThat(appMenuService.findByIds(new Integer[]{6})).hasSize(1);
     }
 }

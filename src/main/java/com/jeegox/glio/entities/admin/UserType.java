@@ -80,19 +80,15 @@ public class UserType extends JComplexEntity<Integer, Company> implements Serial
     @OrderBy(value = "order")
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "user_type_option", joinColumns = {
-            @JoinColumn(name = "id_user_type", nullable = false, updatable = false) },
+            @JoinColumn(name = "id_user_type", nullable = false) },
             inverseJoinColumns = { @JoinColumn(name = "id_option_menu",
-                            nullable = false, updatable = false) })
+                            nullable = false) })
     public Set<OptionMenu> getOptions() {
         return options;
     }
 
     public void setOptions(Set<OptionMenu> options) {
         this.options = options;
-    }
-    
-    public void addOptions(Set<OptionMenu> options){
-        this.options.addAll(options);
     }
 
     @Override
