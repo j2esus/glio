@@ -48,10 +48,10 @@ public class AllController extends BaseController {
 
     @RequestMapping("dash")
     public String dash(HttpServletRequest request, Model model){
-        User user = getCurrentUser(request);
-        List<CategoryMenuDTO> categoriesMenu = categoryMenuService.findByDTO(user.getUserType());
         HttpSession httpSession = request.getSession(false);
-        httpSession.setAttribute(Constants.Security.CATEGORY_LIST, categoriesMenu);
+        List<CategoryMenuDTO> categoriesMenu = (List<CategoryMenuDTO>) httpSession.getAttribute(Constants.Security.CATEGORY_LIST);
+        if (categoriesMenu.size() == 1)
+            return "redirect:all/module?id=" + categoriesMenu.get(0).getId();
         return "all/dash";
     }
     
@@ -118,14 +118,10 @@ public class AllController extends BaseController {
     
     @RequestMapping(name = "module", method = RequestMethod.GET)
     public String module(Model model, @RequestParam Integer id,HttpServletRequest request){
-        CategoryMenu cm = this.categoryMenuService.findById(id);
         HttpSession httpSession = request.getSession(false);
         List<CategoryMenuDTO> categoriesMenu = (List<CategoryMenuDTO>)httpSession.getAttribute(Constants.Security.CATEGORY_LIST);
-
         CategoryMenuDTO category = categoriesMenu.stream().filter(x -> Objects.equals(x.getId(), id)).
                 findFirst().orElse(null);
-
-        model.addAttribute("moduleName", cm != null ? cm.getName(): "");
         httpSession.setAttribute(Constants.Security.MENU, category != null ? category.getOptionsMenus(): new HashSet<>());
         return "all/module";
     }

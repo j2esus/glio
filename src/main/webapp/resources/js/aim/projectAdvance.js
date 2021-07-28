@@ -1,12 +1,12 @@
 var $txtQueryProjects,
-    $dataTableProject,
-    _indexProjectSelected = -1,
-    _projectData = [],
-    _aimData = [];
-    
- var $divAims;
- 
- var $detailsModal;
+        $dataTableProject,
+        _indexProjectSelected = -1,
+        _projectData = [],
+        _aimData = [];
+
+var $divAims;
+
+var $detailsModal;
 
 
 $(document).ready(function () {
@@ -28,7 +28,7 @@ function initEvents() {
             findProjectData();
         }
     });
-    
+
     $dataTableProject.on('click', 'tbody tr', function (event) {
         $(this).addClass('row-selected').siblings().removeClass('row-selected');
         _indexProjectSelected = $(this).data('meta-row');
@@ -89,7 +89,7 @@ function toBuildGraphProject() {
             dataGraph = [];
         },
         success: function (response) {
-            $.each(response, function(key, value){
+            $.each(response, function (key, value) {
                 data.push([key, value]);
             });
         }, complete: function () {
@@ -119,12 +119,12 @@ function toBuildDivForAims(idProject) {
         },
         success: function (data) {
             let html = '';
-            for(let i = 0;i<data.length;i++){
+            for (let i = 0; i < data.length; i++) {
                 html += writeAimGraphHtml(i, data[i]);
                 _aimData.push(data[i]);
             }
             $divAims.html(html);
-            $.each(_aimData, function(i, item){
+            $.each(_aimData, function (i, item) {
                 toBuildAimChart(item.id);
             });
         }, complete: function () {
@@ -145,11 +145,11 @@ function toBuildAimChart(idAim) {
             _blockUI.block();
         },
         success: function (response) {
-            $.each(response, function(key,value) {
+            $.each(response, function (key, value) {
                 data.push([key, value]);
             });
             c3.generate({
-                bindto: '#aim'+idAim,
+                bindto: '#aim' + idAim,
                 data: {
                     columns: data,
                     type: 'pie'
@@ -161,42 +161,42 @@ function toBuildAimChart(idAim) {
     });
 }
 
-function writeAimGraphHtml(index, item){
+function writeAimGraphHtml(index, item) {
     var html = '';
-    if(index%3 == 0){
+    if (index % 3 == 0) {
         html += '<div class="row">';
     }
-    
+
     html += '<div class="col-lg-4">';
-    
+
     html += '<div class="card">';
     html += '<div class="card-header">';
-    html += '<div class="text-left" style="float:left">'+item.name +'</div><div class="text-right"><button type="button" class="btn btn-success fa fa-bars" onclick="showDetails('+index+')"></button></div>';
+    html += '<div class="text-left" style="float:left">' + item.name + '</div><div class="text-right"><button type="button" class="btn btn-success fa fa-bars" onclick="showDetails(' + index + ')"></button></div>';
     html += '</div>';
     html += '<div class="card-body">';
-    html += '<div id="aim'+item.id+'" width="100%"></div>'; 
+    html += '<div id="aim' + item.id + '" width="100%"></div>';
     html += '</div>';
     html += '</div>';
 
-    
+
     html += '</div>';
-    
-    if(index%3 == 2){
+
+    if (index % 3 == 2) {
         html += '</div>';
         html += '<br/>';
     }
-    
+
     return html;
 }
 
-function showDetails(index){
+function showDetails(index) {
     var item = _aimData[index];
     $dataTableTask = $('#dataTableTask');
     $('#titleModalDetail').html(item.name);
     $('#descriptionModal').html(item.description);
     $('#initDateModal').html(_uiUtil.getFormattedDate(item.initDate));
     $('#endDateModal').html(_uiUtil.getFormattedDate(item.endDate));
-    
+
     $.ajax({
         type: "POST",
         url: $.PATH + "advance/findTasks",

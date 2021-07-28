@@ -1,16 +1,21 @@
 package com.jeegox.glio.controllers.admin;
 
 import com.jeegox.glio.controllers.BaseController;
-import com.jeegox.glio.dto.admin.OptionMenuUserTypeDTO;
+import com.jeegox.glio.dto.admin.OptionMenuDTO;
+import com.jeegox.glio.entities.admin.OptionMenu;
 import com.jeegox.glio.entities.admin.UserType;
 import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.services.UserService;
+import com.jeegox.glio.services.admin.AppMenuService;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -18,10 +23,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/userType/**")
 public class UserTypeController extends BaseController {
     private final UserService userService;
+    private final AppMenuService appMenuService;
 
     @Autowired
-    public UserTypeController(UserService userService) {
+    public UserTypeController(UserService userService, 
+            AppMenuService appMenuService) {
         this.userService = userService;
+        this.appMenuService = appMenuService;
     }
 
     @RequestMapping("init")
@@ -60,24 +68,24 @@ public class UserTypeController extends BaseController {
         }
     }
     
-    @RequestMapping("saveOptions")
+    @RequestMapping(value = "saveOptions", method = RequestMethod.POST)
     @ResponseBody
-    public String saveOptions(HttpServletRequest request, @RequestParam Integer idUserType, 
-            @RequestParam String optionsAdd,
-            @RequestParam String optionsDel){
-        try{
-            String[] optionsAddA = optionsAdd.split(",");
-            String[] optionsDelA = optionsDel.split(",");
-            userService.saveOptions(idUserType, optionsAddA, optionsDelA);
-            return "OK";
-        }catch(Exception e){
-            return e.getMessage();
-        }
+    public ResponseEntity<Void> saveOptions(HttpServletRequest request, @RequestParam Integer idUserType, 
+            @RequestParam("options[]") Integer[] options){
+        userService.saveOptions(userService.findUserTypeById(idUserType), 
+                appMenuService.findByIds(options));
+        return ResponseEntity.ok().build();
     }
     
-    @RequestMapping("findOptions")
+    @RequestMapping(value = "getOptionsByUserType", method = RequestMethod.POST)
     @ResponseBody
-    public List<OptionMenuUserTypeDTO> findOptions(HttpServletRequest request, @RequestParam Integer idUserType){
-        return userService.findOptionsMenu(idUserType);
+    public Set<OptionMenu> getOptionsByUserType(HttpServletRequest request, @RequestParam Integer idUserType){
+        return userService.findUserTypeById(idUserType).getOptions();
+    }
+    
+    @RequestMapping(value = "getPublicOptions", method = RequestMethod.POST)
+    @ResponseBody
+    public List<OptionMenuDTO> getPublicOptions(HttpServletRequest request) {
+        return appMenuService.getPublicOptions();
     }
 }

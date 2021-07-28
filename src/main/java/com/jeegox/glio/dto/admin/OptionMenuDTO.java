@@ -1,32 +1,27 @@
 package com.jeegox.glio.dto.admin;
 
-import com.jeegox.glio.entities.admin.OptionMenu;
 import com.jeegox.glio.enumerators.Status;
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
 
-public class CategoryMenuDTO implements Serializable{
+public class OptionMenuDTO implements Serializable{
     private Integer id;
     private String name;
     private Integer order;
+    private String url;
     private Status status;
-    private String icon;
-    private String clazz;
-    private Set<OptionMenu> optionsMenus = new TreeSet<>();
-    
-    public CategoryMenuDTO(){
-        
-    }
-    
-    public CategoryMenuDTO(Integer id, String name, Integer order, Status status, String icon, String clazz){
+    private Integer idCategory;
+    private String category;
+
+    public OptionMenuDTO(Integer id, String name, Integer order, 
+            String url, Status status, Integer idCategory, String category) {
         this.id = id;
         this.name = name;
         this.order = order;
+        this.url = url;
         this.status = status;
-        this.icon = icon;
-        this.clazz = clazz;
+        this.idCategory = idCategory;
+        this.category = category;
     }
 
     public Integer getId() {
@@ -53,6 +48,14 @@ public class CategoryMenuDTO implements Serializable{
         this.order = order;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public Status getStatus() {
         return status;
     }
@@ -61,40 +64,32 @@ public class CategoryMenuDTO implements Serializable{
         this.status = status;
     }
 
-    public String getIcon() {
-        return icon;
+    public Integer getIdCategory() {
+        return idCategory;
     }
 
-    public void setIcon(String icon) {
-        this.icon = icon;
+    public void setIdCategory(Integer idCategory) {
+        this.idCategory = idCategory;
     }
 
-    public Set<OptionMenu> getOptionsMenus() {
-        return optionsMenus;
+    public String getCategory() {
+        return category;
     }
 
-    public void setOptionsMenus(Set<OptionMenu> optionsMenus) {
-        this.optionsMenus = optionsMenus;
-    }
-    
-    public String getClazz() {
-        return clazz;
-    }
-
-    public void setClazz(String clazz) {
-        this.clazz = clazz;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.id);
-        hash = 97 * hash + Objects.hashCode(this.name);
-        hash = 97 * hash + Objects.hashCode(this.order);
-        hash = 97 * hash + Objects.hashCode(this.status);
-        hash = 97 * hash + Objects.hashCode(this.icon);
-        hash = 97 * hash + Objects.hashCode(this.clazz);
-        hash = 97 * hash + Objects.hashCode(this.optionsMenus);
+        hash = 29 * hash + Objects.hashCode(this.id);
+        hash = 29 * hash + Objects.hashCode(this.name);
+        hash = 29 * hash + Objects.hashCode(this.order);
+        hash = 29 * hash + Objects.hashCode(this.url);
+        hash = 29 * hash + Objects.hashCode(this.status);
+        hash = 29 * hash + Objects.hashCode(this.idCategory);
+        hash = 29 * hash + Objects.hashCode(this.category);
         return hash;
     }
 
@@ -109,14 +104,14 @@ public class CategoryMenuDTO implements Serializable{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final CategoryMenuDTO other = (CategoryMenuDTO) obj;
+        final OptionMenuDTO other = (OptionMenuDTO) obj;
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }
-        if (!Objects.equals(this.icon, other.icon)) {
+        if (!Objects.equals(this.url, other.url)) {
             return false;
         }
-        if (!Objects.equals(this.clazz, other.clazz)) {
+        if (!Objects.equals(this.category, other.category)) {
             return false;
         }
         if (!Objects.equals(this.id, other.id)) {
@@ -128,7 +123,7 @@ public class CategoryMenuDTO implements Serializable{
         if (this.status != other.status) {
             return false;
         }
-        if (!Objects.equals(this.optionsMenus, other.optionsMenus)) {
+        if (!Objects.equals(this.idCategory, other.idCategory)) {
             return false;
         }
         return true;
@@ -136,9 +131,9 @@ public class CategoryMenuDTO implements Serializable{
 
     @Override
     public String toString() {
-        return "CategoryMenuDTO{" + "id=" + id + ", name=" + name + ", order=" + order 
-                + ", status=" + status + ", icon=" + icon + ", clazz=" + clazz + 
-                ", optionsMenus=" + optionsMenus + '}';
+        return "OptionMenuDTO{" + "id=" + id + ", name=" + name + ", order=" + 
+                order + ", url=" + url + ", status=" + status + ", idCategory=" + 
+                idCategory + ", category=" + category + '}';
     }
     
     

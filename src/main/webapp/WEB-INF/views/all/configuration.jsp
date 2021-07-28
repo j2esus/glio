@@ -1,6 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<script src="<c:url value="/resources/js/user/configuration.js"/>"></script>
+<script src="<c:url value="/resources/js/all/configuration.js"/>"></script>
 <h1>Configuración</h1>
 <hr/>
 <div class="row">

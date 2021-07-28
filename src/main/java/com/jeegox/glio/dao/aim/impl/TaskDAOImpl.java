@@ -37,10 +37,14 @@ public class TaskDAOImpl extends GenericDAOImpl<Task,Integer> implements TaskDAO
                 " from Task t "+
                 " join t.father a "+
                 " where a.father = :project "+
-                " and t.status <> :status ";
+                " and t.status <> :status " +
+                " and a.status in ( :activeAndFinish ) ";
         return sessionFactory.getCurrentSession().createQuery(query).
                 setParameter("project", project).
-                setParameter("status", Status.DELETED).getResultList();
+                setParameter("status", Status.DELETED).
+                setParameterList("activeAndFinish", 
+                        new Status[]{Status.ACTIVE, Status.FINISHED}).
+                getResultList();
     }
 
     @Override

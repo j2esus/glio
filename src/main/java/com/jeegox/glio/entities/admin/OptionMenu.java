@@ -1,5 +1,6 @@
 package com.jeegox.glio.entities.admin;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.jeegox.glio.entities.util.JComplexEntity;
@@ -20,6 +21,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "option_menu")
+@JsonIgnoreProperties("father")
 public class OptionMenu extends JComplexEntity<Integer, CategoryMenu> implements Serializable, Comparable<OptionMenu>{
     private String name;
     private Integer order;

@@ -1,6 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<script src="<c:url value="/resources/js/session/crudSession.js"/>"></script>
+<script src="<c:url value="/resources/js/admin/crudSession.js"/>"></script>
 
 <h1>Sesiones</h1>
 <hr/>

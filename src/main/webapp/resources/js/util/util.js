@@ -23,7 +23,7 @@ _uiUtil = (function () {
             $(this).val('');
         });
         $('select', context).each(function () {
-            $(this).val('');
+            $(this).prop("selectedIndex", 0).val();
         });
     }
 

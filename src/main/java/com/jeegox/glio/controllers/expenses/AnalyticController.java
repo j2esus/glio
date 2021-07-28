@@ -10,8 +10,6 @@ import com.jeegox.glio.services.ExpenseService;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-
-import org.omg.CosNaming.NamingContextExtPackage.AddressHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,16 +54,11 @@ public class AnalyticController extends BaseController{
         return expenseService.getMonthAmounts(getCurrentCompany(request), year);
     }
     
-    @RequestMapping(value = "findDataCategoryYear", method = RequestMethod.POST)
+    @RequestMapping(value = "findAmountsCategoryBy", method = RequestMethod.POST)
     @ResponseBody
-    public List<GeneralCategoryDTO> findDataCategoryYear(HttpServletRequest request, @RequestParam Integer year){
-        return expenseService.findDataCategory(getCurrentCompany(request), year);
-    }
-    
-    @RequestMapping(value = "findDataCategoryYearMonth", method = RequestMethod.POST)
-    @ResponseBody
-    public List<GeneralCategoryDTO> findDataCategoryYearMonth(HttpServletRequest request, @RequestParam Integer year, @RequestParam Integer month){
-        return expenseService.findDataCategory(getCurrentCompany(request), year, month);
+    public List<GeneralCategoryDTO> findAmountsCategoryBy(HttpServletRequest request, 
+            @RequestParam Integer year, @RequestParam Integer month){
+        return expenseService.findAmountsCategoryBy(getCurrentCompany(request), year, month);
     }
     
     @RequestMapping(value = "findDataSubcategoryYearMonth", method = RequestMethod.POST)

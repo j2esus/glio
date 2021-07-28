@@ -76,12 +76,9 @@ public class ExpenseService {
     }
 
     @Transactional(readOnly = true)
-    public List<GeneralCategoryDTO> findDataCategory(Company company, Integer year) {
-        return expenseDAO.findDataCategory(company, year);
-    }
-
-    @Transactional(readOnly = true)
-    public List<GeneralCategoryDTO> findDataCategory(Company company, Integer year, Integer month) {
+    public List<GeneralCategoryDTO> findAmountsCategoryBy(Company company, Integer year, Integer month) {
+        if(month <= 0)
+            return expenseDAO.findDataCategory(company, year);
         return expenseDAO.findDataCategory(company, year, month);
     }
 
