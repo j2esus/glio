@@ -46,7 +46,7 @@
         </script>
     </head>
     <body class="bg-dark">
-        <div class="text-right" style="color:whitesmoke;padding-right: 5px;font-size: 13px">v.0.39</div>
+        <div class="text-right" style="color:whitesmoke;padding-right: 5px;font-size: 13px">v.0.40</div>
         <div class="container">
             <c:if test="${message != ''}">
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
