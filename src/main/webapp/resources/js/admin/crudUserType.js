@@ -127,6 +127,9 @@ function findData() {
             uncheckAllOptionsMenu();
             _indexSelected = -1;
             _data = [];
+            $("#checkAll").prop("checked", false);
+            $btnSaveOption.hide();
+            $('#nameUserType').html("");
         },
         success: function (items) {
             if (items.length > 0) {
