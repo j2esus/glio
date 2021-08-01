@@ -4,18 +4,15 @@ import com.jeegox.glio.dto.admin.CategoryMenuDTO;
 import com.jeegox.glio.entities.State;
 import com.jeegox.glio.entities.Suburb;
 import com.jeegox.glio.entities.Town;
-import com.jeegox.glio.entities.admin.CategoryMenu;
 import com.jeegox.glio.entities.admin.Token;
 import com.jeegox.glio.entities.admin.User;
 import com.jeegox.glio.entities.aim.Aim;
 import com.jeegox.glio.enumerators.Status;
 import com.jeegox.glio.services.AddressService;
-import com.jeegox.glio.services.CategoryMenuService;
 import com.jeegox.glio.services.UserService;
 import com.jeegox.glio.services.ProjectService;
 import com.jeegox.glio.util.Constants;
 import com.jeegox.glio.util.Util;
-
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -32,15 +29,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/all/**")
 public class AllController extends BaseController {
-    private final CategoryMenuService categoryMenuService;
     private final UserService userService;
     private final ProjectService projectService;
     private final AddressService addressService;
 
     @Autowired
-    public AllController(CategoryMenuService categoryMenuService, UserService userService, ProjectService projectService,
+    public AllController(UserService userService, ProjectService projectService,
                          AddressService addressService) {
-        this.categoryMenuService = categoryMenuService;
         this.userService = userService;
         this.projectService = projectService;
         this.addressService = addressService;
@@ -66,7 +61,7 @@ public class AllController extends BaseController {
         return "all/configuration";
     }
     
-    @RequestMapping("changeUserData")
+    @RequestMapping(value = "changeUserData", method = RequestMethod.POST)
     @ResponseBody
     public String changeUserData(HttpServletRequest request, @RequestParam String username,
             @RequestParam String name,
@@ -83,7 +78,7 @@ public class AllController extends BaseController {
         }
     }
     
-    @RequestMapping("changePassword")
+    @RequestMapping(value = "changePassword", method = RequestMethod.POST)
     @ResponseBody
     public String changePassword(HttpServletRequest request,@RequestParam String password,
             @RequestParam String newPassword,
@@ -99,13 +94,13 @@ public class AllController extends BaseController {
         }
     }
     
-    @RequestMapping("findTokensUser")
+    @RequestMapping(value = "findTokensUser", method = RequestMethod.POST)
     @ResponseBody
     public List<Token> findTokensUser(HttpServletRequest request){
         return userService.findByUser(getCurrentUser(request));
     }
     
-    @RequestMapping("deleteToken")
+    @RequestMapping(value = "deleteToken", method = RequestMethod.POST)
     @ResponseBody
     public String deleteToken(@RequestParam Integer id){
         try{
