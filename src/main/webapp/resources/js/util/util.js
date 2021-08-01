@@ -265,7 +265,7 @@ _notify = (function () {
             },
             placement: {
                 from: "top",
-                align: "center"
+                align: "right"
             }
         });
     }
